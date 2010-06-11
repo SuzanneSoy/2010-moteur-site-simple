@@ -1,0 +1,13 @@
+= MVC =
+
+Modèle :
+    structure : fichiers & dossiers
+    articles: xml
+
+Vue :
+    Vue affichage
+    Vue édition
+
+Contrôleur :
+    articles : editeur.php
+    structure : structure.php
