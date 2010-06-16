@@ -5,7 +5,7 @@ Modèle :
         dans le dossier /contenu
     articles: xml
     vues des articles (édition, affichage, …) : php + html
-        dans le dossier /modeles
+        dans le dossier /types
 
 Vue :
     Vue affichage :
