@@ -3,11 +3,36 @@
 Modèle :
     structure : fichiers & dossiers
     articles: xml
+    vues des articles: xml ???
 
 Vue :
-    Vue affichage
-    Vue édition
+    Vue affichage :
+        templates css
+        affichage d'un article (xslt : xml article -> xhtml fragment ?)
+        affichage de la page principale === affichage de l'article "/"
+    Vue édition ?? :
+        affichage de l'article avec son xslt "édition".
+    
+    Nécessite : affichage d'un autre article (<article src="" mode=""> dans le xhtml produit ???)
 
 Contrôleur :
     articles : editeur.php
     structure : structure.php
+
+
+= Sécurité =
+
+Les contrôleurs s'assurent pour chaque opération (lecture / écriture // listing / création)
+que l'utilisateur a bien les droits requis. Il fait pour cela appel à la fonction suivante :
+
+auth.php: verif_auth(article, prop, action)
+
+La connexion se fait avec :
+
+auth.php: formulaire_connexion_mini() // mini-version en haut à droite ???
+auth.php: formulaire_connexion()
+auth.php: connexion() // récupère les infos dans $POST
+auth.php: formulaire_déconnexion() // lien "déconnexion"
+auth.php: déconnexion()
+
+etc.
