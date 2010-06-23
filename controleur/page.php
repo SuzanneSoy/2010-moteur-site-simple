@@ -4,9 +4,12 @@ require_once("config.php");
 
 // Protocole : http://site/actualités/?nouveau=Le%20titre
 
-// Invariants de sécurité :
+// SECURITE : Invariants de sécurité :
 // Page::chemin ne contient jamais de chaîne '../' ou autres bizarreries des chemins de fichiers.
 //   Donc on peut concaténer Page::chemin à un chemin dans le système de fichiers et être sûr d'être dans un sous-dossier.
+// TODO : Lors de la construction d'un chemin, tous les composants doivent être nettoyés.
+
+// TODO : créer une classe chemin_page
 
 class Page {
     // article/prop_article
@@ -19,7 +22,12 @@ class Page {
     
     public function __construct($chemin) {
         // SECURITE : chemin doit être un sous-dossier de .../modele/
-        $this->chemin = $chemin;
+        $this->chemin = nettoyer_chemin($chemin);
+    }
+    
+    // Nettoie un chemin de page pour qu'il respecte l'invariant de sécurité.
+    public static function nettoyer_chemin($chemin) {
+        return $chemin;
     }
     
     // Renvoie le chemin de la page dans le système de fichiers
@@ -39,11 +47,11 @@ class Page {
     }
   
     public function enfant($nom) {
-        return new Page($this->chemin . '/' . $nom); // TODO
+        return new Page(nettoyer_chemin($this->chemin) . '/' . nettoyer_chemin($nom));
     }
   
     public function parent() {
-        return new Page($this->chemin . '/..'); // TODO
+        return new Page(nettoyer_chemin($this->chemin) . '/..'); // TODO
     }
   
     public function nouveau($nom) {
