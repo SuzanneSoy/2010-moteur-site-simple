@@ -32,7 +32,7 @@ class Page {
     
     // Renvoie le chemin de la page dans le système de fichiers
     private function chemin_fs() {
-        return concaténer_chemin($config_chemin_base, $this->chemin);
+        return concaténer_chemin_fs($config_chemin_base, $this->chemin);
     }
     
     public function liste_enfants() {
