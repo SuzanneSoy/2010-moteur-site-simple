@@ -1,24 +1,29 @@
 <?php
 
-class Gallerie extends Page {
-  public vue($nom_vue) {
-    $ret = '';
+require_once("controleur/page.php");
+
+class Galerie extends Page {
+    public function vue($nom_vue = "normal") {
+        $ret = '';
     
-    $ret += '<ul>';
-    foreach ($this->liste_sous_articles() as $k) {
-      $ret += '<li><a href="' + url_avec_parametres($k) + '">' + afficher($k, 'miniature') + '</a></li>';
-    }
-    $ret += '</ul>';
+        $ret .= '<ul>';
+        foreach ($this->liste_enfants() as $k) {
+            $ret .= '<li><a href="' . $k->url() . '">' . $k->vue('miniature') . '</a></li>';
+        }
+        $ret .= '</ul>';
     
-    if ($edition) {
-      $ret += '<a href="' + $this->url('nouveau') + '">Nouvelle période.</a>';
+        if ($edition) {
+            $ret .= '<a href="' . $this->url('nouveau') . '">Nouvelle période.</a>';
+        }
+    
+        return $ret;
     }
-  }
   
-// TODO :
-// Chaque page est un objet PHP, avec les méthodes suivantes :
-// $page->vue(nom_vue, nom_vue_fallback_1, nom_vue_fallback_2, …); // nom_vue = normal, edition, miniature, …
-//
-// + Méthodes définies dans modele/page.php
+    // TODO :
+    // Chaque page est un objet PHP, avec les méthodes suivantes :
+    // $page->vue(nom_vue, nom_vue_fallback_1, nom_vue_fallback_2, …); // nom_vue = normal, edition, miniature, …
+    //
+    // + Méthodes définies dans modele/page.php
+}
 
 ?>
