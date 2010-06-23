@@ -4,7 +4,9 @@ require_once("config.php");
 
 // Protocole : http://site/actualités/?nouveau=Le%20titre
 
-// TODO : Constructeur.
+// Invariants de sécurité :
+// Page::chemin ne contient jamais de chaîne '../' ou autres bizarreries des chemins de fichiers.
+//   Donc on peut concaténer Page::chemin à un chemin dans le système de fichiers et être sûr d'être dans un sous-dossier.
 
 class Page {
     // article/prop_article
@@ -20,26 +22,28 @@ class Page {
         $this->chemin = $chemin;
     }
     
+    // Renvoie le chemin de la page dans le système de fichiers
+    private function chemin_fs() {
+        return concaténer_chemin($config_chemin_base, $this->chemin);
+    }
+    
     public function liste_enfants() {
-        $lst = scandir($this->chemin);
+        $lst = scandir($this->chemin_fs());
         $lst_enfants = Array();
         if ($lst !== false) {
             foreach ($lst as $k => $v) {
-                // Construire un objet Page pour chacun (code commun avec Page::enfant(nom)).
-                $lst_enfants[] = new Page($this->chemin . '/' . $v); // TODO : . '/' . n'est pas portable !
+                $lst_enfants[] = $this->enfant($v);
             }
         }
         return $lst_enfants;
     }
   
     public function enfant($nom) {
-        // Récupéere le sous-dossier "nom"
-        // Construire un objet Page (code commun avec Page::liste_enfants()).
+        return new Page($this->chemin . '/' . $nom); // TODO
     }
   
     public function parent() {
-        // Récupère le dossier parent
-        // Construire un objet Page (code commun avec Page::enfant(nom)).
+        return new Page($this->chemin . '/..'); // TODO
     }
   
     public function nouveau($nom) {
