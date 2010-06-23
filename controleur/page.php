@@ -1,57 +1,48 @@
 <?php
 
+require_once("util.php");
 require_once("config.php");
+require_once("controleur/chemin_page.php");
 
 // Protocole : http://site/actualités/?nouveau=Le%20titre
 
-// SECURITE : Invariants de sécurité :
-// Page::chemin ne contient jamais de chaîne '../' ou autres bizarreries des chemins de fichiers.
-//   Donc on peut concaténer Page::chemin à un chemin dans le système de fichiers et être sûr d'être dans un sous-dossier.
-// TODO : Lors de la construction d'un chemin, tous les composants doivent être nettoyés.
-
-// TODO : créer une classe chemin_page
+// Structure des répertoires
+// article/_prop_article
+//        /_prop_type
+//        /_prop_photo
+//        /_prop_date
+//        /_prop_lieu
+//        /article_1 // Sous article
+//        /article_2 // Sous article
 
 class Page {
-    // article/prop_article
-    //        /prop_type
-    //        /prop_photo
-    //        /prop_date
-    //        /prop_lieu
-    //        /article_1 // Sous article
-    //        /article_2 // Sous article
-    
     public function __construct($chemin) {
-        // SECURITE : chemin doit être un sous-dossier de .../modele/
-        $this->chemin = nettoyer_chemin($chemin);
-    }
-    
-    // Nettoie un chemin de page pour qu'il respecte l'invariant de sécurité.
-    public static function nettoyer_chemin($chemin) {
-        return $chemin;
+        $this->chemin = new CheminPage($chemin);
     }
     
     // Renvoie le chemin de la page dans le système de fichiers
     private function chemin_fs() {
-        return concaténer_chemin_fs($config_chemin_base, $this->chemin);
+        global $config_chemin_base;
+        return concaténer_chemin_fs($config_chemin_base, $this->chemin->get());
     }
     
     public function liste_enfants() {
-        $lst = scandir($this->chemin_fs());
-        $lst_enfants = Array();
-        if ($lst !== false) {
-            foreach ($lst as $k => $v) {
-                $lst_enfants[] = $this->enfant($v);
-            }
+        $scandir = scandir($this->chemin_fs());
+        if ($scandir === false) { error_log("Impossible d'accéder à la liste des pages enfant de " . $this->chemin->get()); }
+        
+        $enfants = Array();
+        foreach ($scandir as $k => $v) {
+            $enfants[] = $this->enfant($v);
         }
-        return $lst_enfants;
+        return $enfants;
     }
   
     public function enfant($nom) {
-        return new Page(nettoyer_chemin($this->chemin) . '/' . nettoyer_chemin($nom));
+        return new Page($this->chemin->enfant($nom));
     }
   
     public function parent() {
-        return new Page(nettoyer_chemin($this->chemin) . '/..'); // TODO
+        return new Page($this->chemin->parent());
     }
   
     public function nouveau($nom) {
@@ -78,11 +69,11 @@ class Page {
     public function url() {
         // calculer l'url de cette page en fonction de son chemin et de l'url de base
         global $config_url_base;
-        return $config_url_base . $this->chemin;
+        return $config_url_base . $this->chemin->get();
     }
 
     public function vue() {
-        return "Aucune vue pour «" . $this->chemin . "» .";
+        return "Aucune vue pour «" . $this->chemin->get() . "» .";
     }
 }
 
