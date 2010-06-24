@@ -16,6 +16,18 @@ require_once("controleur/chemin_page.php");
 //        /article_2 // Sous article
 
 class Page {
+    private static $types = Array();
+    
+    public static function ajouterType($nom, $classe) {
+        self::$types[$nom] = $classe;
+    }
+    
+    public static function _new($chemin) {
+        // TODO : détecter le type à partir de _prop_type
+        // Problème : pour pouvoir faire un get_prop, il faut qu'on ait déjà instancié la classe...
+        return new self::$types["Galerie"]($chemin);
+    }
+    
     public function __construct($chemin) {
         $this->chemin = new CheminPage($chemin);
     }
@@ -32,17 +44,19 @@ class Page {
         
         $enfants = Array();
         foreach ($scandir as $k => $v) {
-            $enfants[] = $this->enfant($v);
+            if (is_dir(concaténer_chemin_fs($this->chemin_fs(), $v)) && $v != "." && $v != "..") {
+                $enfants[] = $this->enfant($v);
+            }
         }
         return $enfants;
     }
   
     public function enfant($nom) {
-        return new Page($this->chemin->enfant($nom));
+        return Page::_new($this->chemin->enfant($nom));
     }
   
     public function parent() {
-        return new Page($this->chemin->parent());
+        return Page::_new($this->chemin->parent());
     }
   
     public function nouveau($nom) {
