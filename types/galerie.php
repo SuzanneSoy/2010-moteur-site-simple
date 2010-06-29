@@ -18,12 +18,6 @@ class Galerie extends Page {
     
         return $ret;
     }
-  
-    // TODO :
-    // Chaque page est un objet PHP, avec les méthodes suivantes :
-    // $page->vue(nom_vue, nom_vue_fallback_1, nom_vue_fallback_2, …); // nom_vue = normal, edition, miniature, …
-    //
-    // + Méthodes définies dans modele/page.php
 }
 
 Page::ajouterType("Galerie", "Galerie");

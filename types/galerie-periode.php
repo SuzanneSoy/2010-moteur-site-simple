@@ -8,7 +8,7 @@ class GaleriePeriode extends Page {
         
         if ($nom_vue == "miniature") {
             $enfants = $this->liste_enfants();
-            return "miniature". $enfants[0]->vue('miniature');
+            return $enfants[0]->vue('miniature');
         }
         
         $ret .= '<ul>';
@@ -23,12 +23,6 @@ class GaleriePeriode extends Page {
         
         return $ret;
     }
-  
-    // TODO :
-    // Chaque page est un objet PHP, avec les méthodes suivantes :
-    // $page->vue(nom_vue, nom_vue_fallback_1, nom_vue_fallback_2, …); // nom_vue = normal, edition, miniature, …
-    //
-    // + Méthodes définies dans modele/page.php
 }
 
 Page::ajouterType("GaleriePeriode", "GaleriePeriode");
