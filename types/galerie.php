@@ -8,7 +8,7 @@ class Galerie extends Page {
     
         $ret .= '<ul>';
         foreach ($this->liste_enfants() as $k) {
-            $ret .= '<li><a href="' . $k->url() . '">' . '['.$k->chemin->get().'] ' . $k->vue('miniature') . '</a></li>';
+            $ret .= '<li><a href="' . $k->url() . '">' . $k->vue('miniature') . '</a></li>';
         }
         $ret .= '</ul>';
     
