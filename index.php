@@ -3,7 +3,7 @@
 
 require_once("types/galerie.php");
 
-$p = new Galerie("/modele");
+$p = Page::_new("/modele/galerie");
 
 print_r($p->vue());
 

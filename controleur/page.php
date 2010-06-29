@@ -7,11 +7,11 @@ require_once("controleur/chemin_page.php");
 // Protocole : http://site/actualités/?nouveau=Le%20titre
 
 // Structure des répertoires
-// article/_prop_article
-//        /_prop_type
-//        /_prop_photo
-//        /_prop_date
-//        /_prop_lieu
+// article/__prop__article
+//        /__prop__type
+//        /__prop__photo
+//        /__prop__date
+//        /__prop__lieu
 //        /article_1 // Sous article
 //        /article_2 // Sous article
 
@@ -22,11 +22,36 @@ class Page {
         self::$types[$nom] = $classe;
     }
     
+    
+    /* ****** Début du hack ****** */
+    // Lorsqu'on instancie un objet Page, il faudrait en fait instancier un objet Galerie ou Forum ou ...
+    // selon le type de la page. Il faut donc lors de l'instanciation modifier la classe de $this.
+    //
+    // C'est malheureusement impossible. Avec classkit_method_copy, il serait possible de recopier les
+    // méthodes de Galerie ou Forum ou ... par-dessus les méthodes de $this. Mais classkit_method_copy est
+    // expérimentale.
+    //
+    // Une autre approche consisterait à modifier toutes les méthodes de Page pour qu'elles appellent
+    // d'elles-même leur alter ego dans Galerie ou Forum. Mais ces méthodes (dans Galerie) ne pourraient
+    // pas se servir de la méthode parente (dans Page), donc pas d'héritage complet.
+    //
+    // La solution qui a été retenue consiste à appeller la fonction statique "Page::_new()" au lieu de
+    // "new Page()". Page::_new() détecte le type de la page et instancie la bonne classe.
+    // Cependant, pour accéder à __prop__type, il faudrait pouvoir utiliser Page->get_prop(), qui est non
+    // statique alors que Page::_new() est statique. On instancie donc un objet Page, on utilise
+    // Page->get_prop(), puis on instancie la bonne sous-classe de Page (Galerie, Forum, ...).
+    
     public static function _new($chemin) {
-        // TODO : détecter le type à partir de _prop_type
-        // Problème : pour pouvoir faire un get_prop, il faut qu'on ait déjà instancié la classe...
-        return new self::$types["Galerie"]($chemin);
+        $page = new Page($chemin);
+        $type = $page->get_prop("type");
+        if (array_key_exists($type, self::$types)) {
+            return new self::$types[$type]($chemin);
+        } else {
+            return new self($chemin);
+        }
     }
+    /* ******  Fin du hack  ****** */
+    
     
     public function __construct($chemin) {
         $this->chemin = new CheminPage($chemin);
@@ -44,7 +69,7 @@ class Page {
         
         $enfants = Array();
         foreach ($scandir as $k => $v) {
-            if (is_dir(concaténer_chemin_fs($this->chemin_fs(), $v)) && $v != "." && $v != "..") {
+            if (strpos($v, "__prop__") !== 0 && is_dir(concaténer_chemin_fs($this->chemin_fs(), $v)) && $v != "." && $v != "..") {
                 $enfants[] = $this->enfant($v);
             }
         }
@@ -52,17 +77,17 @@ class Page {
     }
   
     public function enfant($nom) {
-        return Page::_new($this->chemin->enfant($nom));
+        return self::_new($this->chemin->enfant($nom));
     }
   
     public function parent() {
-        return Page::_new($this->chemin->parent());
+        return self::_new($this->chemin->parent());
     }
   
     public function nouveau($nom) {
         // Si nom est null, utiliser "Article" + numéro
         // Créer un sous-dossier "nom"
-        // L'initialiser avec le modèle donné dans prop_modele_enfants
+        // L'initialiser avec le modèle donné dans __prop__modele_enfants
         // Construire un objet Page (code commun avec Page::enfant(nom)).
     }
   
@@ -71,9 +96,21 @@ class Page {
         //  alors supprimer récursivement le dossier courant
         //  sinon renvoyer FAUX
     }
- 
+    
+    private function chemin_fs_prop($nom_propriété) {
+        return concaténer_chemin_fs($this->chemin_fs(), "__prop__" . $nom_propriété);
+    }
+    
     public function get_prop($nom_propriété) {
         // lire le contenu du fichier prop_nom_propriété
+        // renvoie toujours une chaîne (vide si pas de propriété ou erreur).
+        $fichier = $this->chemin_fs_prop($nom_propriété);
+        if (file_exists($fichier)) {
+            $a = file_get_contents($fichier);
+            return ($a ? $a : '');
+        } else {
+            return "";
+        }
     }
  
     public function set_prop($nom_propriété, $valeur) {
