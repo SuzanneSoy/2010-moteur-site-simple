@@ -12,7 +12,7 @@ class Galerie extends Page {
         }
         $ret .= '</ul>';
     
-        if ($edition) {
+        if ($nom_vue == "edition") {
             $ret .= '<a href="' . $this->url('nouveau') . '">Nouvelle période.</a>';
         }
     
