@@ -59,8 +59,8 @@ class Page {
     
     // Renvoie le chemin de la page dans le système de fichiers
     private function chemin_fs() {
-        global $config_chemin_base;
-        return concaténer_chemin_fs($config_chemin_base, $this->chemin->get());
+        global $config_chemin_modele;
+        return concaténer_chemin_fs($config_chemin_modele, $this->chemin->get());
     }
     
     public function liste_enfants() {
