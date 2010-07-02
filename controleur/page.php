@@ -117,10 +117,10 @@ class Page {
         // écrire le contenu du fichier prop_nom_propriété
     }
  
-    public function url() {
+    public function url($fichier = "index.php") {
         // calculer l'url de cette page en fonction de son chemin et de l'url de base
         global $config_url_base;
-        return $config_url_base . $this->chemin->get();
+        return $config_url_base . $this->chemin->get() . '/' . $fichier;
     }
 
     public function vue() {
