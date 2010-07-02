@@ -1,5 +1,8 @@
 <?php
 
+ // Tous les chemins pour les include sont relatifs à __cms__ .
+chdir(dirname(__FILE__));
+
 require_once("controleur/page.php");
 
 require_once("types/galerie.php");
