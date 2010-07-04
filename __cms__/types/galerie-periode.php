@@ -11,7 +11,7 @@ class GaleriePeriode extends Page {
             return $enfants[0]->vue('miniature');
         }
         
-        $ret .= '<ul>';
+        $ret .= '<ul class="galerie periode">';
         foreach ($this->liste_enfants() as $k) {
             $ret .= '<li><a href="' . $k->url() . '">' . '['.$k->chemin->get().'] ' . $k->vue('miniature') . '</a></li>';
         }

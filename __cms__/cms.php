@@ -25,7 +25,7 @@ class CMS {
     public static function affiche($uri) {
         $p = Page::_new(CMS::uri_vers_chemin($uri));
         
-        echo CMS::en_tete($uri) // TODO
+        echo CMS::en_tete($p->chemin->get()) // TODO
             . $p->vue()
             . CMS::pied();
     }
@@ -38,12 +38,12 @@ class CMS {
 		<title>' . $titre . '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="Content-Language" content="fr" />
+		<link href="../style.css" rel="stylesheet" type="text/css" /><!-- TODO : chemin incorrect -->
 	</head>
 	<body>
 		<h1>' . $titre . '</h1>';
 //		<meta name="keywords" lang="fr" content="motcle1,mocle2" />
 //		<meta name="description" content="Description de ma page web." />
-//		<link href="style.css" rel="stylesheet" type="text/css" />
     }
     
     public static function pied() {

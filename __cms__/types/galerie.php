@@ -6,7 +6,7 @@ class Galerie extends Page {
     public function vue($nom_vue = "normal") {
         $ret = '';
     
-        $ret .= '<ul>';
+        $ret .= '<ul class="galerie principale">';
         foreach ($this->liste_enfants() as $k) {
             $ret .= '<li><a href="' . $k->url() . '">' . $k->vue('miniature') . '</a></li>';
         }
