@@ -25,8 +25,31 @@ class CMS {
     public static function affiche($uri) {
         $p = Page::_new(CMS::uri_vers_chemin($uri));
         
-        echo "<h1>Test</h1>";
-        echo $p->vue();
+        echo CMS::en_tete($uri) // TODO
+            . $p->vue()
+            . CMS::pied();
+    }
+    
+    public static function en_tete($titre) {
+        return
+'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+	<head>
+		<title>' . $titre . '</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="Content-Language" content="fr" />
+	</head>
+	<body>
+		<h1>' . $titre . '</h1>';
+//		<meta name="keywords" lang="fr" content="motcle1,mocle2" />
+//		<meta name="description" content="Description de ma page web." />
+//		<link href="style.css" rel="stylesheet" type="text/css" />
+    }
+    
+    public static function pied() {
+        return
+'	</body>
+</html>';
     }
 }
 ?>
