@@ -13,14 +13,14 @@ class GaleriePeriode extends Page {
         
         $ret .= '<ul class="galerie periode">';
         foreach ($this->liste_enfants() as $k) {
-            $ret .= '<li><a href="' . $k->url() . '">' . '['.$k->chemin->get().'] ' . $k->vue('miniature') . '</a></li>';
+            $ret .= '<li><a href="' . $k->url() . '">' . $k->vue('miniature') . '</a></li>';
         }
         $ret .= '</ul>';
-        
+
         if ($nom_vue == "edition") {
             $ret .= '<a href="' . $this->url('nouveau') . '">Nouvel évènement.</a>';
         }
-        
+    
         return $ret;
     }
 }
