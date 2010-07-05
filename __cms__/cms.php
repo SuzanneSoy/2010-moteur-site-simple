@@ -15,6 +15,7 @@ class CMS {
         global $config_url_base;
         // TODO : Pas propre !
         $base = "/" . preg_replace("/^https?:\/\/[^\/]*\//", "", $config_url_base, 1);
+        $uri = urldecode($uri);
         if (strpos($uri, $base) == 0) {
             return '/' . substr($uri, strlen($base));
         } else {
