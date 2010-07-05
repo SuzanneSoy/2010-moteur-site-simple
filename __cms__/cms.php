@@ -17,10 +17,12 @@ class CMS {
         $base = "/" . preg_replace("/^https?:\/\/[^\/]*\//", "", $config_url_base, 1);
         $uri = urldecode($uri);
         if (strpos($uri, $base) == 0) {
-            return '/' . substr($uri, strlen($base));
-        } else {
-            return $uri;
+            $uri = '/' . substr($uri, strlen($base));
         }
+        
+        $uri = preg_replace("/\/?index.php$/", "/", $uri, 1);
+        
+        return $uri;
     }
     
     public static function affiche($uri) {
