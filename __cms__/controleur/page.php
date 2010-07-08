@@ -84,17 +84,35 @@ class Page {
         return self::_new($this->chemin->parent());
     }
   
-    public function nouveau($nom) {
+    public function nouveau($nom = "") {
         // Si nom est null, utiliser "Article" + numéro
         // Créer un sous-dossier "nom"
         // L'initialiser avec le modèle donné dans __prop__modele_enfants
         // Construire un objet Page (code commun avec Page::enfant(nom)).
+        
+        if ($nom == "") {
+            $nom = "Nouvel article";
+        }
+        
+        $chemin_enfant = $this->chemin->enfant($nom);
+        if (! file_exists($chemin_enfant->get())) {
+            mkdir($chemin_enfant->get());
+            $p = Page::_new($chemin_enfant->get());
+            $p->set_prop("type", "galerie");
+        }
+        
+        return Page::_new($chemin_enfant->get());
     }
   
     public function supprimer($récursif) {
         // Si récursif || il n'y a pas de sous-dossiers
         //  alors supprimer récursivement le dossier courant
         //  sinon renvoyer FAUX
+        if ($récursif || true) {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     private function chemin_fs_prop($nom_propriété) {
@@ -114,7 +132,9 @@ class Page {
     }
  
     public function set_prop($nom_propriété, $valeur) {
-        // écrire le contenu du fichier prop_nom_propriété
+        // Écrire $valeur dans la propriété $nom_propriété.
+        $fichier = $this->chemin_fs_prop($nom_propriété);
+        file_put_contents($fichier, $valeur);
     }
  
     public function url($fichier = "index.php") {
