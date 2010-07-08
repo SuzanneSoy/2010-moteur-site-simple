@@ -2,6 +2,8 @@
 
 require_once("util.php");
 require_once("config.php");
+require_once("cms.php");
+require_once("squelette.php");
 require_once("controleur/chemin_page.php");
 
 // Protocole : http://site/actualités/?nouveau=Le%20titre
@@ -148,9 +150,7 @@ class Page {
     }
     
     public function affiche() {
-        echo CMS::en_tete($this->chemin->get()) // TODO
-            . $this->vue()
-            . CMS::pied();
+        echo Squelette::enrober($this, $this->vue());
     }
 }
 
