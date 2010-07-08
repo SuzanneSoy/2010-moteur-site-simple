@@ -6,6 +6,11 @@ require_once("cms.php");
 require_once("squelette.php");
 require_once("controleur/chemin_page.php");
 
+require_once("types/galerie.php");
+require_once("types/galerie-periode.php");
+require_once("types/galerie-evenement.php");
+require_once("types/galerie-photo.php");
+
 // Protocole : http://site/actualités/?nouveau=Le%20titre
 
 // Structure des répertoires
