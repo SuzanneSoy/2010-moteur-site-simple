@@ -19,12 +19,11 @@ class CheminPage {
     }
     
     public function parent() {
-        $slash = strrpos($this->chemin, '/');
-        if ($slash !== false) {
-            return substr($this->chemin, 0, $slash);
-        } else {
-            return '/';
-        }
+        return '/'.array_slice($this->chemin, 0, count($this->chemin) - 1);
+    }
+    
+    public function dernier() {
+        return $this->chemin[count($this->chemin) - 1];
     }
     
     public static function nettoyer_chemin($chemin) {
