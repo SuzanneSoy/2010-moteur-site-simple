@@ -1,19 +1,21 @@
 <?php
 
-// Note : L'implémentation de CheminPage pourrait utiliser une pile au lieu des chaînes de caractère :
+// Note : L'implémentation de CheminPage utilise une pile au lieu de chaînes de caractère :
 // ["Chemin", "Vers", "Page"] == "/Chemin/Vers/Page"
+
+require_once("path.php");
 
 class CheminPage {
     public function __construct($chemin) {
-        $this->chemin = CheminPage::nettoyer_chemin($chemin);
+        $this->chemin = explode('/', CheminPage::nettoyer_chemin($chemin));
     }
     
     public function get() {
-        return $this->chemin;
+        return '/'.join($this->chemin, '/');
     }
     
     public function enfant($nom) {
-        return $this->chemin . '/' . CheminPage::nettoyer_chemin($nom);
+        return '/'.join($this->chemin, '/') . '/' . CheminPage::nettoyer_chemin($nom);
     }
     
     public function parent() {
@@ -30,10 +32,15 @@ class CheminPage {
         //   * Ne contient pas '\0'
         //   * Ne contient pas '../'
         //   * Ne contient pas de double occurence de '/'
-        //   * Ni d'autres bizarreries des chemins de fichiers.
         //   * Ne contient pas _prop_
         //   * Ne se termine pas par '/'
-        //   * Commence par '/'
+        //   * Ne commence pas par '/'
+        //   * Ni d'autres bizarreries des chemins de fichiers.
+        
+        $chemin = preg_replace("/\\0/", '', $chemin); // TODO : vérifier si c'est bien ça !
+        $chemin = Path::normalize($chemin);
+        $chemin = preg_replace("/^\/*/", '', $chemin);
+        $chemin = preg_replace("/\/*$/", '', $chemin);
         
         // TODO
         return $chemin;

@@ -2,6 +2,6 @@
 
 require_once("../__cms__/cms.php");
 
-CMS::affiche("/galerie");
+CMS::affiche("/galerie", $_GET);
 
 ?>
