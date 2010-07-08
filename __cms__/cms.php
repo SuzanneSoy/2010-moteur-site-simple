@@ -13,12 +13,20 @@ require_once("types/galerie-evenement.php");
 require_once("types/galerie-photo.php");
 
 class CMS {
-    public static function affiche($chemin) {
+    public static function affiche($chemin, $action = "afficher", $params=null) {
+        if (is_null($params)) $params = array();
+        
         $p = Page::_new($chemin);
         
-        echo CMS::en_tete($p->chemin->get()) // TODO
-            . $p->vue()
-            . CMS::pied();
+        if ($action == "nouvel_enfant") {
+            $p->nouvel_enfant($params["titre"]);
+        } else if ($action == "supprimer") {
+            $p->supprimer($params["recursif"]);
+        } else if ($action == "modifier") {
+            // TODO : houlà...
+        } else {
+            $p->affiche();
+        }
     }
     
     public static function en_tete($titre) {

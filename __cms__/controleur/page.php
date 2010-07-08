@@ -84,7 +84,7 @@ class Page {
         return self::_new($this->chemin->parent());
     }
   
-    public function nouveau($nom = "") {
+    public function nouvel_enfant($nom = "") {
         // Si nom est null, utiliser "Article" + numéro
         // Créer un sous-dossier "nom"
         // L'initialiser avec le modèle donné dans __prop__modele_enfants
@@ -145,6 +145,12 @@ class Page {
 
     public function vue() {
         return "Aucune vue pour «" . $this->chemin->get() . "» .";
+    }
+    
+    public function affiche() {
+        echo CMS::en_tete($this->chemin->get()) // TODO
+            . $this->vue()
+            . CMS::pied();
     }
 }
 
