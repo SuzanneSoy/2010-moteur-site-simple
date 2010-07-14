@@ -8,7 +8,8 @@ class GalerieEvenement extends Page {
         
         if ($nom_vue == "miniature") {
             $enfants = $this->liste_enfants();
-            return $enfants[0]->vue('miniature');
+            if ($enfants[0]) return $enfants[0]->vue('miniature');
+            else return "Aucune<br/>photo";
         }
         
         $ret .= '<ul class="galerie evenement">';
