@@ -97,18 +97,17 @@ class Page {
         // L'initialiser avec le modèle donné dans __prop__modele_enfants
         // Construire un objet Page (code commun avec Page::enfant(nom)).
         
-        if ($nom == "") {
-            $nom = "Nouvel article";
+        if ($nom == "") $nom = "Nouvel article";
+        
+        $futur_enfant = $this->enfant($nom);
+        $chemin_fs_futur_enfant = $futur_enfant->chemin_fs();
+        
+        if (! file_exists($chemin_fs_futur_enfant)) {
+            mkdir($chemin_fs_futur_enfant);
+            $futur_enfant->set_prop("type", "galerie");
         }
         
-        $chemin_enfant = $this->chemin->enfant($nom);
-        if (! file_exists($chemin_enfant->get())) {
-            mkdir($chemin_enfant->get());
-            $p = Page::_new($chemin_enfant->get());
-            $p->set_prop("type", "galerie");
-        }
-        
-        return Page::_new($chemin_enfant->get());
+        return Page::_new($futur_enfant->chemin->get());
     }
   
     public function supprimer($récursif) {
