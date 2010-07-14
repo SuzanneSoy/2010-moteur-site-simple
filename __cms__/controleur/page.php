@@ -23,6 +23,8 @@ require_once("types/galerie-photo.php");
 //        /article_2 // Sous article
 
 class Page {
+    public $type_enfants = "Galerie";
+    
     private static $types = Array();
     
     public static function ajouterType($nom, $classe) {
@@ -92,10 +94,7 @@ class Page {
     }
   
     public function nouvel_enfant($nom = "") {
-        // Si nom est null, utiliser "Article" + numéro
-        // Créer un sous-dossier "nom"
-        // L'initialiser avec le modèle donné dans __prop__modele_enfants
-        // Construire un objet Page (code commun avec Page::enfant(nom)).
+        // TODO : Si nom est null, utiliser "Article" + numéro
         
         if ($nom == "") $nom = "Nouvel article";
         
@@ -104,12 +103,12 @@ class Page {
         
         if (! file_exists($chemin_fs_futur_enfant)) {
             mkdir($chemin_fs_futur_enfant);
-            $futur_enfant->set_prop("type", "galerie");
+            $futur_enfant->set_prop("type", $this->type_enfants);
         }
         
         return Page::_new($futur_enfant->chemin->get());
     }
-  
+    
     public function supprimer($récursif) {
         // Si récursif || il n'y a pas de sous-dossiers
         //  alors supprimer récursivement le dossier courant

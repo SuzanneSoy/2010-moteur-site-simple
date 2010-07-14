@@ -3,6 +3,8 @@
 require_once("controleur/page.php");
 
 class Galerie extends Page {
+    public $type_enfants = "GalerieEvenement";
+    
     public function vue($nom_vue = "normal") {
         $ret = '';
     
