@@ -143,10 +143,19 @@ class Page {
         file_put_contents($fichier, $valeur);
     }
  
-    public function url($fichier = "index.php") {
-        // calculer l'url de cette page en fonction de son chemin et de l'url de base
+    // calculer l'url de cette page en fonction de son chemin et de l'url de base
+    public function url($fichier = "", $params = array()) {
         global $config_url_base;
-        return $config_url_base . $this->chemin->get() . '/' . $fichier;
+        
+        $u = $config_url_base . $this->chemin->get() . '/' . $fichier;
+        
+        $sep = '?';
+        foreach ($params as $k => $v) {
+            $u .= $sep . urlencode($k) . '=' . urlencode($v);
+            $sep = '&';
+        }
+        
+        return $u;
     }
 
     public function vue() {
