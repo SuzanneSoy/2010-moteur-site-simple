@@ -20,6 +20,7 @@ class GalerieEvenement extends Page {
         
         if ($nom_vue == "edition") {
             $ret .= '<a href="' . $this->url('nouveau') . '">Nouvelle photo.</a>';
+            $ret .= '<a href="' . $this->url('supprimer') . '">Supprmier cet évènement.</a>';
         }
         
         return $ret;

@@ -19,6 +19,7 @@ class GaleriePeriode extends Page {
 
         if ($nom_vue == "edition") {
             $ret .= '<a href="' . $this->url('nouveau') . '">Nouvel évènement.</a>';
+            $ret .= '<a href="' . $this->url('supprimer') . '">Supprmier cette période.</a>';
         }
     
         return $ret;
