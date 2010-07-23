@@ -11,7 +11,16 @@ function créer_enfant($chemin, $nom) {
 function set_prop($chemin, $prop, $valeur) {
 }
 
+function set_prop_fichier($chemin, $prop, $fichier) {
+	// Stocke le contenu de $fichier dans $prop, et supprime $fichier.
+}
+
 function get_prop($chemin, $prop) {
+}
+
+function get_prop_sendfile($chemin, $prop) {
+	// Envoie tout le conctenu de $prop sur le réseau.
+	// Équivalent à appeller sendfile sur le fichier qui contient $prop.
 }
 
 function supprimer($chemin, $récursif) {
@@ -21,9 +30,6 @@ function liste_enfants($chemin) {
 }
 
 /*function parent($chemin) {
-}*/
-
-/*function stocker_fichier($chemin_fs_orig, $chemin, $prop) {
 }*/
 
 function renomer($chemin, $nouveau_nom) {

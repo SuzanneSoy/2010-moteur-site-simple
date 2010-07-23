@@ -11,9 +11,11 @@ function action($chemin, $action, $paramètres) {
 		// return Redirect vers la page parente.
 	} else {
 		if (is_set($paramètres["fichier_image"])) {
-			// stocker le fichier reçu dans prop_image
 			// redimensionner l'image avec gd, stocker la miniature dans
-			// prop_image_mini
+			// prop_image_mini (set_prop_fichier()).
+			// Pb : Où est-ce qu'on met temporairement la miniature
+			// avant de la déplacer ???
+			// stocker le fichier reçu dans prop_image (set_prop_fichier()).
 		}
 		if (is_set($paramètres["titre"])) {
 			// renomer la page
@@ -40,9 +42,9 @@ function vue($chemin, $vue = "normal") {
 	} else if ($vue == "miniature") {
 		return "Vue miniature.";
 	} else if ($vue == "image") {
-		// stockage::sendfile_prop("image");
+		// stockage::get_prop_sendfile("image");
 	} else if ($vue == "image_mini") {
-		// stockage::sendfile_prop("image_mini");
+		// stockage::get_prop_sendfile("image_mini");
 	}
 }
 
