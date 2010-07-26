@@ -18,7 +18,7 @@ function lire($chemin) {
 	// file_get_contents()
 }
 
-function ecrire($chemin, $données) {
+function écrire($chemin, $données) {
 	// file_put_contents();
 }
 
@@ -26,7 +26,8 @@ function liste_enfants($chemin) {
 	// Renvoie la liste des sous-fichiers et sous-dossiers.
 }
 
-function déplacer($chemin_de, $cemin_vers) {
+function déplacer($chemin_de, $chemin_vers) {
+	// mv
 }
 
 ?>
