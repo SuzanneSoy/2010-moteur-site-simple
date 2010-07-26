@@ -26,8 +26,8 @@ function set_groupe($utilisateur, $groupe) {
 	// Positionne le groupe de $utilisateur à $groupe.
 }
 
-function get_groupe($utilisateur, $groupe) {
-	// Positionne le groupe de $utilisateur à $groupe.
+function get_groupe($utilisateur) {
+	// Renvoie le groupe de $utilisateur.
 }
 
 function supprimer_utilisateur($utilisateur) {
