@@ -1,6 +1,9 @@
 <?php
 
-function vérifier_permission($chemin, $action, $utilisateur) {
+function vérifier_permission($chemin, $action, $utilisateur = null) {
+	if ($utilisateur === null) {
+		$utilisateur = Authentification::get_utilisateur();
+	}
 	// Vérifie si $utilisateur a la permission d'effectuer $action sur $chemin.
 	// Parcourt la liste les règles de sécurité (get_regles()), et
 	// sélectionne la première pour laquelle $chemin correspond au motif
