@@ -1,5 +1,11 @@
 <?php
 
+// Regle :
+//  - motif de chemin (liste de segments pouvant être une chaîne, *, ou ** pour le dernier)
+//  - motif d'action (get_prop, set_prop, creer_page, supprimer, *)
+//  - motif d'utilisateur ($utilisateur ou * ou "propriétaire")
+//  - autorisation : true ou false.
+
 function vérifier_permission($chemin, $action, $utilisateur = null) {
 	if ($utilisateur === null) {
 		$utilisateur = Authentification::get_utilisateur();
