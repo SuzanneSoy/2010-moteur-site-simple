@@ -7,6 +7,10 @@ function action($chemin, $action, $paramètres) {
 		// Supprimer cette page.
 		// return Redirect vers la page parente.
 	} else {
+		if (is_set($paramètres["message"])) {
+			// set_prop($chemin, "message", $paramètres["message"]);
+		}
+		
 		if (is_set($paramètres["vue"])) {
 			self::vue($chemin, $paramètres["vue"]);
 		} else {
@@ -19,14 +23,14 @@ function vue($chemin, $vue = "normal") {
 	if ($vue == "normal") {
         $ret = '';
 		if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
-			// afficher le textarea du message
+			$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "message"), $nom_champ);
 		} else {
-			$ret .= "<p>" . get_prop($chemin, "message") . "</p>";
+			$ret .= affichage_texte_enrichi(get_prop($chemin, "message"));
 		}
 		if (vérifier_permission($chemin, "supprimer", get_utilisateur())) {
-			// peut-être afficher le lien "Supprimer" ???
+			// peut-être afficher le bouton "Supprimer" ??? ou est-ce trop d'options ?
 		}
-		// Peut-être afficher le bouton "citer" ?
+		// Peut-être afficher le bouton "citer" ? ou est-ce trop d'options ?
 		return $ret;
 	}
 }

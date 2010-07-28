@@ -15,7 +15,7 @@ function action($chemin, $action, $paramètres) {
 			// prop_image_mini (set_prop_fichier()).
 			// Pb : Où est-ce qu'on met temporairement la miniature
 			// avant de la déplacer ???
-			// stocker le fichier reçu dans prop_image (set_prop_fichier()).
+			// stocker le fichier reçu dans prop_image (set_prop_fichier_reçu()).
 		}
 		if (is_set($paramètres["titre"])) {
 			// renomer la page
