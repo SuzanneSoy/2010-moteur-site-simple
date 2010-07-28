@@ -35,6 +35,13 @@ function set_prop_fichier($chemin, $prop, $fichier) {
 	}
 }
 
+// Comme pour set_prop_fichier, mais pour un fichier reçu (uploadé).
+function set_prop_fichier_reçu($chemin, $prop, $fichier) {
+	// move_uploaded_file directement ? (on court-circuite SystemeFichiers)
+	// ou bien is_uploaded_file, puis si oui on appelle set_prop_fichier ?
+	// ou mieux, on ajoute un "move_uploaded_file" à SystèmeFichiers ?
+}
+
 function get_prop($chemin, $prop, $forcer_permissions = false) {
 	// $forcer_permissions permet à vérifier_permission() et ses
 	// dépendances get_regles() et get_groupe() de faire des get_prop
