@@ -1,33 +1,45 @@
 <?php
 
-function créer_dossier($chemin) {
-	// mkdir($chemin)
-}
+// NOTE : Cette abstraction a l'air assez innutile à part supprimer...
 
-/*function créer_fichier($chemin) {
-	// touch($chemin)
-}*/
-
-function supprimer($chemin, $récursif) {
-	// Si non récursif, supprime ssi c'est un fichier.
-	// Sinon, si c'est un fichier ou un lien, supprime,
-	//        si c'est un dossier, appelle récursivement puis rmdir.
-}
-
-function lire($chemin) {
-	// file_get_contents()
-}
-
-function écrire($chemin, $données) {
-	// file_put_contents();
-}
-
-function liste_enfants($chemin) {
-	// Renvoie la liste des sous-fichiers et sous-dossiers.
-}
-
-function déplacer($chemin_de, $chemin_vers) {
-	// mv
+class SystèmeFichiers {
+	public function créer_dossier($chemin_fs) {
+		mkdir($chemin_fs);
+	}
+	
+	/*public function créer_fichier($chemin_fs) {
+		// touch($chemin_fs)
+	}*/
+	
+	public function supprimer($chemin_fs, $récursif) {
+		if (is_link($chemin_fs) || is_file($chemin_fs)) {
+			unlink($chemin_fs);
+		} else if ($récursif) {
+			$d = dir($chemin_fs);
+			while (false !== ($entrée = $d->read())) {
+				self::supprimer($chemin_fs . '/' . $entrée, $récursif);
+			}
+			$d->close();
+			rmdir($chemin_fs);
+		}
+	}
+	
+	public function lire($chemin_fs) {
+		file_get_contents($chermin_fs)
+	}
+	
+	public function écrire($chemin_fs, $données) {
+		file_put_contents($chemin_fs, $données);
+	}
+	
+	public function liste_enfants($chemin_fs) {
+		return scandir($chemin_fs);
+	
+	}
+	
+	public function déplacer($chemin_fs_de, $chemin_fs_vers) {
+		rename($chemin_fs_de, $chemin_fs_vers);
+	}
 }
 
 ?>
