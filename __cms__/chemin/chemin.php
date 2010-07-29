@@ -34,9 +34,18 @@ class Chemin {
 		array_push($s, self::nettoyer_segment($nom));
 		return new self($s);
 	}
+	
+	public function parent() {
+		return new self(array_slice($this->segments, 0, -1));
+	}
+	
+    public function dernier() {
+        return end($this->segments);
+    }
+
     
     public static function nettoyer_chemin($chemin) {
-        // SECURITE : $chemin_nettoyé
+        // SECURITE : $chemin nettoyé
         //   * Ne contient pas '\0'
         //   * Ne contient pas '../'
         //   * Ne contient pas de double occurence de '/'
