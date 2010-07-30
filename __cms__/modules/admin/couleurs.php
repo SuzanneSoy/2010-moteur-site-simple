@@ -33,6 +33,13 @@ function vue($chemin, $vue = "normal") {
 		$ret .= "<input ... Couleur C />";
 		$ret .= ...
 		return "Vue normale de la page.";
+	} else if ($vue == "css") {
+		// TODO : où mettre ce gen_css... ?
+		return Site::gen_css(array(
+			"Couleur_A" => Stockage::get_prop($chemin, "Coucleur_A"),
+			"Couleur_B" => Stockage::get_prop($chemin, "Coucleur_B"),
+			"Couleur_C" => Stockage::get_prop($chemin, "Coucleur_C")
+		));
 	}
 }
 
