@@ -8,9 +8,9 @@
 function nouvelle_page($chemin, $nom) {
 	if (vérifier_permission($chemin, "nouvelle_page")) {
 		$enfant = $chemin->enfant($nom);
-		SystemeFichiers::créer_dossier($config_chemin_base_stockage . '/' . $enfant);
+		SystemeFichiers::créer_dossier($config_chemin_base_stockage . '/' . $enfant->get());
 		// Imitation de l'url rewriting
-		SystemeFichiers::écrire($config_chemin_base_public . '/' . $enfant, "<?php require_once(" . $config_chemin_base_php . "/cms.php);"); // TODO : séparer dans une autre fonction (rewriting.php ?)
+		SystemeFichiers::écrire($config_chemin_base_public . '/' . $enfant->get(), "<?php require_once(" . $config_chemin_base_php . "/cms.php);"); // TODO : séparer dans une autre fonction (rewriting.php ?)
 		return $enfant;
 	} else {
 		return false;
@@ -49,7 +49,7 @@ function get_prop($chemin, $prop, $forcer_permissions = false) {
 	if ($forcer_permissions || vérifier_permission($chemin, "get_prop")) {
 		return SystemeFichiers::lire($config_chemin_base_stockage . '/' . $chemin . '/' . $prop);
 	} else {
-		return false;
+		return "[Accès interdit]";
 	}
 }
 
