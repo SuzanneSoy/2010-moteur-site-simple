@@ -1,6 +1,6 @@
 <?php
 
-class Connexion {
+class AdminConnexion {
 	public function action($chemin, $action, $paramètres) {
 		if ($action == "connexion") {
 			if (connexion($paramètres["utilisateur"], $paramètres["mdp"])) {
