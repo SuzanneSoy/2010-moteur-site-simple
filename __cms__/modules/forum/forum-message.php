@@ -11,7 +11,7 @@ function action($chemin, $action, $paramètres) {
 			Stockage::set_prop($chemin, "message", $paramètres["message"]);
 		}
 		
-		// TODO ...
+		// TODO ... Quelles sont les interactions entre l'utilisateur et le message, dans quel ordre, ...
 		if (is_set($paramètres["vue"])) {
 			Modules::vue($chemin->parent(), $paramètres["vue"]);
 		} else {
