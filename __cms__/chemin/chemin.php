@@ -46,6 +46,10 @@ class Chemin {
         return '/'.join($this->segments, '/');
     }
     
+    public function get_url() {
+		return $config_url_base . '/' . $this->get();
+	}
+    
     public function enfant($nom) {
 		$s = $this->segments;
 		$x = self::nettoyer_segment($nom)
@@ -57,6 +61,10 @@ class Chemin {
 	
 	public function parent() {
 		return new self(array_slice($this->segments, 0, -1));
+	}
+	
+	public function renomer($nom) {
+		return $this->parent()->enfant($nom);
 	}
 	
     public function dernier() {
