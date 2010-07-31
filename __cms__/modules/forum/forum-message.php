@@ -4,17 +4,18 @@ function action($chemin, $action, $paramètres) {
 	if ($action == "anuler") {
 		return redirect($chemin);
 	} else if ($action == "supprimer") {
-		// Supprimer cette page.
-		// return Redirect vers la page parente.
+		Stockage::supprimer($chemin);
+		return redirect($chemin->parent());
 	} else {
 		if (is_set($paramètres["message"])) {
-			// set_prop($chemin, "message", $paramètres["message"]);
+			Stockage::set_prop($chemin, "message", $paramètres["message"]);
 		}
 		
+		// TODO ...
 		if (is_set($paramètres["vue"])) {
-			self::vue($chemin, $paramètres["vue"]);
+			Modules::vue($chemin->parent(), $paramètres["vue"]);
 		} else {
-			self::vue($chemin);
+			Modules::vue($chemin->parent());
 		}
 	}
 }
@@ -23,7 +24,7 @@ function vue($chemin, $vue = "normal") {
 	if ($vue == "normal") {
         $ret = '';
 		if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
-			$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "message"), $nom_champ);
+			$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "message"), "message");
 		} else {
 			$ret .= affichage_texte_enrichi(get_prop($chemin, "message"));
 		}
