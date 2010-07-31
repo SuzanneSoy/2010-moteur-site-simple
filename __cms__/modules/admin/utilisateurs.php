@@ -19,23 +19,26 @@ class AdminUtilisateurs {
 		// Solution B :
 		} else {
 			if (is_set($paramètres["nouveau_nom"]) && ($action == "nouvelle_page")) {
-				// TODO : SECURITE : Si la page existe déjà, laisser tomber !
-				Stockage::nouvelle_page($singleton, $paramètres["nouveau_nom"]);
+				Authentification::nouvel_utilisateur($paramètres["nouveau_nom"]);
 				$paramètres["nom"] = $paramètres["nouveau_nom"];
 				// TODO : message de confirmation quelque part ?
 			}
 			
-			if (is_set($paramètres["nouveau_nom"]) && is_set($paramètres["nom"])) {
-				// renomer la page $paramètres["nom"]
+			if (is_set($paramètres["nom"]) && is_set($paramètres["nouveau_nom"]) && ($action != "nouvelle_page")) {
+				Authentification::renomer_utilisateur($paramètres["nom"], $paramètres["nouveau_nom"]);
 				$paramètres["nom"] = $paramètres["nouveau_nom"];
 			}
 			
-			if (is_set($paramètres["mot_de_passe"]) && is_set($paramètres["nom"])) {
-				Stockage::set_pop($singleton->enfant($paramètres["nom"]), "mot_de_passe", $paramètres["mot_de_passe"]);
+			if (is_set($paramètres["nom"]) && is_set($paramètres["mot_de_passe"])) {
+				Authentification::set_mot_de_passe($paramètres["nom"], $paramètres["mot_de_passe"]);
 			}
 			
-			if (is_set($paramètres["peut_se_connecter"]) && is_set($paramètres["nom"])) {
-				Stockage::set_pop($singleton->enfant($paramètres["nom"]), "peut_se_connecter", $paramètres["peut_se_connecter"]);
+			if (is_set($paramètres["nom"]) && is_set($paramètres["groupe"])) {
+				Authentification::set_groupe($paramètres["nom"], $paramètres["groupe"]);
+			}
+			
+			if (is_set($paramètres["nom"]) && is_set($paramètres["peut_se_connecter"])) {
+				Authentification::set_peut_se_connecter($paramètres["nom"], ($paramètres["peut_se_connecter"] == "true"));
 			}
 			
 			if (is_set($paramètres["vue"])) {
