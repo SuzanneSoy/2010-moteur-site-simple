@@ -21,7 +21,7 @@ class Authentification {
 	}
 	
 	public function get_utilisateur() {
-			Session::get("utilisateur");
+		Session::get("utilisateur");
 	}
 	
 	public function nouvel_utilisateur($nom_utilisateur) {
@@ -33,24 +33,33 @@ class Authentification {
 	}
 	
 	public function supprimer_utilisateur($nom_utilisateur) {
-		// Supprime l'utilisateur créé par nouvel_utilisateur
+		Stockage::supprimer(self::$singleton->enfant($nom_utilisateur));
 	}
 	
 	public function renomer_utilisateur($nom_utilisateur, $nouveau_nom) {
-		Stockage::renomer($chemin->enfant($nom_utilisateur), $nouveau_nom);
+		Stockage::renomer(self::$singleton->enfant($nom_utilisateur), $nouveau_nom);
+	}
+	
+	public function liste_utilisateurs() {
+		$liste = array();
+		foreach (stockage::liste_enfants($chemin) as $k) {
+			array_push($liste, $k->dernier());
+		}
+		sort($liste);
+		return $liste;
 	}
 	
 	public function set_groupe($nom_utilisateur, $groupe) {
 		// TODO : Vérifier si le groupe existe ?
-		Stockage::set_pop($singleton->enfant($nom_utilisateur), "groupe", $groupe);
+		Stockage::set_pop(self::$singleton->enfant($nom_utilisateur), "groupe", $groupe);
 	}
 	
 	public function get_groupe($nom_utilisateur) {
-		return Stockage::get_prop($singleton->enfant($nom_utilisateur), "groupe");
+		return Stockage::get_prop(self::$singleton->enfant($nom_utilisateur), "groupe");
 	}
 	
 	public function set_mot_de_passe($nom_utilisateur, $mot_de_passe) {
-		Stockage::set_pop($singleton->enfant($nom_utilisateur), "mot_de_passe", $mot_de_passe);
+		Stockage::set_pop(self::$singleton->enfant($nom_utilisateur), "mot_de_passe", $mot_de_passe);
 	}
 	
 	public function set_mot_de_passe_aléatoire($utilisateur) {
@@ -58,7 +67,7 @@ class Authentification {
 	}
 	
 	public function get_mot_de_passe($nom_utilisateur) {
-		return Stockage::get_prop($singleton->enfant($nom_utilisateur), "mot_de_passe");
+		return Stockage::get_prop(self::$singleton->enfant($nom_utilisateur), "mot_de_passe");
 	}
 	
 	public function set_peut_se_connecter($nom_utilisateur, $valeur) {
