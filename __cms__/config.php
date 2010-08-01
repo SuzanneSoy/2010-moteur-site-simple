@@ -15,8 +15,11 @@ $config_url_base = "http://127.0.0.1/2010-moteur-site-simple/";
 $config_chemin_base = realpath(dirname(__FILE__));
 
 // Chemin vers le stockage interne des données.
-// En général, c'est le chemin __cms__
+// En général, c'est le chemin ..../__cms__/modele
 $config_chemin_base_stockage = Path::combine($config_chemin_base, "modele");
+
+// Chemin vers la partie visible du site.
+// En général, c'est le chemin vers le dossier contenant __cms__
 $config_chemin_base_public = Path::combine($config_chemin_base "/..");
 
 // ======== FIN CONFIGURATION =======
