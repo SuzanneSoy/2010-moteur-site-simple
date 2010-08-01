@@ -6,10 +6,11 @@
 // $chemin, puis appelle une fonction de systeme-fichiers.php
 
 class Stockage {
-	public function nouvelle_page($chemin, $nom) {
+	public function nouvelle_page($chemin, $nom, $type) {
 		if (vérifier_permission($chemin, "nouvelle_page")) {
 			$enfant = $chemin->enfant($nom);
 			SystemeFichiers::créer_dossier($enfant->get_fs_stockage());
+			self::set_prop($enfant, "type", $type);
 			self::activer_réécriture($enfant);
 			return $enfant;
 		} else {

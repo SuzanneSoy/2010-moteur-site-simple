@@ -29,7 +29,7 @@ class Authentification {
 	
 	public function nouvel_utilisateur($nom_utilisateur) {
 		// TODO : SECURITE : Si la page existe déjà, laisser tomber !
-		Stockage::nouvelle_page(self::singleton(), $nom_utilisateur);
+		Stockage::nouvelle_page(self::singleton(), $nom_utilisateur, "admin-utilisateur");
 		self::set_mot_de_passe_aléatoire($nom_utilisateur);
 		self::set_groupe($nom_utilisateur, "Anonymes");
 		self::set_peut_se_connecter($nom_utilisateur, false);

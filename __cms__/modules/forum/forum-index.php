@@ -7,7 +7,7 @@ class ForumIndex {
 		} else if ($action == "nouvelle_page") {
 			// TODO : faut-il demander à avoir directement le nom du nouveau sujet ?
 			// TODO : quel est le propriétaire du nouveau sujet ?
-			$np = Stockage::nouvelle_page($chemin, "Nouveau sujet");
+			$np = Stockage::nouvelle_page($chemin, "Nouveau sujet", "forum-sujet");
 			Stockage::set_prop($np, "proprietaire", get_utilisateur());
 			return redirect($np);
 		} else {

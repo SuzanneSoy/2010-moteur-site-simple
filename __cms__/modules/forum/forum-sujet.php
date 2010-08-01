@@ -8,7 +8,7 @@ class ForumSujet {
 			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
 			$numéro_message = 1 + Stockage::get_prop($chemin, "dernier_numero");
 			Stockage::set_prop($chemin, "dernier_numero", $numéro_message);
-			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message);
+			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message, "forum-message");
 			Stockage::set_prop($np, "proprietaire", get_utilisateur());
 	
 			return redirect($chemin, "#message" . $numéro_message);
