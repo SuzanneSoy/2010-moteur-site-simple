@@ -98,7 +98,7 @@ class Chemin {
         $chemin = preg_replace("/\\/*$/", '', $chemin);
         
         $segments = explode('/', $chemin);
-        $segments = array_map("nettoyer_segment", $segments);
+        $segments = array_map(array("self", "nettoyer_segment"), $segments);
         
         return $segments;
     }
