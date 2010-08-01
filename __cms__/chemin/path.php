@@ -1,5 +1,6 @@
 <?php
 // http://www.liranuna.com/php-path-resolution-class-relative-paths-made-easy/
+// Licence : WTFPL
 /**
  * @class Path
  *
