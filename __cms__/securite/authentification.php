@@ -21,7 +21,8 @@ class Authentification {
 	}
 	
 	public function get_utilisateur() {
-		Session::get("utilisateur");
+		$u = Session::get("utilisateur");
+		return ($u === false) ? "Anonyme" : $u;
 	}
 	
 	public function nouvel_utilisateur($nom_utilisateur) {
