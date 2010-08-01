@@ -32,13 +32,20 @@ class SystèmeFichiers {
 		file_put_contents($chemin_fs, $données);
 	}
 	
-	public function liste_enfants($chemin_fs) {
+	public function liste_fichiers($chemin_fs) {
 		return scandir($chemin_fs);
-	
 	}
 	
 	public function déplacer($chemin_fs_de, $chemin_fs_vers) {
 		rename($chemin_fs_de, $chemin_fs_vers);
+	}
+	
+	public function déplacer_fichier_téléchargé($chemin_fs_de, $chemin_fs_vers) {
+		return move_uploaded_file($chemin_fs_de, $chemin_fs_vers);
+	}
+	
+	public function envoyer_fichier_directement($chemin_fs) {
+		return readfile($chemin_fs);
 	}
 }
 
