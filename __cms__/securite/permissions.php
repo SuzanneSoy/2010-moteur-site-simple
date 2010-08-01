@@ -7,7 +7,9 @@
 //  - autorisation : true ou false.
 
 class Permissions {
-	private $singleton = new Chemin("/admin/permissions/");
+	private function singleton() {
+		return new Chemin("/admin/utilisateurs/");
+	}
 	
 	// Vérifie si $utilisateur a la permission d'effectuer $action sur $chemin.
 	public function vérifier_permission($chemin, $action, $utilisateur = null) {
@@ -48,14 +50,14 @@ class Permissions {
 			$str_regles .= "\n"; // TODO vérifier que la séquence d'échappement est bien comprise.
 		}
 		
-		return Stockage::get_prop(self::$singleton, "regles", $str_regles);
+		return Stockage::get_prop(self::singleton(), "regles", $str_regles);
 	}
 	
 	public function get_regles() {
 		// Renvoie un tableau de quadruplets
 		// (chemin, action, groupe, autorisation).
 		// ou false si erreur.
-		$str_regles = Stockage::get_prop(self::$singleton, "regles");
+		$str_regles = Stockage::get_prop(self::singleton(), "regles");
 		// TODO erreur si la propriété n'existe pas.
 		$str_regles = preg_replace('/\r\n|\r/', "\n", $str_regles);
 		$regles = array();
@@ -65,12 +67,12 @@ class Permissions {
 			if (count($r) != 4) {
 				return false;
 			}
-			array_push(array(
+			$regles[] = array(
 				"chemin" => self::unescape_element_regle(new Chemin($r[0])),
 				"action" => self::unescape_element_regle($r[1]),
 				"groupe" => self::unescape_element_regle($r[2]),
 				"autorisation" => ($r[3] == "oui")
-			));
+			);
 		}
 		return $regles;
 	}

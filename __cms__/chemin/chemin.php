@@ -25,7 +25,7 @@ class Chemin {
 		if ((count($motif) != count($this->segments)) && (end($motif) != CHEMIN_JOKER_MULTI_SEGMENTS)) {
 			return false;
 		}
-		for ($i = 0; $i < count($motif); i++) {
+		for ($i = 0; $i < count($motif); $i++) {
 			if ($motif[$i] == CHEMIN_JOKER_MULTI_SEGMENTS) {
 				continue;
 			}
@@ -62,7 +62,7 @@ class Chemin {
     
     public function enfant($nom) {
 		$s = $this->segments;
-		$x = self::nettoyer_segment($nom)
+		$x = self::nettoyer_segment($nom);
 		if ($x != '') {
 			array_push($s, $x);
 		}
@@ -98,7 +98,7 @@ class Chemin {
         $chemin = preg_replace("/\\/*$/", '', $chemin);
         
         $segments = explode('/', $chemin);
-        $segments = array_map("nettoyer_segment", $segments)
+        $segments = array_map("nettoyer_segment", $segments);
         
         return $segments;
     }

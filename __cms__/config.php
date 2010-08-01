@@ -20,7 +20,7 @@ $config_chemin_base_stockage = Path::combine($config_chemin_base, "modele");
 
 // Chemin vers la partie visible du site.
 // En général, c'est le chemin vers le dossier contenant __cms__
-$config_chemin_base_public = Path::combine($config_chemin_base "/..");
+$config_chemin_base_public = Path::combine($config_chemin_base, "/..");
 
 // ======== FIN CONFIGURATION =======
 

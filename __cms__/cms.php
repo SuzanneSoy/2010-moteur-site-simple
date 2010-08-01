@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/config.php");
 require_once(dirname(__FILE__) . "/include.php");
 
 class CMS {
-    public static function cms($chemin_str) {
+    public function cms($chemin_str) {
 		// TODO : appeller Modules::action($chemin, $action, $paramètres);
 		
 		$chemin = new Chemin($chemin_str);

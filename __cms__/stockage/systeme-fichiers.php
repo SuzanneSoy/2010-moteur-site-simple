@@ -25,7 +25,7 @@ class SystèmeFichiers {
 	}
 	
 	public function lire($chemin_fs) {
-		file_get_contents($chermin_fs)
+		file_get_contents($chermin_fs);
 	}
 	
 	public function écrire($chemin_fs, $données) {

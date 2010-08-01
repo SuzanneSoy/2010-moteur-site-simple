@@ -36,12 +36,12 @@ class GaleriePhoto {
 		if ($vue == "normal") {
 			$ret = '';
 			if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
-				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />'
+				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= '<input type="filename" .../>';
 				$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "description"), "message");
 			} else {
-				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>'
+				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= affichage_texte_enrichi(get_prop($chemin, "message"));
 			}

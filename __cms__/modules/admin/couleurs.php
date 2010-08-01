@@ -32,7 +32,7 @@ class AdminCouleurs {
 			$ret .= "<input ... Couleur A />";
 			$ret .= "<input ... Couleur B />";
 			$ret .= "<input ... Couleur C />";
-			$ret .= ...
+			// $ret .= ...
 			return "Vue normale de la page.";
 		} else if ($vue == "css") {
 			// TODO : où mettre ce gen_css... ?

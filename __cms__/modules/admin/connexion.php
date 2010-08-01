@@ -29,10 +29,10 @@ class AdminConnexion {
 			return formulaire_connexion();
 		} else if ($vue == "connexion réussie") {
 			return "<h1>Connexion réussie</h1><p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p><p><a href=\"" . $config_url_base . "\">Retour à la page d'accueil</a>.</p>";
-		} else if ($vue == "connexion échouée") {
+		}else if ($vue == "connexion échouée") {
 			return formulaire_connexion("<p><strong>Mauvais mot de passe et/ou nom d'utilisateur. Ré-essayez ou retournez à la <a href=\"" . $config_url_base . "\">page d'accueil</a>.</strong></p>");
-		} else if ($vue == "déconnexion") {
-			return "<h1>Déconnexion réussie</h1><p>Vous êtes déconnecté. Vous pouvez à présent retourner à la <a href=\"" . $config_url_base . "\">page d'accueil</a>.</p>"
+		}else if ($vue == "déconnexion") {
+		  return '<h1>Déconnexion réussie</h1><p>Vous êtes déconnecté. Vous pouvez à présent retourner à la <a href="' . $config_url_base . "\">page d'accueil</a>.</p>";
 		}
 	}
 	

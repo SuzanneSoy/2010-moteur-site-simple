@@ -20,10 +20,10 @@ class Stockage {
 	// Imitation de l'url rewriting lorsque ce n'est pas disponible sur
 	// le serveur.
 	public function activer_réécriture($chemin_vers) {
-		$php_str = "<?php\n"
-		$php_str .= "require_once(" . Path::combine($config_chemin_base, "cms.php") . ");\n"
-		$php_str .= "CMS::cms(" . $chemin_vers->get() . ");\n"
-		$php_str .= "?>\n"
+		$php_str = "<?php\n=";
+		$php_str .= "require_once(" . Path::combine($config_chemin_base, "cms.php") . ");\n";
+		$php_str .= "CMS::cms(" . $chemin_vers->get() . ");\n";
+		$php_str .= "?>\n";
 		return SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
 	}
 	
@@ -33,7 +33,7 @@ class Stockage {
 	
 	public function set_prop($chemin, $prop, $valeur) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::écrire(Path::combine($chemin->get_fs_stockage(), $prop), $valeur)
+		  return SystemeFichiers::écrire(Path::combine($chemin->get_fs_stockage(), $prop), $valeur);
 		} else {
 			return false;
 		}
@@ -94,13 +94,13 @@ class Stockage {
 	public function liste_enfants($chemin) {
 		// TODO : SECURITE : vérifier la permission. Mais pour quelle action ?
 		// get_prop ? ou une nouvelle (?) : liste_enfants ?
-        $enfants = Array();
-        foreach (SystemeFichiers::liste_fichiers() as $k => $v) {
-            if (strpos($v, "__prop__") !== 0 && is_dir($chemin->enfant($v)->get_fs_stockage()) && $v != "." && $v != "..") {
-                $enfants[] = $chemin->enfant($v);
-            }
-        }
-        return $enfants;
+		$enfants = Array();
+		foreach (SystemeFichiers::liste_fichiers() as $k => $v) {
+			if (strpos($v, "__prop__") !== 0 && is_dir($chemin->enfant($v)->get_fs_stockage()) && $v != "." && $v != "..") {
+				$enfants[] = $chemin->enfant($v);
+			}
+		}
+		return $enfants;
 	}
 	
 	public function renomer($chemin, $nouveau_nom) {

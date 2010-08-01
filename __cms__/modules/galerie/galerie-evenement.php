@@ -41,15 +41,15 @@ class GalerieÉvènement {
 			}
 			if (vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
-				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>'
-				$ret .= '<input type="submit" value="Nouvelle page"/>'
-				$ret .= '</form>'
+				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
+				$ret .= '<input type="submit" value="Nouvelle page"/>';
+				$ret .= '</form>';
 			}
 			if (vérifier_permission($chemin, "supprimer", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
-				$ret .= '<input type="hidden" name="action" value="supprimer"/>'
-				$ret .= '<input type="submit" value="Supprimer"/>'
-				$ret .= '</form>'
+				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
+				$ret .= '<input type="submit" value="Supprimer"/>';
+				$ret .= '</form>';
 			}
 	        $ret .= '<ul class="galerie evenement">';
 	        foreach (Stockage::liste_enfants($chemin) as $k) {
