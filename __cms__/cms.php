@@ -15,4 +15,5 @@ class CMS {
 		Modules::action($chemin, $action, $paramètres);
     }
 }
+
 ?>

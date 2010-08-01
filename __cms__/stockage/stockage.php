@@ -24,7 +24,11 @@ class Stockage {
 		$php_str .= "require_once(" . Path::combine($config_chemin_base, "cms.php") . ");\n"
 		$php_str .= "CMS::cms(" . $chemin_vers->get() . ");\n"
 		$php_str .= "?>\n"
-		SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
+		return SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
+	}
+	
+	public function désactiver_réécriture($chemin_vers) {
+		return SystemeFichiers::supprimer($chemin_vers->get_fs_public());
 	}
 	
 	public function set_prop($chemin, $prop, $valeur) {
@@ -80,6 +84,7 @@ class Stockage {
 	// code.
 	public function supprimer($chemin, $récursif) {
 		if (vérifier_permission($chemin, "supprimer")) {
+			// TODO : désactiver_réécriture($chemin) récursivement
 			return SystèmeFichier::supprimer($chemin->get_fs_stockage(), $récursif);
 		} else {
 			return false;
@@ -104,6 +109,8 @@ class Stockage {
 		}
 		
 		if (vérifier_permission($chemin->parent(), "nouvelle_page") && vérifier_permission($chemin, "supprimer")) {
+			// TODO : désactiver_réécriture($chemin) récursivement
+			// TODO : puis activer_réécriture($chemin) récursivement
 			return SystemeFichiers::déplacer($chemin->get_fs_stockage(), $chemin->renomer($nouveau_nom)->get_fs_stockage());
 		} else {
 			return false;
