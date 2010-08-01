@@ -9,13 +9,22 @@ class Stockage {
 	public function nouvelle_page($chemin, $nom) {
 		if (vérifier_permission($chemin, "nouvelle_page")) {
 			$enfant = $chemin->enfant($nom);
-			SystemeFichiers::créer_dossier($config_chemin_base_stockage . '/' . $enfant->get());
-			// Imitation de l'url rewriting
-			SystemeFichiers::écrire($config_chemin_base_public . '/' . $enfant->get(), "<?php require_once(" . $config_chemin_base_php . "/cms.php);"); // TODO : séparer dans une autre fonction (rewriting.php ?)
+			SystemeFichiers::créer_dossier($enfant->get_fs_stockage());
+			self::activer_réécriture($enfant);
 			return $enfant;
 		} else {
 			return false;
 		}
+	}
+	
+	// Imitation de l'url rewriting lorsque ce n'est pas disponible sur
+	// le serveur.
+	public function activer_réécriture($chemin_vers) {
+		$php_str = "<?php\n"
+		$php_str .= "require_once(" . Path::combine($config_chemin_base, "cms.php") . ");\n"
+		$php_str .= "CMS::cms(" . $chemin_vers->get() . ");\n"
+		$php_str .= "?>\n"
+		SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
 	}
 	
 	public function set_prop($chemin, $prop, $valeur) {
