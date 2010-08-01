@@ -65,4 +65,6 @@ class GaleriePériode {
 	}
 }
 
+enregister_module("GaleriePériode", "galerie-periode");
+
 ?>

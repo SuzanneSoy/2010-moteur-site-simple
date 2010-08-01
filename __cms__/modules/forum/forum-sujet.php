@@ -65,4 +65,6 @@ class ForumSujet {
 	}
 }
 
+enregister_module("ForumSujet", "forum-sujet");
+
 ?>

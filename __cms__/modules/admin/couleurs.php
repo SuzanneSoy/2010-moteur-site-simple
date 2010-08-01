@@ -45,4 +45,6 @@ class AdminCouleurs {
 	}
 }
 
+enregister_module("AdminCouleurs", "admin-couleurs");
+
 ?>

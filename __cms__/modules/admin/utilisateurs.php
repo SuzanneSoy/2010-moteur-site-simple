@@ -87,4 +87,6 @@ class AdminUtilisateurs {
 	}
 }
 
+enregister_module("AdminUtilisateurs", "admin-utilisateurs");
+
 ?>

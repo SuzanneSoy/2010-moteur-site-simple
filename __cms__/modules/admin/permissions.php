@@ -34,4 +34,6 @@ class AdminPermissions {
 	}
 }
 
+enregister_module("AdminPermissions", "admin-permissions");
+
 ?>

@@ -42,4 +42,6 @@ class AdminConnexion {
 	}
 }
 
+enregister_module("AdminConnexion", "admin-connexion");
+
 ?>

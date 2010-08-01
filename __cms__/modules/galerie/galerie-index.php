@@ -65,4 +65,6 @@ class GalerieIndex {
 	}
 }
 
+enregister_module("GalerieIndex", "galerie-index");
+
 ?>

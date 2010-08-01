@@ -56,4 +56,6 @@ class GaleriePhoto {
 	}
 }
 
+enregister_module("GaleriePhoto", "galerie-photo");
+
 ?>

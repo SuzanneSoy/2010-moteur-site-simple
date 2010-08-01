@@ -36,4 +36,6 @@ class ForumIndex {
 	}
 }
 
+enregister_module("ForumIndex", "forum-index");
+
 ?>

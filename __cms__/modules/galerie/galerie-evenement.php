@@ -65,4 +65,6 @@ class GalerieÉvènement {
 	}
 }
 
+enregister_module("GalerieÉvènement", "galerie-evenement");
+
 ?>
