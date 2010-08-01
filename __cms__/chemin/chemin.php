@@ -47,7 +47,17 @@ class Chemin {
     }
     
     public function get_url() {
-		return $config_url_base . '/' . $this->get();
+		// $config_url_base DOIT se terminer par '/', tel que spécifié
+		// dans config.php.
+		return $config_url_base . $this->get();
+	}
+	
+	public function get_fs_stockage() {
+		return Path::combine($config_chemin_base_stockage, $this->get());
+	}
+	
+	public function get_fs_public() {
+		return Path::combine($config_chemin_base_public, $this->get());
 	}
     
     public function enfant($nom) {

@@ -20,7 +20,7 @@ class Stockage {
 	
 	public function set_prop($chemin, $prop, $valeur) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::écrire($config_chemin_base_stockage . '/' . $chemin . '/' . $prop, $valeur)
+			return SystemeFichiers::écrire(Path::combine($chemin->get_fs_stockage(), $prop), $valeur)
 		} else {
 			return false;
 		}
@@ -29,7 +29,7 @@ class Stockage {
 	// Stocke le contenu de $fichier dans $prop, et supprime $fichier.
 	public function set_prop_fichier($chemin, $prop, $fichier) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::déplacer($fichier, $config_chemin_base_stockage . '/' . $chemin . '/' . $prop)
+			return SystemeFichiers::déplacer($fichier, Path::combine($chemin->get_fs_stockage(), $prop));
 		} else {
 			return false;
 		}
@@ -38,7 +38,7 @@ class Stockage {
 	// Comme pour set_prop_fichier, mais pour un fichier reçu (uploadé).
 	public function set_prop_fichier_reçu($chemin, $prop, $fichier) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, $config_chemin_base_stockage . '/' . $chemin . '/' . $prop)
+			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, Path::combine($chemin->get_fs_stockage(), $prop));
 		} else {
 			return false;
 		}
@@ -49,7 +49,7 @@ class Stockage {
 		// dépendances get_regles() et get_groupe() de faire des get_prop
 		// même si l'utilisateur courant n'en a pas le droit.
 		if ($forcer_permissions || vérifier_permission($chemin, "get_prop")) {
-			return SystemeFichiers::lire($config_chemin_base_stockage . '/' . $chemin . '/' . $prop);
+			return SystemeFichiers::lire(Path::combine($chemin->get_fs_stockage(), $prop));
 		} else {
 			return "[Accès interdit]";
 		}
@@ -59,7 +59,7 @@ class Stockage {
 		// Envoie tout le conctenu de $prop sur le réseau.
 		// Équivalent à appeller sendfile sur le fichier qui contient $prop.
 		if (vérifier_permission($chemin, "get_prop")) {
-			return SystemeFichiers::envoyer_fichier_directement($config_chemin_base_stockage . '/' . $chemin . '/' . $prop);
+			return SystemeFichiers::envoyer_fichier_directement(Path::combine($chemin->get_fs_stockage(), $prop));
 		} else {
 			return false;
 		}
@@ -71,7 +71,7 @@ class Stockage {
 	// code.
 	public function supprimer($chemin, $récursif) {
 		if (vérifier_permission($chemin, "supprimer")) {
-			return SystèmeFichier::supprimer($config_chemin_base_stockage . '/' . $chemin, $récursif);
+			return SystèmeFichier::supprimer($chemin->get_fs_stockage(), $récursif);
 		} else {
 			return false;
 		}
@@ -82,7 +82,7 @@ class Stockage {
 		// get_prop ? ou une nouvelle (?) : liste_enfants ?
         $enfants = Array();
         foreach (SystemeFichiers::liste_fichiers() as $k => $v) {
-            if (strpos($v, "__prop__") !== 0 && is_dir($config_chemin_base_stockage . '/' . $chemin->enfant($v))) && $v != "." && $v != "..") {
+            if (strpos($v, "__prop__") !== 0 && is_dir($chemin->enfant($v)->get_fs_stockage()) && $v != "." && $v != "..") {
                 $enfants[] = $chemin->enfant($v);
             }
         }
@@ -95,7 +95,7 @@ class Stockage {
 		}
 		
 		if (vérifier_permission($chemin->parent(), "nouvelle_page") && vérifier_permission($chemin, "supprimer")) {
-			return SystemeFichiers::déplacer($config_chemin_base_stockage . '/' . $chemin, $config_chemin_base_stockage . '/' . $chemin->renomer($nouveau_nom));
+			return SystemeFichiers::déplacer($chemin->get_fs_stockage(), $chemin->renomer($nouveau_nom)->get_fs_stockage());
 		} else {
 			return false;
 		}
