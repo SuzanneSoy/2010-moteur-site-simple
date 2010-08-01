@@ -20,10 +20,11 @@ class Stockage {
 	// Imitation de l'url rewriting lorsque ce n'est pas disponible sur
 	// le serveur.
 	public function activer_réécriture($chemin_vers) {
-		$php_str = "<?php\n=";
-		$php_str .= "require_once(" . Path::combine($config_chemin_base, "cms.php") . ");\n";
-		$php_str .= "CMS::cms(" . $chemin_vers->get() . ");\n";
-		$php_str .= "?>\n";
+		// TODO : échapper les " dans le require_once et l'appel à cms.
+		$php_str = "<?php\n\n";
+		$php_str .= "require_once(\"" . Path::combine($config_chemin_base, "cms.php") . "\");\n\n";
+		$php_str .= "CMS::page(\"" . $chemin_vers->get() . "\");\n\n";
+		$php_str .= "?>";
 		return SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
 	}
 	
