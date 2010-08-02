@@ -45,6 +45,6 @@ class AdminCouleurs {
 	}
 }
 
-Modules::enregister_module("AdminCouleurs", "admin-couleurs");
+Modules::enregister_module("AdminCouleurs", "admin-couleurs", "vue", "Couleur_A Couleur_B Couleur_C");
 
 ?>

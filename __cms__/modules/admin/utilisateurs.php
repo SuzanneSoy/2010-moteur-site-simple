@@ -87,6 +87,6 @@ class AdminUtilisateurs {
 	}
 }
 
-Modules::enregister_module("AdminUtilisateurs", "admin-utilisateurs");
+Modules::enregister_module("AdminUtilisateurs", "admin-utilisateurs", "vue", "nouveau_nom nom mot_de_passe groupe peut_se_connecter");
 
 ?>

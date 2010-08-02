@@ -34,6 +34,6 @@ class AdminPermissions {
 	}
 }
 
-Modules::enregister_module("AdminPermissions", "admin-permissions");
+Modules::enregister_module("AdminPermissions", "admin-permissions", "vue", "regles");
 
 ?>

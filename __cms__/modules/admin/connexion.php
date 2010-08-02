@@ -42,6 +42,6 @@ class AdminConnexion {
 	}
 }
 
-Modules::enregister_module("AdminConnexion", "admin-connexion");
+Modules::enregister_module("AdminConnexion", "admin-connexion", "vue");
 
 ?>
