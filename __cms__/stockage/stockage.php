@@ -33,9 +33,13 @@ class Stockage {
 		return SystemeFichiers::supprimer($chemin_vers->get_fs_public());
 	}
 	
+	private function fichier_prop($chemin, $prop) {
+		return Path::combine($chemin->get_fs_stockage(), '__prop__' . $prop);
+	}
+	
 	public function set_prop($chemin, $prop, $valeur) {
 		if (vérifier_permission($chemin, "set_prop")) {
-		  return SystemeFichiers::écrire(Path::combine($chemin->get_fs_stockage(), $prop), $valeur);
+			return SystemeFichiers::écrire(self::fichier_prop($chemin, $prop), $valeur);
 		} else {
 			return false;
 		}
@@ -44,7 +48,7 @@ class Stockage {
 	// Stocke le contenu de $fichier dans $prop, et supprime $fichier.
 	public function set_prop_fichier($chemin, $prop, $fichier) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::déplacer($fichier, Path::combine($chemin->get_fs_stockage(), $prop));
+			return SystemeFichiers::déplacer($fichier, self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
 		}
@@ -53,7 +57,7 @@ class Stockage {
 	// Comme pour set_prop_fichier, mais pour un fichier reçu (uploadé).
 	public function set_prop_fichier_reçu($chemin, $prop, $fichier) {
 		if (vérifier_permission($chemin, "set_prop")) {
-			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, Path::combine($chemin->get_fs_stockage(), $prop));
+			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
 		}
@@ -64,7 +68,7 @@ class Stockage {
 		// dépendances get_regles() et get_groupe() de faire des get_prop
 		// même si l'utilisateur courant n'en a pas le droit.
 		if ($forcer_permissions || Permissions::vérifier_permission($chemin, "get_prop")) {
-			return SystèmeFichiers::lire(Path::combine($chemin->get_fs_stockage(), $prop));
+			return SystèmeFichiers::lire(self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
 		}
@@ -74,7 +78,7 @@ class Stockage {
 		// Envoie tout le conctenu de $prop sur le réseau.
 		// Équivalent à appeller sendfile sur le fichier qui contient $prop.
 		if (vérifier_permission($chemin, "get_prop")) {
-			return SystemeFichiers::envoyer_fichier_directement(Path::combine($chemin->get_fs_stockage(), $prop));
+			return SystemeFichiers::envoyer_fichier_directement(self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
 		}
