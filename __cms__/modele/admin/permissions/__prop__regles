@@ -1,0 +1,8 @@
+/**|*|Administrateurs|oui
+/admin/**|*|Administrateurs|oui
+/admin/**|*|*|non
+/forum/|nouvelle_page|Utilisateurs|oui
+/forum/*|nouvelle_page|Utilisateurs|oui
+/galerie/**|*|Utilisateurs|oui
+/galerie/**|*|Anonymes|non
+/**|get_prop|Anonymes|oui
