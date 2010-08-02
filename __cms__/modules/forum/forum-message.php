@@ -36,6 +36,6 @@ function vue($chemin, $vue = "normal") {
 	}
 }
 
-Modules::enregister_module("ForumMessage", "forum-message");
+Modules::enregister_module("ForumMessage", "forum-message", "vue", "message");
 
 ?>

@@ -37,7 +37,7 @@ class Permissions {
 	}
 	
 	public static function chemin_correspond($chemin, $motif) {
-		$chemin->correspond($motif);
+		return $chemin->correspond($motif);
 	}
 	
 	public static function action_correspond($action, $motif) {

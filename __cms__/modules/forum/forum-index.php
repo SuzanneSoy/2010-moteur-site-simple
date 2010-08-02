@@ -36,6 +36,6 @@ class ForumIndex {
 	}
 }
 
-Modules::enregister_module("ForumIndex", "forum-index");
+Modules::enregister_module("ForumIndex", "forum-index", "vue");
 
 ?>

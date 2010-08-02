@@ -65,6 +65,6 @@ class GalerieÉvènement {
 	}
 }
 
-Modules::enregister_module("GalerieÉvènement", "galerie-evenement");
+Modules::enregister_module("GalerieÉvènement", "galerie-evenement", "vue", "titre description");
 
 ?>

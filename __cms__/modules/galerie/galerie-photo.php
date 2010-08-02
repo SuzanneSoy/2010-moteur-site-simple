@@ -56,6 +56,6 @@ class GaleriePhoto {
 	}
 }
 
-Modules::enregister_module("GaleriePhoto", "galerie-photo");
+Modules::enregister_module("GaleriePhoto", "galerie-photo", "vue", "description", "fichier_image");
 
 ?>

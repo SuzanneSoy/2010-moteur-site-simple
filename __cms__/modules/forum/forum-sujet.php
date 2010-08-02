@@ -65,6 +65,6 @@ class ForumSujet {
 	}
 }
 
-Modules::enregister_module("ForumSujet", "forum-sujet");
+Modules::enregister_module("ForumSujet", "forum-sujet", "vue", "titre");
 
 ?>

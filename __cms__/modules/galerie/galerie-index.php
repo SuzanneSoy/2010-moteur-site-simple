@@ -32,7 +32,7 @@ class GalerieIndex {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
-			if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "description"), "message");
 			} else {
@@ -65,6 +65,6 @@ class GalerieIndex {
 	}
 }
 
-Modules::enregister_module("GalerieIndex", "galerie-index");
+Modules::enregister_module("GalerieIndex", "galerie-index", "vue", "titre description");
 
 ?>

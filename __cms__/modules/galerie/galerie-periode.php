@@ -65,6 +65,6 @@ class GaleriePériode {
 	}
 }
 
-Modules::enregister_module("GaleriePériode", "galerie-periode");
+Modules::enregister_module("GaleriePériode", "galerie-periode", "vue", "titre description");
 
 ?>
