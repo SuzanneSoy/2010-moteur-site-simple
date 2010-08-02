@@ -8,7 +8,7 @@
 
 class Permissions {
 	private function singleton() {
-		return new Chemin("/admin/utilisateurs/");
+		return new Chemin("/admin/permissions/");
 	}
 	
 	// Vérifie si $utilisateur a la permission d'effectuer $action sur $chemin.
