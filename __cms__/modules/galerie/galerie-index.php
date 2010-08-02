@@ -39,13 +39,13 @@ class GalerieIndex {
 				$ret .= '<h1>' . get_prop($chemin, "titre") . '</h1>';
 				$ret .= '<p class="galerie index description affichage">' . get_prop($chemin, "description") . '</p>';
 			}
-			if (vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle page"/>';
 				$ret .= '</form>';
 			}
-			if (vérifier_permission($chemin, "supprimer", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "supprimer", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
 				$ret .= '<input type="submit" value="Supprimer"/>';

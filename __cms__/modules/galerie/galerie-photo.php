@@ -35,7 +35,7 @@ class GaleriePhoto {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 			$ret = '';
-			if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= '<input type="filename" .../>';

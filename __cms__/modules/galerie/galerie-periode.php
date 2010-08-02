@@ -32,20 +32,20 @@ class GaleriePériode {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
-			if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "description"), "message");
 			} else {
 				$ret .= '<h1>' . get_prop($chemin, "titre") . '</h1>';
 				$ret .= '<p class="galerie periode description affichage">' . get_prop($chemin, "description") . '</p>';
 			}
-			if (vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle page"/>';
 				$ret .= '</form>';
 			}
-			if (vérifier_permission($chemin, "supprimer", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "supprimer", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
 				$ret .= '<input type="submit" value="Supprimer"/>';

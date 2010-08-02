@@ -23,7 +23,7 @@ class ForumIndex {
 		if ($vue == "normal") {
 	        $ret = '';
 			$ret .= "<h1>Forum</h1>";
-			if (vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
 				// afficher le lien "Nouveau sujet"
 			}
 	        $ret .= '<ul class="forum index">';

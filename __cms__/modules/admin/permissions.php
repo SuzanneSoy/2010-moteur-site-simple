@@ -24,7 +24,7 @@ class AdminPermissions {
 			$ret = "";
 			$ret .= "<h1>Règles de sécurité</h1>";
 			$ret .= "<p>La première règle correspondant à une action de l'utilisateur est appliquée. Bla-bla blabla sur le fonctionnement.</p>";
-			if (vérifier_permission($singleton, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($singleton, "set_prop", get_utilisateur())) {
 				$ret .= "<textarea ...>" . Stockage::get_prop($singleton, "regles") . "</textarea>"; // TODO : html escape chars etc.
 			} else {
 				$ret .= "<pre><code>" . Stockage::get_prop($singleton, "regles") . "</code></pre>"; // TODO : html escape chars etc.

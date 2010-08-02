@@ -12,7 +12,7 @@ class Permissions {
 	}
 	
 	// Vérifie si $utilisateur a la permission d'effectuer $action sur $chemin.
-	public function vérifier_permission($chemin, $action, $utilisateur = null) {
+	public function Permissions::vérifier_permission($chemin, $action, $utilisateur = null) {
 		if ($utilisateur === null) {
 			$utilisateur = Authentification::get_utilisateur();
 		}

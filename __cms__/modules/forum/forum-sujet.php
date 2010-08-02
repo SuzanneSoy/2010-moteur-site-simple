@@ -33,7 +33,7 @@ class ForumSujet {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
-			if (vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="text" name="titre" class="forum sujet titre edition" value="' . Stockage::get_prop($chemin, "titre") . '"/>';
 				$ret .= '<input type="submit" value="renomer" />';
@@ -41,7 +41,7 @@ class ForumSujet {
 			} else {
 				$ret .= '<h1 class="forum sujet titre affichage">' . get_prop($chemin, "titre") . '</h1>';
 			}
-			if (vérifier_permission($chemin, "supprimer", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "supprimer", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
 				$ret .= '<input type="submit" value="Supprimer"/>';
@@ -52,7 +52,7 @@ class ForumSujet {
 	            $ret .= '<li>' . Modules::vue($k) . '</li>';
 	        }
 	        $ret .= '</ul>';
-			if (vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle page"/>';

@@ -1,13 +1,13 @@
 <?php
 
-// Chaque fonction appelle vérifier_permission($chemin, $action, $utilisateur).
+// Chaque fonction appelle Permissions::vérifier_permission($chemin, $action, $utilisateur).
 
 // Chaque fonction ajoute un chemin de base (pour le stockage) avant
 // $chemin, puis appelle une fonction de systeme-fichiers.php
 
 class Stockage {
 	public function nouvelle_page($chemin, $nom, $type) {
-		if (vérifier_permission($chemin, "nouvelle_page")) {
+		if (Permissions::vérifier_permission($chemin, "nouvelle_page")) {
 			$enfant = $chemin->enfant($nom);
 			SystemeFichiers::créer_dossier($enfant->get_fs_stockage());
 			self::set_prop($enfant, "type", $type);
@@ -38,7 +38,7 @@ class Stockage {
 	}
 	
 	public function set_prop($chemin, $prop, $valeur) {
-		if (vérifier_permission($chemin, "set_prop")) {
+		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::écrire(self::fichier_prop($chemin, $prop), $valeur);
 		} else {
 			return false;
@@ -47,7 +47,7 @@ class Stockage {
 	
 	// Stocke le contenu de $fichier dans $prop, et supprime $fichier.
 	public function set_prop_fichier($chemin, $prop, $fichier) {
-		if (vérifier_permission($chemin, "set_prop")) {
+		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::déplacer($fichier, self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
@@ -56,7 +56,7 @@ class Stockage {
 	
 	// Comme pour set_prop_fichier, mais pour un fichier reçu (uploadé).
 	public function set_prop_fichier_reçu($chemin, $prop, $fichier) {
-		if (vérifier_permission($chemin, "set_prop")) {
+		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
@@ -64,7 +64,7 @@ class Stockage {
 	}
 	
 	public function get_prop($chemin, $prop, $forcer_permissions = false) {
-		// $forcer_permissions permet à vérifier_permission() et ses
+		// $forcer_permissions permet à Permissions::vérifier_permission() et ses
 		// dépendances get_regles() et get_groupe() de faire des get_prop
 		// même si l'utilisateur courant n'en a pas le droit.
 		if ($forcer_permissions || Permissions::vérifier_permission($chemin, "get_prop")) {
@@ -77,7 +77,7 @@ class Stockage {
 	public function get_prop_sendfile($chemin, $prop) {
 		// Envoie tout le conctenu de $prop sur le réseau.
 		// Équivalent à appeller sendfile sur le fichier qui contient $prop.
-		if (vérifier_permission($chemin, "get_prop")) {
+		if (Permissions::vérifier_permission($chemin, "get_prop")) {
 			return SystemeFichiers::envoyer_fichier_directement(self::fichier_prop($chemin, $prop));
 		} else {
 			return false;
@@ -89,7 +89,7 @@ class Stockage {
 	// récursive sur un niveau seulement, ce qui n'est pas possible avec ce
 	// code.
 	public function supprimer($chemin, $récursif) {
-		if (vérifier_permission($chemin, "supprimer")) {
+		if (Permissions::vérifier_permission($chemin, "supprimer")) {
 			// TODO : désactiver_réécriture($chemin) récursivement
 			return SystèmeFichier::supprimer($chemin->get_fs_stockage(), $récursif);
 		} else {
@@ -114,7 +114,7 @@ class Stockage {
 			return true;
 		}
 		
-		if (vérifier_permission($chemin->parent(), "nouvelle_page") && vérifier_permission($chemin, "supprimer")) {
+		if (Permissions::vérifier_permission($chemin->parent(), "nouvelle_page") && vérifier_permission($chemin, "supprimer")) {
 			// TODO : désactiver_réécriture($chemin) récursivement
 			// TODO : puis activer_réécriture($chemin) récursivement
 			return SystemeFichiers::déplacer($chemin->get_fs_stockage(), $chemin->renomer($nouveau_nom)->get_fs_stockage());
