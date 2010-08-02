@@ -2,6 +2,9 @@
 
 require_once(dirname(__FILE__) . "/path.php");
 
+define('CHEMIN_JOKER_MULTI_SEGMENTS', '**');
+define('CHEMIN_JOKER_SEGMENT', '*');
+
 class Chemin {
 	// Si $chemin est un tableau, chaque segment doit vérifier les invariants de nettoyer_segment.
     public function __construct($chemin) {
@@ -13,7 +16,8 @@ class Chemin {
     }
     
 	public function correspond($motif) {
-		// motif : liste de segments, pouvant être un chaîne ou un jocker
+		$motif = $motif->segments;
+		// motif : liste de segments pouvant être un chaîne ou un jocker
 		// correspondant à "n'importe quelle chaîne pour ce segment". Le
 		// dernier segment peut être le joker "n'importe quelle suite de
 		// segments (le motif doit donc correspondre à un préfixe du chemin

@@ -26,13 +26,29 @@ class Permissions {
 		// sinon on renvoie false
 		
 		foreach (self::get_regles() as $r) {
-			if ($chemin->correspond($r["chemin"])
-			&&  self::action_correspond($action, $r["action"])
-			&&  $groupe == $r["groupe"]) {
+			if (    self::chemin_correspond($chemin, $r["chemin"])
+			    &&  self::action_correspond($action, $r["action"])
+			    &&  self::groupe_correspond($groupe, $r["groupe"])) {
 				return $r["autorisation"];
 			}
 		}
 		
+		return false;
+	}
+	
+	public static function chemin_correspond($chemin, $motif) {
+		$chemin->correspond($motif);
+	}
+	
+	public static function action_correspond($action, $motif) {
+		if ($motif == '*') return true;
+		if ($action == $motif) return true;
+		return false;
+	}
+	
+	public static function groupe_correspond($groupe, $motif) {
+		if ($motif == '*') return true;
+		if ($groupe == $motif) return true;
 		return false;
 	}
 	
@@ -70,7 +86,7 @@ class Permissions {
 				return false;
 			}
 			$regles[] = array(
-				"chemin" => self::unescape_element_regle(new Chemin($r[0])),
+				"chemin" => new Chemin(self::unescape_element_regle($r[0])),
 				"action" => self::unescape_element_regle($r[1]),
 				"groupe" => self::unescape_element_regle($r[2]),
 				"autorisation" => ($r[3] == "oui")

@@ -14,9 +14,10 @@ class Modules {
 	}
 	
 	public static function get_liste_paramètres($chemin) {
+		$module = self::get_module($chemin);
+		if ($module === false) return false;
 		// TODO
-		call_user_func(array(self::get_module($chemin), "get_liste_paramètres"));
-		return ;
+		return call_user_func(array($module, "get_liste_paramètres"));;
 	}
 }
 
