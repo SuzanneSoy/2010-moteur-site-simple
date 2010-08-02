@@ -6,8 +6,9 @@ class Authentification {
 	}
 	
 	public function connexion($nom_utilisateur, $mdp) {
-		$mdp_réel = Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "mot_de_passe");
-		$peut_se_connecter = Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter");
+		$ch_utilisateur = self::singleton()->enfant($nom_utilisateur);
+		$mdp_réel = self::get_mot_de_passe($nom_utilisateur, true); // true => forcer permissions.
+		$peut_se_connecter = self::get_peut_se_connecter($nom_utilisateur, true);  // true => forcer permissions.
 		if ($mdp == $mdp_réel && $peut_se_connecter === "true") { // Triple égale. Pas d'entourloupe avec des casts miteux !
 			// TODO : Vérifier si c'est sécurisé => stocké _uniquement_ sur le serveur.
 			Session::put("utilisateur", $nom_utilisateur);
@@ -57,8 +58,8 @@ class Authentification {
 		Stockage::set_pop(self::singleton()->enfant($nom_utilisateur), "groupe", $groupe);
 	}
 	
-	public function get_groupe($nom_utilisateur) {
-		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "groupe");
+	public function get_groupe($nom_utilisateur, $forcer_permissions = false) {
+		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "groupe", $forcer_permissions);
 	}
 	
 	public function set_mot_de_passe($nom_utilisateur, $mot_de_passe) {
@@ -69,16 +70,17 @@ class Authentification {
 		self::set_mot_de_passe($utilisateur, substr(md5($utilisateur . rand() . microtime()) , 0, 8));
 	}
 	
-	public function get_mot_de_passe($nom_utilisateur) {
-		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "mot_de_passe");
+	public function get_mot_de_passe($nom_utilisateur, $forcer_permissions = false) {
+		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "mot_de_passe", $forcer_permissions);
 	}
 	
 	public function set_peut_se_connecter($nom_utilisateur, $valeur) {
 		Stockage::set_pop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter", $valeur ? "true" : "false");
 	}
 	
-	public function get_peut_se_connecter($nom_utilisateur) {
-		return (Stockage::get_pop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter") == "true") ? true : false;
+	public function get_peut_se_connecter($nom_utilisateur, $forcer_permissions = false) {
+		$peut_se_connecter = Stockage::get_pop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter", $forcer_permissions);
+		return ($peut_se_connecter == "true") ? true : false;
 	}
 }
 

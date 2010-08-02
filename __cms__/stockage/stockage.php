@@ -63,10 +63,10 @@ class Stockage {
 		// $forcer_permissions permet à vérifier_permission() et ses
 		// dépendances get_regles() et get_groupe() de faire des get_prop
 		// même si l'utilisateur courant n'en a pas le droit.
-		if ($forcer_permissions || vérifier_permission($chemin, "get_prop")) {
-			return SystemeFichiers::lire(Path::combine($chemin->get_fs_stockage(), $prop));
+		if ($forcer_permissions || Permissions::vérifier_permission($chemin, "get_prop")) {
+			return SystèmeFichiers::lire(Path::combine($chemin->get_fs_stockage(), $prop));
 		} else {
-			return "[Accès interdit]";
+			return false;
 		}
 	}
 	

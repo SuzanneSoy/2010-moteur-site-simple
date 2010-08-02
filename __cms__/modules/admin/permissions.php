@@ -6,11 +6,11 @@ class AdminPermissions {
 		if ($action == "anuler") {
 			return redirect($chemin);
 		} else {
-			if (is_set($paramètres["regles"])) {
+			if (isset($paramètres["regles"])) {
 				Stockage::set_prop($singleton, "regles", $paramètres["regles"]);
 			}
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -34,6 +34,6 @@ class AdminPermissions {
 	}
 }
 
-enregister_module("AdminPermissions", "admin-permissions");
+Modules::enregister_module("AdminPermissions", "admin-permissions");
 
 ?>

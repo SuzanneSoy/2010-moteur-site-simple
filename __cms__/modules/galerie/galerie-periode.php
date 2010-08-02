@@ -12,16 +12,16 @@ class GaleriePériode {
 			Stockage::supprimer($chemin);
 			return redirect($chemin->parent());
 		} else {
-			if (is_set($paramètres["titre"])) {
+			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : peut-être redirect($chemin) ?
 			}
-			if (is_set($paramètres["description"])) {
+			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
 			}
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -59,12 +59,12 @@ class GaleriePériode {
 			return $ret;
 		} else if ($vue == "miniature") {
 			$enfants = Stockage::liste_enfants($chemin);
-			if (is_set($enfants[0])) return Modules::vue($enfants[0], 'miniature');
+			if (isset($enfants[0])) return Modules::vue($enfants[0], 'miniature');
 			else return "Aucune<br/>photo";
 		}
 	}
 }
 
-enregister_module("GaleriePériode", "galerie-periode");
+Modules::enregister_module("GaleriePériode", "galerie-periode");
 
 ?>

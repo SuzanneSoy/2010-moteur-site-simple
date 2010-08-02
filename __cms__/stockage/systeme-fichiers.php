@@ -25,15 +25,15 @@ class SystèmeFichiers {
 	}
 	
 	public function lire($chemin_fs) {
-		file_get_contents($chermin_fs);
+		return file_exists($chemin_fs) && file_get_contents($chemin_fs);
 	}
 	
 	public function écrire($chemin_fs, $données) {
-		file_put_contents($chemin_fs, $données);
+		return is_dir(dirname($chemin_fs)) && file_put_contents($chemin_fs, $données);
 	}
 	
 	public function liste_fichiers($chemin_fs) {
-		return scandir($chemin_fs);
+		return is_dir($chemin_fs) && scandir($chemin_fs);
 	}
 	
 	public function déplacer($chemin_fs_de, $chemin_fs_vers) {

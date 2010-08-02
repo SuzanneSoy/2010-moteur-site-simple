@@ -16,7 +16,7 @@ class Permissions {
 		if ($utilisateur === null) {
 			$utilisateur = Authentification::get_utilisateur();
 		}
-		$groupe = Authentification::get_groupe($utilisateur);
+		$groupe = Authentification::get_groupe($utilisateur, true); // true => forcer permissions.
 		
 		// Parcourt la liste les règles de sécurité (get_regles()), et
 		// sélectionne la première pour laquelle $chemin correspond au motif
@@ -50,15 +50,17 @@ class Permissions {
 			$str_regles .= "\n"; // TODO vérifier que la séquence d'échappement est bien comprise.
 		}
 		
-		return Stockage::get_prop(self::singleton(), "regles", $str_regles);
+		return Stockage::set_prop(self::singleton(), "regles", $str_regles);
 	}
 	
 	public function get_regles() {
 		// Renvoie un tableau de quadruplets
 		// (chemin, action, groupe, autorisation).
 		// ou false si erreur.
-		$str_regles = Stockage::get_prop(self::singleton(), "regles");
-		// TODO erreur si la propriété n'existe pas.
+		
+		$str_regles = Stockage::get_prop(self::singleton(), "regles", true); // true => forcer permissions.
+		if (!$str_regles) Erreur::fatale("Impossible de lire les règles de sécurité.");
+		
 		$str_regles = preg_replace('/\r\n|\r/', "\n", $str_regles);
 		$regles = array();
 		// TODO : ignorer les lignes vides !

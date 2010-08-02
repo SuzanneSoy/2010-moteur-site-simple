@@ -7,12 +7,12 @@ function action($chemin, $action, $paramètres) {
 		Stockage::supprimer($chemin);
 		return redirect($chemin->parent());
 	} else {
-		if (is_set($paramètres["message"])) {
+		if (isset($paramètres["message"])) {
 			Stockage::set_prop($chemin, "message", $paramètres["message"]);
 		}
 		
 		// TODO ... Quelles sont les interactions entre l'utilisateur et le message, dans quel ordre, ...
-		if (is_set($paramètres["vue"])) {
+		if (isset($paramètres["vue"])) {
 			Modules::vue($chemin->parent(), $paramètres["vue"]);
 		} else {
 			Modules::vue($chemin->parent());
@@ -36,6 +36,6 @@ function vue($chemin, $vue = "normal") {
 	}
 }
 
-enregister_module("ForumMessage", "forum-message");
+Modules::enregister_module("ForumMessage", "forum-message");
 
 ?>

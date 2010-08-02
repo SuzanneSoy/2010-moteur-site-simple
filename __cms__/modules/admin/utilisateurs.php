@@ -18,36 +18,36 @@ class AdminUtilisateurs {
 		
 		// Solution B :
 		} else {
-			if (is_set($paramètres["nouveau_nom"]) && ($action == "nouvelle_page")) {
+			if (isset($paramètres["nouveau_nom"]) && ($action == "nouvelle_page")) {
 				// TODO : SECURITE : Si l'utilisateur existe déjà, laisser tomber et ne pas faire les set_* qui suivent !
 				Authentification::nouvel_utilisateur($paramètres["nouveau_nom"]);
 				$paramètres["nom"] = $paramètres["nouveau_nom"];
 				// TODO : message de confirmation quelque part ?
 			}
 			
-			if (is_set($paramètres["nom"]) && is_set($paramètres["nouveau_nom"]) && ($action != "nouvelle_page")) {
+			if (isset($paramètres["nom"]) && isset($paramètres["nouveau_nom"]) && ($action != "nouvelle_page")) {
 				Authentification::renomer_utilisateur($paramètres["nom"], $paramètres["nouveau_nom"]);
 				$paramètres["nom"] = $paramètres["nouveau_nom"];
 			}
 			
-			if (is_set($paramètres["nom"]) && is_set($paramètres["mot_de_passe"])) {
+			if (isset($paramètres["nom"]) && isset($paramètres["mot_de_passe"])) {
 				Authentification::set_mot_de_passe($paramètres["nom"], $paramètres["mot_de_passe"]);
 			}
 			
-			if (is_set($paramètres["nom"]) && is_set($paramètres["groupe"])) {
+			if (isset($paramètres["nom"]) && isset($paramètres["groupe"])) {
 				Authentification::set_groupe($paramètres["nom"], $paramètres["groupe"]);
 			}
 			
-			if (is_set($paramètres["nom"]) && is_set($paramètres["peut_se_connecter"])) {
+			if (isset($paramètres["nom"]) && isset($paramètres["peut_se_connecter"])) {
 				Authentification::set_peut_se_connecter($paramètres["nom"], ($paramètres["peut_se_connecter"] == "true"));
 			}
 			
-			if (is_set($paramètres["nom"]) && ($action == "supprimer")) {
+			if (isset($paramètres["nom"]) && ($action == "supprimer")) {
 				Authentification::supprimer_utilisateur($paramètres["nom"]);
 				// TODO : message de confirmation quelque part ?
 			}
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -87,6 +87,6 @@ class AdminUtilisateurs {
 	}
 }
 
-enregister_module("AdminUtilisateurs", "admin-utilisateurs");
+Modules::enregister_module("AdminUtilisateurs", "admin-utilisateurs");
 
 ?>

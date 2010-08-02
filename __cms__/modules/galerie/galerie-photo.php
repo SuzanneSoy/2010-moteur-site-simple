@@ -8,23 +8,23 @@ class GaleriePhoto {
 			Stockage::supprimer($chemin);
 			return redirect($chemin->parent());
 		} else {
-			if (is_set($paramètres["fichier_image"])) {
+			if (isset($paramètres["fichier_image"])) {
 				// redimensionner l'image avec gd, stocker la miniature dans
 				// prop_image_mini (set_prop_fichier()).
 				// Pb : Où est-ce qu'on met temporairement la miniature
 				// avant de la déplacer ???
 				// stocker le fichier reçu dans prop_image (set_prop_fichier_reçu()).
 			}
-	/*		if (is_set($paramètres["titre"])) {
+	/*		if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : peut-être redirect($chemin) ?
 			}*/
-			if (is_set($paramètres["description"])) {
+			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
 			}
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -56,6 +56,6 @@ class GaleriePhoto {
 	}
 }
 
-enregister_module("GaleriePhoto", "galerie-photo");
+Modules::enregister_module("GaleriePhoto", "galerie-photo");
 
 ?>

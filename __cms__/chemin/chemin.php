@@ -53,11 +53,11 @@ class Chemin {
 	}
 	
 	public function get_fs_stockage() {
-		return Path::combine($config_chemin_base_stockage, $this->get());
+		return Path::combine(Config::get('chemin_base_stockage'), $this->get());
 	}
 	
 	public function get_fs_public() {
-		return Path::combine($config_chemin_base_public, $this->get());
+		return Path::combine(Config::get('chemin_base_public'), $this->get());
 	}
     
     public function enfant($nom) {

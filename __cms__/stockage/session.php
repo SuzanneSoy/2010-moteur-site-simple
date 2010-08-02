@@ -2,7 +2,7 @@
 
 class Session {
 	public function démarrer() {
-		return session_id !== "" || session_start();
+		return (session_id() !== "") || session_start();
 	}
 	
 	public function put($k, $v) {
@@ -12,7 +12,7 @@ class Session {
 	
 	public function get($k) {
 		self::démarrer();
-		return is_set($_SESSION[$k]) ? $_SESSION[$k] : false;
+		return isset($_SESSION[$k]) ? $_SESSION[$k] : false;
 	}
 	
 	public function effacer($k) {

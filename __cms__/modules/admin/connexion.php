@@ -12,7 +12,7 @@ class AdminConnexion {
 			déconnexion();
 			return self::vue("déconnexion");
 		} else {
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -42,6 +42,6 @@ class AdminConnexion {
 	}
 }
 
-enregister_module("AdminConnexion", "admin-connexion");
+Modules::enregister_module("AdminConnexion", "admin-connexion");
 
 ?>

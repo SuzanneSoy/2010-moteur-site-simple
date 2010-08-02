@@ -16,13 +16,13 @@ class ForumSujet {
 			Stockage::supprimer($chemin);
 			return redirect($chemin->parent());
 		} else {
-			if (is_set($paramètres["titre"])) {
+			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : peut-être redirect($chemin) ?
 			}
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -65,6 +65,6 @@ class ForumSujet {
 	}
 }
 
-enregister_module("ForumSujet", "forum-sujet");
+Modules::enregister_module("ForumSujet", "forum-sujet");
 
 ?>

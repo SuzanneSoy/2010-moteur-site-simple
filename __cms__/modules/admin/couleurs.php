@@ -5,18 +5,18 @@ class AdminCouleurs {
 		if ($action == "anuler") {
 			return redirect($chemin);
 		} else {
-			if (is_set($paramètres["Couleur_A"])) {
+			if (isset($paramètres["Couleur_A"])) {
 				// Stocker couleur A
 			}
-			if (is_set($paramètres["Couleur_B"])) {
+			if (isset($paramètres["Couleur_B"])) {
 				// Stocker couleur B
 			}
-			if (is_set($paramètres["Couleur_C"])) {
+			if (isset($paramètres["Couleur_C"])) {
 				// Stocker couleur C
 			}
 			// ...
 			
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -45,6 +45,6 @@ class AdminCouleurs {
 	}
 }
 
-enregister_module("AdminCouleurs", "admin-couleurs");
+Modules::enregister_module("AdminCouleurs", "admin-couleurs");
 
 ?>

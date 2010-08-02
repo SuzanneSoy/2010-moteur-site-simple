@@ -11,7 +11,7 @@ class ForumIndex {
 			Stockage::set_prop($np, "proprietaire", get_utilisateur());
 			return redirect($np);
 		} else {
-			if (is_set($paramètres["vue"])) {
+			if (isset($paramètres["vue"])) {
 				self::vue($chemin, $paramètres["vue"]);
 			} else {
 				self::vue($chemin);
@@ -36,6 +36,6 @@ class ForumIndex {
 	}
 }
 
-enregister_module("ForumIndex", "forum-index");
+Modules::enregister_module("ForumIndex", "forum-index");
 
 ?>
