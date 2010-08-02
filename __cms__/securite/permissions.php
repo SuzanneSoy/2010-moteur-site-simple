@@ -91,7 +91,7 @@ class Permissions {
 				"action" => self::unescape_element_regle($r[1]),
 				"groupe" => self::unescape_element_regle($r[2]),
 				"autorisation" => ($r[3] == "oui"),
-				"commentaire" => self::unescape_element_regle($r[4]);
+				"commentaire" => self::unescape_element_regle($r[4])
 			);
 		}
 		return $regles;
