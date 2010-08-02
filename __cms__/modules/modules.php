@@ -13,9 +13,10 @@ class Modules {
 		return self::$liste_modules[$type];
 	}
 	
-	public static function liste_paramètres($chemin) {
+	public static function get_liste_paramètres($chemin) {
 		// TODO
-		return self::get_module($chemin);
+		call_user_func(array(self::get_module($chemin), "get_liste_paramètres"));
+		return ;
 	}
 }
 

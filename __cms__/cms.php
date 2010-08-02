@@ -15,7 +15,7 @@ class CMS {
 		// TODO : appeller Modules::action($chemin, $action, $paramètres);
 		
 		$chemin = new Chemin($chemin_str);
-		$noms_params = Modules::liste_paramètres($chemin);
+		$noms_params = Modules::get_liste_paramètres($chemin);
 		$noms_params[] = "action";
 		// récupérer $noms_params dans $_GET, $_POST et $_FILE
 		$action = $paramètres["action"];
