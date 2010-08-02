@@ -60,7 +60,7 @@ class AdminUtilisateurs {
 		if ($vue == "normal") {
 	        $ret = '';
 			$ret .= "<h1>Utilisateurs</h1>";
-			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				// afficher le lien "Nouvel utilisateur"
 			}
 	        $ret .= '<table class="utilisateurs index"><thead><th>Nom</th><th>Prénom</th><th>Groupe</th><th>Mot de passe</th><th>Peut se connecter</th><th colspan="2"></th></thead><tbody>';

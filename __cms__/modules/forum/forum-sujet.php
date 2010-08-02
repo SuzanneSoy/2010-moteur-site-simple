@@ -9,7 +9,7 @@ class ForumSujet {
 			$numéro_message = 1 + Stockage::get_prop($chemin, "dernier_numero");
 			Stockage::set_prop($chemin, "dernier_numero", $numéro_message);
 			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message, "forum-message");
-			Stockage::set_prop($np, "proprietaire", get_utilisateur());
+			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 	
 			return redirect($chemin, "#message" . $numéro_message);
 		} else if ($action == "supprimer") {
@@ -33,15 +33,15 @@ class ForumSujet {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
-			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="text" name="titre" class="forum sujet titre edition" value="' . Stockage::get_prop($chemin, "titre") . '"/>';
 				$ret .= '<input type="submit" value="renomer" />';
 				$ret .= '</form>';
 			} else {
-				$ret .= '<h1 class="forum sujet titre affichage">' . get_prop($chemin, "titre") . '</h1>';
+				$ret .= '<h1 class="forum sujet titre affichage">' . Stockage::get_prop($chemin, "titre") . '</h1>';
 			}
-			if (Permissions::vérifier_permission($chemin, "supprimer", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
 				$ret .= '<input type="submit" value="Supprimer"/>';
@@ -52,7 +52,7 @@ class ForumSujet {
 	            $ret .= '<li>' . Modules::vue($k) . '</li>';
 	        }
 	        $ret .= '</ul>';
-			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle page"/>';
@@ -60,7 +60,7 @@ class ForumSujet {
 			}
 			return $ret;
 		} else if ($vue == "miniature") {
-			return get_prop($chemin, "titre");
+			return Stockage::get_prop($chemin, "titre");
 		}
 	}
 }

@@ -23,12 +23,12 @@ function action($chemin, $action, $paramètres) {
 function vue($chemin, $vue = "normal") {
 	if ($vue == "normal") {
         $ret = '';
-		if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
-			$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "message"), "message");
+		if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
+			$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "message"), "message");
 		} else {
-			$ret .= affichage_texte_enrichi(get_prop($chemin, "message"));
+			$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 		}
-		if (Permissions::vérifier_permission($chemin, "supprimer", get_utilisateur())) {
+		if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
 			// peut-être afficher le bouton "Supprimer" ??? ou est-ce trop d'options ?
 		}
 		// Peut-être afficher le bouton "citer" ? ou est-ce trop d'options ?

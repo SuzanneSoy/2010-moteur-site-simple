@@ -8,7 +8,7 @@ class ForumIndex {
 			// TODO : faut-il demander à avoir directement le nom du nouveau sujet ?
 			// TODO : quel est le propriétaire du nouveau sujet ?
 			$np = Stockage::nouvelle_page($chemin, "Nouveau sujet", "forum-sujet");
-			Stockage::set_prop($np, "proprietaire", get_utilisateur());
+			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			return redirect($np);
 		} else {
 			if (isset($paramètres["vue"])) {
@@ -23,7 +23,7 @@ class ForumIndex {
 		if ($vue == "normal") {
 	        $ret = '';
 			$ret .= "<h1>Forum</h1>";
-			if (Permissions::vérifier_permission($chemin, "nouvelle_page", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				// afficher le lien "Nouveau sujet"
 			}
 	        $ret .= '<ul class="forum index">';

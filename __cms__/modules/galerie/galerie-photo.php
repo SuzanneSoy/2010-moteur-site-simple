@@ -35,15 +35,15 @@ class GaleriePhoto {
 	public function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 			$ret = '';
-			if (Permissions::vérifier_permission($chemin, "set_prop", get_utilisateur())) {
+			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= '<input type="filename" .../>';
-				$ret .= formulaire_édition_texte_enrichi(get_prop($chemin, "description"), "message");
+				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
 			} else {
 				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
-				$ret .= affichage_texte_enrichi(get_prop($chemin, "message"));
+				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}
 			return $ret;
 		} else if ($vue == "miniature") {
