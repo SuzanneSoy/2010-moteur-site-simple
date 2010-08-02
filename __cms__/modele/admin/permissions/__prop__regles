@@ -1,8 +1,9 @@
-/**|*|Administrateurs|oui
-/admin/**|*|Administrateurs|oui
-/admin/**|*|*|non
-/forum/|nouvelle_page|Utilisateurs|oui
-/forum/*|nouvelle_page|Utilisateurs|oui
-/galerie/**|*|Utilisateurs|oui
-/galerie/**|*|Anonymes|non
-/**|get_prop|Anonymes|oui
+/**|*|Administrateurs|oui|Les administrateurs ont tous les droits
+/admin/**|*|Administrateurs|oui|Les administrateurs peuvent administer (redondant avec la règle ci-dessus).
+/admin/**|*|*|non|Les non-administrateur n'ont pas accès à la section "admin".
+/forum/|nouvelle_page|Utilisateurs|oui|Les utilisateurs peuvent créer de nouveaux sujets de discussion dans le forum.
+/forum/*|nouvelle_page|Utilisateurs|oui|Les utilisateurs peuvent créer des messages dans les sujets de discussion.
+/forum/*/*|set_prop|Propriétaire|oui|L'auteur d'un message peut en définir le contenu (pas les autres, ce n'est pas un wiki).
+/galerie/**|get_prop|Utilisateurs|oui|Les utilisateurs peuvent consulter la galerie.
+/galerie/**|*|Anonymes|non|Mais le reste du monde ne peut pas voir la galerie (photos privées par ex.)
+/**|get_prop|Anonymes|oui|Le reste du monde peut consulter le site.

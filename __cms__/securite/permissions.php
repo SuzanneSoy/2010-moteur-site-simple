@@ -63,6 +63,7 @@ class Permissions {
 			$str_regles .= '|' . self::escape_element_regle($r["action"]);
 			$str_regles .= '|' . self::escape_element_regle($r["groupe"]);
 			$str_regles .= '|' . ($r["autorisation"] ? "oui" : "non");
+			$str_regles .= '|' . self::escape_element_regle($r["commentaire"]);
 			$str_regles .= "\n"; // TODO vérifier que la séquence d'échappement est bien comprise.
 		}
 		
@@ -70,8 +71,8 @@ class Permissions {
 	}
 	
 	public function get_regles() {
-		// Renvoie un tableau de quadruplets
-		// (chemin, action, groupe, autorisation).
+		// Renvoie un tableau de quintuplets
+		// (chemin, action, groupe, autorisation, commentaire).
 		// ou false si erreur.
 		
 		$str_regles = Stockage::get_prop(self::singleton(), "regles", true); // true => forcer permissions.
@@ -82,14 +83,15 @@ class Permissions {
 		// TODO : ignorer les lignes vides !
 		foreach (explode("\n", $str_regles) as $k => $v) {
 			$r = explode('|',$v);
-			if (count($r) != 4) {
+			if (count($r) != 5) {
 				return false;
 			}
 			$regles[] = array(
 				"chemin" => new Chemin(self::unescape_element_regle($r[0])),
 				"action" => self::unescape_element_regle($r[1]),
 				"groupe" => self::unescape_element_regle($r[2]),
-				"autorisation" => ($r[3] == "oui")
+				"autorisation" => ($r[3] == "oui"),
+				"commentaire" => self::unescape_element_regle($r[4]);
 			);
 		}
 		return $regles;

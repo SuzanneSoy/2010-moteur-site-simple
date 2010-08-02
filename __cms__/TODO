@@ -1,4 +1,3 @@
-Possibilité d'avoir un commentaire à la fin de chaque ligne des règles.
 Sécurité : les noms de propriétés passés à stockage ne doivent pas
    contenir de '/' (doivent valider "nettoyer_segment()".
 Renomer SystèmeFichiers : seuls les modules ont deux bosses dans leur CamelCase
