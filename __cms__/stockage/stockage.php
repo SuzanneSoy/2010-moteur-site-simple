@@ -101,7 +101,7 @@ class Stockage {
 		// TODO : SECURITE : vérifier la permission. Mais pour quelle action ?
 		// get_prop ? ou une nouvelle (?) : liste_enfants ?
 		$enfants = Array();
-		foreach (SystemeFichiers::liste_fichiers() as $k => $v) {
+		foreach (SystèmeFichiers::liste_fichiers($chemin->get_fs_stockage()) as $k => $v) {
 			if (strpos($v, "__prop__") !== 0 && is_dir($chemin->enfant($v)->get_fs_stockage()) && $v != "." && $v != "..") {
 				$enfants[] = $chemin->enfant($v);
 			}
