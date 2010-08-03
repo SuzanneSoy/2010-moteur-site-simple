@@ -1,7 +1,2 @@
 Sécurité : les noms de propriétés passés à stockage ne doivent pas
    contenir de '/' (doivent valider "nettoyer_segment()".
-Actions pouvant être effectuées par get (pas d'effets de bord) et ne
-   pouvant pas être effectuées par get (seulement POST, effets de
-   bord).
-
-déplacer cms.php dans __cms__/cms/
