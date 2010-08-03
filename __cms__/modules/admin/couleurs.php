@@ -1,7 +1,7 @@
 <?php
 
 class AdminCouleurs {
-	public function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
 			return redirect($chemin);
 		} else {
@@ -24,7 +24,7 @@ class AdminCouleurs {
 		}
 	}
 	
-	public function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 			// Si l'utilisateur a l'autorisation de modifier les propriétés,
 			// on affiche la version modifiable plutôt que la "vue".

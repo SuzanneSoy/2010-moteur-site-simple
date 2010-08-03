@@ -1,7 +1,7 @@
 <?php
 
 class ForumIndex {
-	public function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
 			return redirect($chemin);
 		} else if ($action == "nouvelle_page") {
@@ -19,7 +19,7 @@ class ForumIndex {
 		}
 	}
 	
-	public function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
 			$ret .= "<h1>Forum</h1>";

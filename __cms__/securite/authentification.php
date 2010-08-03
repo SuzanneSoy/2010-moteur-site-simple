@@ -1,11 +1,11 @@
 <?php
 
 class Authentification {
-	private function singleton() {
+	private static function singleton() {
 		return new Chemin("/admin/utilisateurs/");
 	}
 	
-	public function connexion($nom_utilisateur, $mdp) {
+	public static function connexion($nom_utilisateur, $mdp) {
 		$ch_utilisateur = self::singleton()->enfant($nom_utilisateur);
 		$mdp_réel = self::get_mot_de_passe($nom_utilisateur, true); // true => forcer permissions.
 		$peut_se_connecter = self::get_peut_se_connecter($nom_utilisateur, true);  // true => forcer permissions.
@@ -19,16 +19,16 @@ class Authentification {
 		}
 	}
 	
-	public function déconnexion() {
+	public static function déconnexion() {
 		Session::effacer("utilisateur");
 	}
 	
-	public function get_utilisateur() {
+	public static function get_utilisateur() {
 		$u = Session::get("utilisateur");
 		return ($u === false) ? "Anonyme" : $u;
 	}
 	
-	public function nouvel_utilisateur($nom_utilisateur) {
+	public static function nouvel_utilisateur($nom_utilisateur) {
 		// TODO : SECURITE : Si la page existe déjà, laisser tomber !
 		Stockage::nouvelle_page(self::singleton(), $nom_utilisateur, "admin-utilisateur");
 		self::set_mot_de_passe_aléatoire($nom_utilisateur);
@@ -36,15 +36,15 @@ class Authentification {
 		self::set_peut_se_connecter($nom_utilisateur, false);
 	}
 	
-	public function supprimer_utilisateur($nom_utilisateur) {
+	public static function supprimer_utilisateur($nom_utilisateur) {
 		Stockage::supprimer(self::singleton()->enfant($nom_utilisateur));
 	}
 	
-	public function renomer_utilisateur($nom_utilisateur, $nouveau_nom) {
+	public static function renomer_utilisateur($nom_utilisateur, $nouveau_nom) {
 		Stockage::renomer(self::singleton()->enfant($nom_utilisateur), $nouveau_nom);
 	}
 	
-	public function liste_utilisateurs() {
+	public static function liste_utilisateurs() {
 		$liste = array();
 		foreach (stockage::liste_enfants($chemin) as $k) {
 			array_push($liste, $k->dernier());
@@ -53,32 +53,32 @@ class Authentification {
 		return $liste;
 	}
 	
-	public function set_groupe($nom_utilisateur, $groupe) {
+	public static function set_groupe($nom_utilisateur, $groupe) {
 		// TODO : Vérifier si le groupe existe ?
 		Stockage::set_pop(self::singleton()->enfant($nom_utilisateur), "groupe", $groupe);
 	}
 	
-	public function get_groupe($nom_utilisateur, $forcer_permissions = false) {
+	public static function get_groupe($nom_utilisateur, $forcer_permissions = false) {
 		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "groupe", $forcer_permissions);
 	}
 	
-	public function set_mot_de_passe($nom_utilisateur, $mot_de_passe) {
+	public static function set_mot_de_passe($nom_utilisateur, $mot_de_passe) {
 		Stockage::set_pop(self::singleton()->enfant($nom_utilisateur), "mot_de_passe", $mot_de_passe);
 	}
 	
-	public function set_mot_de_passe_aléatoire($utilisateur) {
+	public static function set_mot_de_passe_aléatoire($utilisateur) {
 		self::set_mot_de_passe($utilisateur, substr(md5($utilisateur . rand() . microtime()) , 0, 8));
 	}
 	
-	public function get_mot_de_passe($nom_utilisateur, $forcer_permissions = false) {
+	public static function get_mot_de_passe($nom_utilisateur, $forcer_permissions = false) {
 		return Stockage::get_prop(self::singleton()->enfant($nom_utilisateur), "mot_de_passe", $forcer_permissions);
 	}
 	
-	public function set_peut_se_connecter($nom_utilisateur, $valeur) {
+	public static function set_peut_se_connecter($nom_utilisateur, $valeur) {
 		Stockage::set_pop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter", $valeur ? "true" : "false");
 	}
 	
-	public function get_peut_se_connecter($nom_utilisateur, $forcer_permissions = false) {
+	public static function get_peut_se_connecter($nom_utilisateur, $forcer_permissions = false) {
 		$peut_se_connecter = Stockage::get_pop(self::singleton()->enfant($nom_utilisateur), "peut_se_connecter", $forcer_permissions);
 		return ($peut_se_connecter == "true") ? true : false;
 	}

@@ -6,7 +6,7 @@
 // $chemin, puis appelle une fonction de systeme-fichiers.php
 
 class Stockage {
-	public function nouvelle_page($chemin, $nom, $type) {
+	public static function nouvelle_page($chemin, $nom, $type) {
 		if (Permissions::vérifier_permission($chemin, "nouvelle_page")) {
 			$enfant = $chemin->enfant($nom);
 			SystemeFichiers::créer_dossier($enfant->get_fs_stockage());
@@ -20,7 +20,7 @@ class Stockage {
 	
 	// Imitation de l'url rewriting lorsque ce n'est pas disponible sur
 	// le serveur.
-	public function activer_réécriture($chemin_vers) {
+	public static function activer_réécriture($chemin_vers) {
 		// TODO : échapper les " dans le require_once et l'appel à cms.
 		$php_str = "<?php\n\n";
 		$php_str .= "require_once(\"" . Path::combine($config_chemin_base, "cms.php") . "\");\n\n";
@@ -29,15 +29,15 @@ class Stockage {
 		return SystemeFichiers::écrire($chemin_vers->get_fs_public(), $php_str);
 	}
 	
-	public function désactiver_réécriture($chemin_vers) {
+	public static function désactiver_réécriture($chemin_vers) {
 		return SystemeFichiers::supprimer($chemin_vers->get_fs_public());
 	}
 	
-	private function fichier_prop($chemin, $prop) {
+	private static function fichier_prop($chemin, $prop) {
 		return Path::combine($chemin->get_fs_stockage(), '__prop__' . $prop);
 	}
 	
-	public function set_prop($chemin, $prop, $valeur) {
+	public static function set_prop($chemin, $prop, $valeur) {
 		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::écrire(self::fichier_prop($chemin, $prop), $valeur);
 		} else {
@@ -46,7 +46,7 @@ class Stockage {
 	}
 	
 	// Stocke le contenu de $fichier dans $prop, et supprime $fichier.
-	public function set_prop_fichier($chemin, $prop, $fichier) {
+	public static function set_prop_fichier($chemin, $prop, $fichier) {
 		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::déplacer($fichier, self::fichier_prop($chemin, $prop));
 		} else {
@@ -55,7 +55,7 @@ class Stockage {
 	}
 	
 	// Comme pour set_prop_fichier, mais pour un fichier reçu (uploadé).
-	public function set_prop_fichier_reçu($chemin, $prop, $fichier) {
+	public static function set_prop_fichier_reçu($chemin, $prop, $fichier) {
 		if (Permissions::vérifier_permission($chemin, "set_prop")) {
 			return SystemeFichiers::déplacer_fichier_téléchargé($fichier, self::fichier_prop($chemin, $prop));
 		} else {
@@ -63,7 +63,7 @@ class Stockage {
 		}
 	}
 	
-	public function get_prop($chemin, $prop, $forcer_permissions = false) {
+	public static function get_prop($chemin, $prop, $forcer_permissions = false) {
 		// $forcer_permissions permet à Permissions::vérifier_permission() et ses
 		// dépendances get_regles() et get_groupe() de faire des get_prop
 		// même si l'utilisateur courant n'en a pas le droit.
@@ -74,7 +74,7 @@ class Stockage {
 		}
 	}
 	
-	public function get_prop_sendfile($chemin, $prop) {
+	public static function get_prop_sendfile($chemin, $prop) {
 		// Envoie tout le conctenu de $prop sur le réseau.
 		// Équivalent à appeller sendfile sur le fichier qui contient $prop.
 		if (Permissions::vérifier_permission($chemin, "get_prop")) {
@@ -88,7 +88,7 @@ class Stockage {
 	// ses propriétés, or pour ça, il faudrait que la suppression soit
 	// récursive sur un niveau seulement, ce qui n'est pas possible avec ce
 	// code.
-	public function supprimer($chemin, $récursif) {
+	public static function supprimer($chemin, $récursif) {
 		if (Permissions::vérifier_permission($chemin, "supprimer")) {
 			// TODO : désactiver_réécriture($chemin) récursivement
 			return SystèmeFichier::supprimer($chemin->get_fs_stockage(), $récursif);
@@ -97,7 +97,7 @@ class Stockage {
 		}
 	}
 	
-	public function liste_enfants($chemin) {
+	public static function liste_enfants($chemin) {
 		// TODO : SECURITE : vérifier la permission. Mais pour quelle action ?
 		// get_prop ? ou une nouvelle (?) : liste_enfants ?
 		$enfants = Array();
@@ -109,7 +109,7 @@ class Stockage {
 		return $enfants;
 	}
 	
-	public function renomer($chemin, $nouveau_nom) {
+	public static function renomer($chemin, $nouveau_nom) {
 		if ($chemin->dernier() == $nouveau_nom) {
 			return true;
 		}

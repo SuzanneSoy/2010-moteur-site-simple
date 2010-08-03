@@ -1,7 +1,7 @@
 <?php
 
 class ForumSujet {
-	public function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
 			return redirect($chemin);
 		} else if ($action == "nouvelle_page") {
@@ -30,7 +30,7 @@ class ForumSujet {
 		}
 	}
 	
-	public function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {

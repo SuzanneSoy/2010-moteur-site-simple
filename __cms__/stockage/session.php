@@ -1,21 +1,21 @@
 <?php
 
 class Session {
-	public function démarrer() {
+	public static function démarrer() {
 		return (session_id() !== "") || session_start();
 	}
 	
-	public function put($k, $v) {
+	public static function put($k, $v) {
 		self::démarrer();
 		$_SESSION[$k] = $v;
 	}
 	
-	public function get($k) {
+	public static function get($k) {
 		self::démarrer();
 		return isset($_SESSION[$k]) ? $_SESSION[$k] : false;
 	}
 	
-	public function effacer($k) {
+	public static function effacer($k) {
 		self::démarrer();
 		unset($_SESSION[$k]);
 	}

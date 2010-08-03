@@ -7,12 +7,12 @@
 //  - autorisation : true ou false.
 
 class Permissions {
-	private function singleton() {
+	private static function singleton() {
 		return new Chemin("/admin/permissions/");
 	}
 	
 	// Vérifie si $utilisateur a la permission d'effectuer $action sur $chemin.
-	public function vérifier_permission($chemin, $action, $utilisateur = null) {
+	public static function vérifier_permission($chemin, $action, $utilisateur = null) {
 		if ($utilisateur === null) {
 			$utilisateur = Authentification::get_utilisateur();
 		}
@@ -53,7 +53,7 @@ class Permissions {
 	}
 	
 	// TODO : d'abord set_nouvelles_regles, puis appliquer_nouvelles_regles.
-	public function set_regles($regles) {
+	public static function set_regles($regles) {
 		// $regles est un tableau de quadruplets
 		// (chemin, action, groupe, autorisation).
 		
@@ -70,7 +70,7 @@ class Permissions {
 		return Stockage::set_prop(self::singleton(), "regles", $str_regles);
 	}
 	
-	public function get_regles() {
+	public static function get_regles() {
 		// Renvoie un tableau de quintuplets
 		// (chemin, action, groupe, autorisation, commentaire).
 		// ou false si erreur.
@@ -97,13 +97,13 @@ class Permissions {
 		return $regles;
 	}
 	
-	public function escape_element_regle() {
+	public static function escape_element_regle() {
 		$str = preg_replace('/-/', '--', $str);
 		$str = preg_replace('/|/', '-p', $str);
 		return $str;
 	}
 	
-	public function unescape_element_regle($str) {
+	public static function unescape_element_regle($str) {
 		$str = preg_replace('/-p/', '|', $str);
 		$str = preg_replace('/--/', '-', $str);
 		return $str;

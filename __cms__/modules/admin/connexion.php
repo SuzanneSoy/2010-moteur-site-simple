@@ -1,7 +1,7 @@
 <?php
 
 class AdminConnexion {
-	public function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		if ($action == "connexion") {
 			if (connexion($paramètres["utilisateur"], $paramètres["mdp"])) {
 				return self::vue("connexion réussie");
@@ -22,7 +22,7 @@ class AdminConnexion {
 	
 	// TODO : Peut-être mettre ces textes dans un autre fichier ?
 	// TODO : $config_url_base n'est pas forcément la page d'accueil...
-	public function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		// Les quatre vues ("connexion réussie", "déconnexion réussie",
 		// formulaire de connexion, formulaire + "mauvais mdp")
 		if ($vue == "normal") {
@@ -36,7 +36,7 @@ class AdminConnexion {
 		}
 	}
 	
-	public function formulaire_connexion($message = "") {
+	public static function formulaire_connexion($message = "") {
 		// TODO
 		return "<h1>Connexion</h1>" . $message . "<input type=\"text\" name=\"nom\" value=\"Nom\" />...";
 	}

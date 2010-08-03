@@ -1,7 +1,7 @@
 <?php
 
 class AdminUtilisateurs {
-	public function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		$singleton = new Chemin("/admin/utilisateurs/");
 		if ($action == "anuler") {
 			return redirect($chemin);
@@ -55,7 +55,7 @@ class AdminUtilisateurs {
 		}
 	}
 	
-	public function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		$singleton = new Chemin("/admin/utilisateurs/");
 		if ($vue == "normal") {
 	        $ret = '';
