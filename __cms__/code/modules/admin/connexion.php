@@ -21,18 +21,28 @@ class AdminConnexion {
 	}
 	
 	// TODO : Peut-être mettre ces textes dans un autre fichier ?
-	// TODO : $config_url_base n'est pas forcément la page d'accueil...
+	// TODO : Config::get("url_base") n'est pas forcément la page d'accueil...
 	public static function vue($chemin, $vue = "normal") {
 		// Les quatre vues ("connexion réussie", "déconnexion réussie",
 		// formulaire de connexion, formulaire + "mauvais mdp")
 		if ($vue == "normal") {
 			return formulaire_connexion();
 		} else if ($vue == "connexion réussie") {
-			return "<h1>Connexion réussie</h1><p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p><p><a href=\"" . $config_url_base . "\">Retour à la page d'accueil</a>.</p>";
+			$ret = "<h1>Connexion réussie</h1>";
+			$ret .= "<p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p>";
+			$ret .= "<p><a href=\"" . Config::get("url_base") . "\">Retour à la page d'accueil</a>.</p>";
+			return $ret;
 		}else if ($vue == "connexion échouée") {
-			return formulaire_connexion("<p><strong>Mauvais mot de passe et/ou nom d'utilisateur. Ré-essayez ou retournez à la <a href=\"" . $config_url_base . "\">page d'accueil</a>.</strong></p>");
+			$msg = "<p><strong>Mauvais mot de passe et/ou nom d'utilisateur. Ré-essayez ou retournez à la ";
+			$msg .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
+			$msg .= ".</strong></p>";
+			return formulaire_connexion($msg);
 		}else if ($vue == "déconnexion") {
-		  return '<h1>Déconnexion réussie</h1><p>Vous êtes déconnecté. Vous pouvez à présent retourner à la <a href="' . $config_url_base . "\">page d'accueil</a>.</p>";
+			$ret = "<h1>Déconnexion réussie</h1>";
+			$ret .= "<p>Vous êtes déconnecté. Vous pouvez à présent retourner à la ";
+			$ret .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
+			$ret .= ".</p>";
+			return $ret;
 		}
 	}
 	

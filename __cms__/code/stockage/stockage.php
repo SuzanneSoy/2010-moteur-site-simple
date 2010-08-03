@@ -23,7 +23,7 @@ class Stockage {
 	public static function activer_réécriture($chemin_vers) {
 		// TODO : échapper les " dans le require_once et l'appel à cms.
 		$php_str = "<?php\n\n";
-		$php_str .= "require_once(\"" . Path::combine($config_chemin_base, "cms.php") . "\");\n\n";
+		$php_str .= "require_once(\"" . Path::combine(Config::get("chemin_base"), "cms.php") . "\");\n\n";
 		$php_str .= "CMS::page(\"" . $chemin_vers->get() . "\");\n\n";
 		$php_str .= "?>";
 		return Système_fichiers::écrire($chemin_vers->get_fs_public(), $php_str);
