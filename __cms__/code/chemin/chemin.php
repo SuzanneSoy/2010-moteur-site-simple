@@ -7,9 +7,9 @@ define('CHEMIN_JOKER_SEGMENT', '*');
 
 class Chemin {
 	// Si $chemin est un tableau, chaque segment doit vérifier les invariants de nettoyer_segment.
-    public function __construct($chemin) {
+    public function __construct($chemin, $est_un_motif = false) {
 		if (! is_array($chemin)) {
-			$this->segments = self::nettoyer_chemin($chemin);
+			$this->segments = self::nettoyer_chemin($chemin, $est_un_motif);
 		} else {
 			$this->segments = $chemin;
 		}
@@ -86,7 +86,7 @@ class Chemin {
     }
 
     
-    public static function nettoyer_chemin($chemin) {
+    public static function nettoyer_chemin($chemin, $est_un_motif = false) {
         // SÉCURITÉ : $chemin nettoyé
         //   * Ne contient pas '\0'
         //   * Ne contient pas '../'
@@ -102,23 +102,32 @@ class Chemin {
         $chemin = preg_replace("/\\/*$/", '', $chemin);
         
         $segments = explode('/', $chemin);
-        $segments = array_map(array("self", "nettoyer_segment"), $segments);
+        if ($est_un_motif) {
+			$segments = array_map(array("self", "nettoyer_segment_motif"), $segments);
+		} else {
+			$segments = array_map(array("self", "nettoyer_segment"), $segments);
+		}
         
         return $segments;
     }
     
-    public static function nettoyer_segment($segment) {
+    public static function nettoyer_segment($segment, $est_un_motif = false) {
 		// SÉCURITÉ : $segment nettoyé :
 		//   * /!\ Peut être vide /!\
+        //   * Ne doit pas contenir '\0' (octet NULL).
 		//   * Ne doit pas contenir '/' non plus, remplacer par '-'.
 		//   * Ne doit pas contenir '*' non plus, remplacer par '-'.
         //   * Ne contient pas "__prop__", remplacer par "___prop___".
 		
         $segment = preg_replace("/\\0/", '', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
-        $segment = preg_replace("/\\//", '', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
-        $segment = preg_replace("/\\*/", '', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
+        $segment = preg_replace("/\\//", '-', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
+        if (!$est_un_motif) $segment = preg_replace("/\\*/", '-', $segment); // TODO : vérifier ...
         $segment = preg_replace("/__prop__/", '___prop___', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
 		return $segment;
+	}
+
+	public static function nettoyer_segment_motif($segment) {
+		return self::nettoyer_segment($segment, true);
 	}
 }
 

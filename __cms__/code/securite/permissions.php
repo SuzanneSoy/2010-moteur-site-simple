@@ -87,7 +87,7 @@ class Permissions {
 				return false;
 			}
 			$regles[] = array(
-				"chemin" => new Chemin(self::unescape_element_regle($r[0])),
+				"chemin" => new Chemin(self::unescape_element_regle($r[0]), true),
 				"action" => self::unescape_element_regle($r[1]),
 				"groupe" => self::unescape_element_regle($r[2]),
 				"autorisation" => ($r[3] == "oui"),

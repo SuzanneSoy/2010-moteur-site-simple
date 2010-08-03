@@ -1,7 +1,7 @@
 <?php
 
-require_once("../__cms__/cms.php");
+require_once("/home/js/github/2010-moteur-site-simple/__cms__/cms.php");
 
-CMS::affiche("/galerie", $_GET);
+CMS::page("/galerie/");
 
 ?>
