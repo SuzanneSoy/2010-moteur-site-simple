@@ -1,8 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . "/chemin/path.php");
-require_once(dirname(__FILE__) . "/cms/configuration.php");
-
 // ========== CONFIGURATION =========
 
 // Addresse de courriel de l'administrateur.
@@ -19,7 +16,7 @@ Config::set('chemin_base', realpath(dirname(__FILE__)));
 
 // Chemin vers le stockage interne des données.
 // En général, c'est le chemin ..../__cms__/modele
-Config::set('chemin_base_stockage', Path::combine(Config::get("chemin_base"), "modele"));
+Config::set('chemin_base_stockage', Path::combine(Config::get("chemin_base"), "donnees"));
 
 // Chemin vers la partie visible du site.
 // En général, c'est le chemin vers le dossier contenant __cms__

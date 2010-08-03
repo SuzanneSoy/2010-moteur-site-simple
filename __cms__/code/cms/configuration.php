@@ -18,4 +18,13 @@ class Config {
 	}
 }
 
+require_once(dirname(__FILE__) . "/../chemin/path.php");
+require_once(dirname(__FILE__) . "/../../config.php");
+
+if (Config::get('courriel_admin') === null) {
+	echo "Vous devez indiquer le courriel de l'administrateur dans le fichier config.php.";
+	exit;
+}
+
+
 ?>

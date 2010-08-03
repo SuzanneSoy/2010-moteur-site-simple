@@ -2,12 +2,7 @@
 
 error_reporting(E_ALL | E_STRICT);
 
-require_once(dirname(__FILE__) . "/../config.php");
-if (Config::get('courriel_admin') === null) {
-	echo "Vous devez indiquer le courriel de l'administrateur dans le fichier config.php.";
-	exit;
-}
-
+require_once(dirname(__FILE__) . "/configuration.php");
 require_once(dirname(__FILE__) . "/include_tous.php");
 
 class CMS {
