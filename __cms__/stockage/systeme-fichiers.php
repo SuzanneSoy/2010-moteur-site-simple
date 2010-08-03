@@ -2,7 +2,7 @@
 
 // NOTE : Cette abstraction a l'air assez innutile à part supprimer...
 
-class SystèmeFichiers {
+class Système_fichiers {
 	public static function créer_dossier($chemin_fs) {
 		mkdir($chemin_fs);
 	}
