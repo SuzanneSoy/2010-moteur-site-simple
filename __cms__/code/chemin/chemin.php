@@ -53,7 +53,7 @@ class Chemin {
     public function get_url() {
 		// Config::get("url_base") DOIT se terminer par '/', tel que spécifié
 		// dans config.php.
-		return Path::combine(Config::get("url_base"), $this->get());
+		return Config::get("url_base") . $this->get();
 	}
 	
 	public function get_fs_stockage() {
