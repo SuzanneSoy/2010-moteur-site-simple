@@ -10,6 +10,7 @@ class Modules {
 			"post" => qw($post),
 			"file" => qw($file)
 		);
+                self::$liste_modules[$type]["get_post"][] = "action"; // Toujours présent.
 	}
 	
 	public static function get_module($chemin) {

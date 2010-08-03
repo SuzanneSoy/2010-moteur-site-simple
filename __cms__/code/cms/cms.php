@@ -10,13 +10,22 @@ class CMS {
 		// TODO : appeller Modules::action($chemin, $action, $paramètres);
 		
 		$chemin = new Chemin($chemin_str);
-		$noms_params = Modules::get_module($chemin);
-		$noms_params["get_post"][] = "action";
+		$module = Modules::get_module($chemin);
+                
 		$paramètres = array("action" => "vue");
-		// récupérer $noms_params dans $_GET, $_POST et $_FILE ==> $paramètres
+                foreach ($module["get_post"] as $param) {
+                    if (isset($_GET[$param])) $paramètres[$param] = $_GET[$param];
+                    if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+                }
+                foreach ($module["post"] as $param) {
+                    if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+                }
+                foreach ($module["file"] as $param) {
+                    if (isset($_FILE[$param])) $paramètres[$param] = $_FILE[$param];
+                }
+                
 		$action = $paramètres["action"];
-		Modules::action($chemin, $action, $paramètres);
-                echo "OK.";
+		echo Modules::action($chemin, $action, $paramètres);
     }
 }
 

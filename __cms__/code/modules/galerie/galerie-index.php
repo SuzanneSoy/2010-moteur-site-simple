@@ -22,9 +22,9 @@ class GalerieIndex {
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
