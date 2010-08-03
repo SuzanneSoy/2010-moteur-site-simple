@@ -45,13 +45,15 @@ class GaleriePhoto {
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}
-			return $ret;
+			return Modules::page($ret, "Photo");
 		} else if ($vue == "miniature") {
-			return '<img src="' . $chemin->get_url("?vue=image_mini") . '"></img>';
+			$ret = '<img src="' . $chemin->get_url("?vue=image_mini") . '"></img>';
+			
+			return Modules::page($ret, "Photo");
 		} else if ($vue == "image") {
-			Stockage::get_prop_sendfile("image");
+			return Modules::raw(Stockage::get_prop_sendfile("image"));
 		} else if ($vue == "image_mini") {
-			Stockage::get_prop_sendfile("image_mini");
+			return Modules::raw(Stockage::get_prop_sendfile("image_mini"));
 		}
 	}
 }

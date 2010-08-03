@@ -21,15 +21,19 @@ class Modules {
 	
 	public static function action($chemin, $action, $paramètres) {
 		$module = self::get_module($chemin);
-		if ($module === false) return false;
+		if ($module === false) return self::page(false, "Erreur");
 		return call_user_func(array($module["classe"], "action"), $chemin, $action, $paramètres);
 	}
 	
 	public static function vue($chemin, $vue = "normal") {
 		$module = self::get_module($chemin);
-		if ($module === false) return false;
+		if ($module === false) return self::page(false, "Erreur");
 		return call_user_func(array($module["classe"], "vue"), $chemin, $vue);
-	}	
+	}
+
+	public static function page($contenu, $titre) {
+		return (object)array("contenu" => $contenu, "titre" => $titre);
+	}
 }
 
 ?>

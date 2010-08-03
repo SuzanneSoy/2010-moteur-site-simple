@@ -30,8 +30,8 @@ class GalerieIndex {
 	}
 	
 	public static function vue($chemin, $vue = "normal") {
+		$ret = '';
 		if ($vue == "normal") {
-	        $ret = '';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
@@ -51,17 +51,15 @@ class GalerieIndex {
 				$ret .= '<input type="submit" value="Supprimer"/>';
 				$ret .= '</form>';
 			}
-	        $ret .= '<ul class="galerie index">';
-	        foreach (Stockage::liste_enfants($chemin) as $k) {
-	            $ret .= '<li><a href="' . $k->get_url() . '">' . Modules::vue($k, 'miniature') . '</a></li>'; // TODO : escape l'url !
-	        }
-	        $ret .= '</ul>';
-			return $ret;
-		} else if ($vue == "miniature") {
-			$enfants = Stockage::liste_enfants($chemin);
-			if (isset($enfants[0])) return Modules::vue($enfants[0], 'miniature');
-			else return "Aucune<br/>photo";
+			$ret .= '<ul class="galerie index">';
+			foreach (Stockage::liste_enfants($chemin) as $k) {
+				$ret .= '<li><a href="' . $k->get_url() . '">'
+					. Modules::vue($k, 'miniature')->contenu
+					. '</a></li>'; // TODO : escape l'url !
+			}
+			$ret .= '</ul>';
 		}
+		return Modules::page($ret, Stockage::get_prop($chemin, "titre"));
 	}
 }
 

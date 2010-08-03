@@ -18,8 +18,7 @@ class Squelette {
 		<meta http-equiv="Content-Language" content="fr" />
 		<link href="../style.css" rel="stylesheet" type="text/css" /><!-- TODO : chemin incorrect -->
 	</head>
-	<body>
-		<h1>' . $page->titre . '</h1>';
+	<body>';
 //		<meta name="keywords" lang="fr" content="motcle1,mocle2" />
 //		<meta name="description" content="Description de ma page web." />
     }

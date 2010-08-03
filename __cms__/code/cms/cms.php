@@ -13,19 +13,27 @@ class CMS {
 		$module = Modules::get_module($chemin);
                 
 		$paramètres = array("action" => "vue");
-                foreach ($module["get_post"] as $param) {
-                    if (isset($_GET[$param])) $paramètres[$param] = $_GET[$param];
-                    if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
-                }
-                foreach ($module["post"] as $param) {
-                    if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
-                }
-                foreach ($module["file"] as $param) {
-                    if (isset($_FILE[$param])) $paramètres[$param] = $_FILE[$param];
-                }
-                
+		
+		foreach ($module["get_post"] as $param) {
+			if (isset($_GET[$param])) $paramètres[$param] = $_GET[$param];
+			if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+		}
+		foreach ($module["post"] as $param) {
+			if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+		}
+		foreach ($module["file"] as $param) {
+			if (isset($_FILE[$param])) $paramètres[$param] = $_FILE[$param];
+		}
+        
 		$action = $paramètres["action"];
-		echo Modules::action($chemin, $action, $paramètres);
+		$ret = Modules::action($chemin, $action, $paramètres);
+		
+		// TODO
+		// if ($ret est une page) {
+		echo Squelette::enrober($ret);
+		// } else if ($ret est un redirect) {
+		// } else if ($ret est un raw) {
+		// }
     }
 }
 
