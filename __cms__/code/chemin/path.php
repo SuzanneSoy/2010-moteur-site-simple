@@ -76,7 +76,29 @@ final class Path
 			return "$a/$b";
 		')));
 	}
- 
+
+	// Ajout par js jahvascriptmaniac+github@gmail.com
+	// Depuis le dossier $a, construire un chemin relatif vers $b.
+	public static function relative($a, $b) {
+		$a = explode('/', self::normalize($a));
+		$b = explode('/', self::normalize($b));
+
+		// Zapper la partie commune
+		for ($i = 0; $i < count($a) && $i < count($b); $i++) {
+			if (! ($a[$i] == $b[$i])) break;
+		}
+		
+		$rel = ".";
+		for ($j = $i; $j < count($a); $j++) {
+			$rel .= "/..";
+		}
+		for ($j = $i; $j < count($b); $j++) {
+			$rel .= '/' . $b[$j];
+		}
+		
+		return $rel;
+	}
+	
 	/**
 	 * Empty, private constructor, to prevent instantiation
 	 */
