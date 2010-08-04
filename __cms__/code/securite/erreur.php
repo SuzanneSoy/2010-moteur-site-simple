@@ -1,6 +1,10 @@
 <?php
 
 class Erreur {
+	public $type = "erreur";
+	public $message = "erreur";
+	public $string = "";
+	
 	public static function fatale($message) {
 		echo '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -21,6 +25,20 @@ class Erreur {
 </html>';
 		//echo "\n"; debug_print_backtrace();
 		exit;
+	}
+	
+	public static function lecture($message) {
+		$t = new self("lecture", $message);
+	}
+	
+	public function __construct($type, $message, $string = "[debug:erreur]") {
+		$this->type = $type;
+		$this->message = $message;
+		$this->string = $string;
+	}
+	
+	public function __toString() {
+		return $this->string;
 	}
 }
 

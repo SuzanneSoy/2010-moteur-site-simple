@@ -73,8 +73,7 @@ class Stockage {
 		if ($forcer_permissions || Permissions::vérifier_permission($chemin, "get_prop")) {
 			return Système_fichiers::lire(self::fichier_prop($chemin, $prop));
 		} else {
-			Erreur::fatale("Permission non accordée pour la lecture de chemin: " . $chemin->get() . " propriété: " . $prop);
-			// return false;
+			return Erreur::lecture("Permission non accordée pour la lecture de chemin: " . $chemin->get() . " propriété: " . $prop);
 		}
 	}
 	
@@ -84,7 +83,7 @@ class Stockage {
 		if (Permissions::vérifier_permission($chemin, "get_prop")) {
 			return Système_fichiers::envoyer_fichier_directement(self::fichier_prop($chemin, $prop));
 		} else {
-			return false;
+			return Erreur::lecture("Permission non accordée pour la lecture de chemin: " . $chemin->get() . " propriété: " . $prop);
 		}
 	}
 	
