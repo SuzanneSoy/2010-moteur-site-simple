@@ -37,17 +37,17 @@ class GaleriePhoto {
 			$ret = '';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
-				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
+				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"/>';
 				$ret .= '<input type="filename" .../>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
 			} else {
 				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>';
-				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
+				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"/>';
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature" || $vue == "mini") {
-			$ret = '<img src="' . $chemin->get_url("?vue=image_mini") . '"></img>';
+			$ret = '<img src="' . $chemin->get_url("?vue=image_mini") . '"/>';
 			
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image") {
