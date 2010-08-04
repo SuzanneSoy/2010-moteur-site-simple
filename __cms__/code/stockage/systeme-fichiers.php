@@ -4,7 +4,9 @@
 
 class Système_fichiers {
 	public static function créer_dossier($chemin_fs) {
-		mkdir($chemin_fs);
+		$d = dirname($chemin_fs);
+		if (!is_dir($d)) self::créer_dossier($d);
+		if (!is_dir($chemin_fs)) mkdir($chemin_fs);
 	}
 	
 	/*public static function créer_fichier($chemin_fs) {
@@ -30,7 +32,8 @@ class Système_fichiers {
 	}
 	
 	public static function écrire($chemin_fs, $données) {
-		if (!is_dir(dirname($chemin_fs))) return false;
+		$d = dirname($chemin_fs);
+		if (!is_dir($d)) self::créer_dossier($d);
 		return file_put_contents($chemin_fs, $données);
 	}
 	

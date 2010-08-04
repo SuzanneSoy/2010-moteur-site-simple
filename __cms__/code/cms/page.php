@@ -64,9 +64,10 @@ class Page {
 			header("Content-Type: " . $this->raw_mime);
 			echo $this->raw_données;
 		} else if ($this->type == "redirect") {
-			echo "TODO : Redirection vers <a href=\""
+			header("Location: " . $this->redirect_destination);
+			/*echo "TODO : Redirection vers <a href=\""
 				. $this->redirect_destination . "\">"
-				. $this->redirect_destination . "</a>";
+				. $this->redirect_destination . "</a>";*/
 		}
 		// TODO : else erreur
 	}
