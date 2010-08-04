@@ -4,7 +4,7 @@ class AdminUtilisateurs {
 	public static function action($chemin, $action, $paramètres) {
 		$singleton = new Chemin("/admin/utilisateurs/");
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		
 		// TODO ...
 		// Solution A (propre) :

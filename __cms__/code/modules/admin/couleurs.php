@@ -3,7 +3,7 @@
 class AdminCouleurs {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else {
 			if (isset($paramètres["Couleur_A"])) {
 				// Stocker couleur A

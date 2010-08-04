@@ -33,10 +33,6 @@ class Modules {
 		if ($module === false) return self::page(false, "Erreur");
 		return call_user_func(array($module["classe"], "vue"), $chemin, $vue);
 	}
-
-	public static function page($contenu, $titre) {
-		return (object)array("contenu" => $contenu, "titre" => $titre);
-	}
 }
 
 ?>

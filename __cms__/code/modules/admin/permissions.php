@@ -4,7 +4,7 @@ class AdminPermissions {
 	function action($chemin, $action, $paramètres) {
 		$singleton = new Chemin("/admin/permissions/");
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else {
 			if (isset($paramètres["regles"])) {
 				Stockage::set_prop($singleton, "regles", $paramètres["regles"]);

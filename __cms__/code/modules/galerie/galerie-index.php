@@ -3,19 +3,19 @@
 class GalerieIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			return redirect($np);
+			return new Page($np, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin);
-			return redirect($chemin->parent());
+			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être redirect($chemin) ?
+				// TODO : peut-être new Page($chemin, '', "redirect") ?
 			}
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -59,7 +59,7 @@ class GalerieIndex {
 			}
 			$ret .= '</ul>';
 		}
-		return Modules::page($ret, Stockage::get_prop($chemin, "titre"));
+		return new Page($ret, Stockage::get_prop($chemin, "titre"));
 	}
 }
 

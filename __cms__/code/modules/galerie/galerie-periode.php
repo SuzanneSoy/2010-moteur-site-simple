@@ -3,28 +3,28 @@
 class GaleriePériode {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvel évènement", "galerie-periode");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			return redirect($np);
+			return new Page($np, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin);
-			return redirect($chemin->parent());
+			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être redirect($chemin) ?
+				// TODO : peut-être new Page($chemin, '', "redirect") ?
 			}
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
@@ -53,7 +53,8 @@ class GaleriePériode {
 			}
 	        $ret .= '<ul class="galerie période">';
 	        foreach (Stockage::liste_enfants($chemin) as $k) {
-	            $ret .= '<li><a href="' . $k->get_url() . '">' . Modules::vue($k, 'miniature') . '</a></li>'; // TODO : escape l'url !
+				// TODO : escape l'url !
+	            $ret .= '<li><a href="' . $k->get_url() . '">' . Modules::vue($k, 'miniature')->contenu . '</a></li>';
 	        }
 	        $ret .= '</ul>';
 		} else if ($vue == "miniature") {
@@ -62,7 +63,7 @@ class GaleriePériode {
 			$enfants = Stockage::liste_enfants($chemin);
 			if (isset($enfants[0])) $ret = Modules::vue($enfants[0], 'miniature')->contenu;
 		}
-		return Modules::page($ret, Stockage::get_prop($chemin, "titre"));
+		return new Page($ret, Stockage::get_prop($chemin, "titre"));
 	}
 }
 

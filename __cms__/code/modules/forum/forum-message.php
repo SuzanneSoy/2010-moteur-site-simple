@@ -2,10 +2,10 @@
 
 function action($chemin, $action, $paramètres) {
 	if ($action == "anuler") {
-		return redirect($chemin);
+		return new Page($chemin, '', "redirect");
 	} else if ($action == "supprimer") {
 		Stockage::supprimer($chemin);
-		return redirect($chemin->parent());
+		return new Page($chemin->parent(), '', "redirect");
 	} else {
 		if (isset($paramètres["message"])) {
 			Stockage::set_prop($chemin, "message", $paramètres["message"]);

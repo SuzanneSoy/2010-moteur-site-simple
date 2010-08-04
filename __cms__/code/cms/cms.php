@@ -28,12 +28,7 @@ class CMS {
 		$action = $paramètres["action"];
 		$ret = Modules::action($chemin, $action, $paramètres);
 		
-		// TODO
-		// if ($ret est une page) {
-		echo Squelette::enrober($ret);
-		// } else if ($ret est un redirect) {
-		// } else if ($ret est un raw) {
-		// }
+		$ret->envoyer();
     }
 }
 

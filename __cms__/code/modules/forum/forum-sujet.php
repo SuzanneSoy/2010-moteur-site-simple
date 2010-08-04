@@ -3,7 +3,7 @@
 class ForumSujet {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
 			$numéro_message = 1 + Stockage::get_prop($chemin, "dernier_numero");
@@ -11,15 +11,15 @@ class ForumSujet {
 			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message, "forum-message");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 	
-			return redirect($chemin, "#message" . $numéro_message);
+			return new Page($chemin, "#message" . $numéro_message, "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin);
-			return redirect($chemin->parent());
+			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être redirect($chemin) ?
+				// TODO : peut-être new Page($chemin, '', "redirect") ?
 			}
 			
 			if (isset($paramètres["vue"])) {

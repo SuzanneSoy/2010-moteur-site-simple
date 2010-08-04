@@ -3,10 +3,10 @@
 class GaleriePhoto {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return redirect($chemin);
+			return new Page($chemin, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin);
-			return redirect($chemin->parent());
+			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["fichier_image"])) {
 				// redimensionner l'image avec gd, stocker la miniature dans
@@ -18,16 +18,16 @@ class GaleriePhoto {
 	/*		if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être redirect($chemin) ?
+				// TODO : peut-être new Page($chemin, '', "redirect") ?
 			}*/
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
@@ -45,15 +45,15 @@ class GaleriePhoto {
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"></img>';
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}
-			return Modules::page($ret, "Photo");
+			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature") {
 			$ret = '<img src="' . $chemin->get_url("?vue=image_mini") . '"></img>';
 			
-			return Modules::page($ret, "Photo");
+			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image") {
-			return Modules::raw(Stockage::get_prop_sendfile("image"));
+			return new Page($chemin, "image", "sendfile");
 		} else if ($vue == "image_mini") {
-			return Modules::raw(Stockage::get_prop_sendfile("image_mini"));
+			return new Page($chemin, "image_mini", "sendfile");
 		}
 	}
 }
