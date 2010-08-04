@@ -22,7 +22,7 @@ class Squelette {
 		<link href="' . $chemin_css . '" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
-		<h1>' . Stockage::get_prop($racine, "nom_site") . '</h1>
+		<h1><a href="' . $racine->get_url() . '">' . Stockage::get_prop($racine, "nom_site") . '</a></h1>
 		<div class="site connexion">
 			<a href="' . $racine->enfant("admin")->enfant("connexion")->get_url() . '">connexion</a>
 		</div>
