@@ -13,6 +13,8 @@ class Page {
 			$this->set_page($a, $b);
 		} else if ($type == "sendfile") {
 			$this->set_sendfile($a, $b);
+		} else if ($type == "raw") {
+			$this->set_raw($a, $b);
 		} else if ($type == "redirect") {
 			$this->set_redirect($a, $b);
 		}
@@ -30,6 +32,12 @@ class Page {
 		$this->type = "sendfile";
 	}
 
+	public function set_raw($données, $mime) {
+		$this->raw_données = $données;
+		$this->raw_mime = $mime;
+		$this->type = "raw";
+	}
+
 	public function set_redirect($destination, $params = "") {
 		if (!is_string($destination)) $destination = $destination->get_url();
 		$this->redirect_destination = $destination . $params;
@@ -42,11 +50,15 @@ class Page {
 			echo Squelette::enrober($this);
 		} else if ($this->type == "sendfile") {
 			Stockage::get_prop_sendfile($this->sendfile_chemin, $this->sendfile_prop);
+		} else if ($this->type == "raw") {
+			header("Content-Type: " . $this->raw_mime);
+			echo $this->raw_données;
 		} else if ($this->type == "redirect") {
 			echo "TODO : Redirection vers <a href=\""
 				. $this->redirect_destination . "\">"
 				. $this->redirect_destination . "</a>";
 		}
+		// TODO : else erreur
 	}
 }
 

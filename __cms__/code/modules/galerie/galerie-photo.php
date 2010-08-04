@@ -46,7 +46,7 @@ class GaleriePhoto {
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
-		} else if ($vue == "miniature") {
+		} else if ($vue == "miniature" || $vue == "mini") {
 			$ret = '<img src="' . $chemin->get_url("?vue=image_mini") . '"></img>';
 			
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
@@ -55,6 +55,7 @@ class GaleriePhoto {
 		} else if ($vue == "image_mini") {
 			return new Page($chemin, "image_mini", "sendfile");
 		}
+		return new Page('',''); // TODO : devrait renvoyer une page d'erreur !
 	}
 }
 

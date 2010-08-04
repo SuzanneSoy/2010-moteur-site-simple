@@ -1,4 +1,7 @@
-.galerie img {
+<?php
+
+function get_css() {
+	return ".galerie img {
     border: thin solid black;
     padding: 0.1em;
 }
@@ -10,4 +13,5 @@
 .galerie li {
     float: left;
     margin: 1em;
+}";
 }

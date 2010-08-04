@@ -9,6 +9,9 @@ class Squelette {
     }
     
     public static function en_tete($page) {
+		// TODO : chemin css relatif.
+		$chemin_css = new Chemin('/');
+		$chemin_css = $chemin_css->get_url('?vue=css');
         return
 '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -16,7 +19,7 @@ class Squelette {
 		<title>' . $page->titre . '</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta http-equiv="Content-Language" content="fr" />
-		<link href="../style.css" rel="stylesheet" type="text/css" /><!-- TODO : chemin incorrect -->
+		<link href="' . $chemin_css . '" rel="stylesheet" type="text/css" />
 	</head>
 	<body>';
 //		<meta name="keywords" lang="fr" content="motcle1,mocle2" />

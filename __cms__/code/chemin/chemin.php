@@ -46,14 +46,16 @@ class Chemin {
 	
 	// Invariant de sécurité : la chaîne renvoyée ne commence ni ne
 	// termine par '/'.
-    public function get($slash_debut = false) {
+    public function get($slash_debut = true) {
         return ($slash_debut ? '/' : '') . join($this->segments, '/');
     }
     
     public function get_url($fin = "") {
 		// Config::get("url_base") DOIT se terminer par '/', tel que spécifié
 		// dans config.php.
-		return Config::get("url_base") . $this->get() . '/' . $fin;
+		$ch = $this->get(false) . "/";
+		if ($ch == '/') $ch = '';
+		return Config::get("url_base") . $ch . $fin;
 	}
 	
 	public function get_fs_stockage() {
