@@ -25,7 +25,7 @@ class Système_fichiers {
 	}
 	
 	public static function lire($chemin_fs) {
-		if (!file_exists($chemin_fs)) return false;
+		if (!file_exists($chemin_fs)) Erreur::fatale("Ne peut lire le fichier " . $chemin_fs); // return false;
 		return file_get_contents($chemin_fs);
 	}
 	

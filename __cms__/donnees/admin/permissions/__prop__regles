@@ -1,7 +1,8 @@
-/**|*|Administrateurs|oui|Les administrateurs ont tous les droits
+/**|*|Administrateurs|oui|Les administrateurs ont tous les droits.
 /admin/**|*|Administrateurs|oui|Les administrateurs peuvent administer (redondant avec la règle ci-dessus).
+/admin/connexion/**|*|*|oui|Tout le monde peut se connecter.
 /admin/**|*|*|non|Les non-administrateur n'ont pas accès à la section "admin".
 /forum/|nouvelle_page|Utilisateurs|oui|Les utilisateurs peuvent créer de nouveaux sujets de discussion dans le forum.
 /forum/*|nouvelle_page|Utilisateurs|oui|Les utilisateurs peuvent créer des messages dans les sujets de discussion.
-/forum/*/*|set_prop|Propriétaire|oui|L'auteur d'un message peut en définir le contenu (pas les autres, ce n'est pas un wiki).
+/forum/*/*|set_prop|Propriétaire|oui|L'auteur d'un message peut en définir le contenu (pas les autres, ce n'est pas un wiki).
 /**|get_prop|Anonymes|oui|Le reste du monde peut consulter le site.

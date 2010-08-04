@@ -3,19 +3,19 @@
 class AdminConnexion {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "connexion") {
-			if (connexion($paramètres["utilisateur"], $paramètres["mdp"])) {
-				return self::vue("connexion réussie");
+			if (Authentification::connexion($paramètres["utilisateur"], $paramètres["mdp"])) {
+				return self::vue($chemin, "connexion réussie");
 			} else {
-				return self::vue("connexion échouée");
+				return self::vue($chemin, "connexion échouée");
 			}
 		} else if ($action == "déconnexion") {
-			déconnexion();
-			return self::vue("déconnexion");
+			Authentification::déconnexion();
+			return self::vue($chemin, "déconnexion");
 		} else {
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
@@ -26,32 +26,45 @@ class AdminConnexion {
 		// Les quatre vues ("connexion réussie", "déconnexion réussie",
 		// formulaire de connexion, formulaire + "mauvais mdp")
 		if ($vue == "normal") {
-			return formulaire_connexion();
+			$ret = self::formulaire_connexion($chemin);
+			return new Page($ret, "Connexion");
 		} else if ($vue == "connexion réussie") {
 			$ret = "<h2>Connexion réussie</h2>";
 			$ret .= "<p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p>";
 			$ret .= "<p><a href=\"" . Config::get("url_base") . "\">Retour à la page d'accueil</a>.</p>";
-			return $ret;
+			return new Page($ret, "Connexion réussie");
 		}else if ($vue == "connexion échouée") {
 			$msg = "<p><strong>Mauvais mot de passe et/ou nom d'utilisateur. Ré-essayez ou retournez à la ";
 			$msg .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
 			$msg .= ".</strong></p>";
-			return formulaire_connexion($msg);
+			
+			$ret = self::formulaire_connexion($chemin, "Connexion échouée", $msg);
+			return new Page($ret, "Connexion échouée");
 		}else if ($vue == "déconnexion") {
 			$ret = "<h2>Déconnexion réussie</h2>";
 			$ret .= "<p>Vous êtes déconnecté. Vous pouvez à présent retourner à la ";
 			$ret .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
 			$ret .= ".</p>";
-			return $ret;
+			return new Page($ret, "Déconnexion réussie");
 		}
 	}
 	
-	public static function formulaire_connexion($message = "") {
+	public static function formulaire_connexion($chemin, $titre = "Connexion", $message = "") {
 		// TODO
-		return "<h2>Connexion</h2>" . $message . "<input type=\"text\" name=\"nom\" value=\"Nom\" />...";
+		$ret = "<h2>" . $titre . "</h2>";
+		$ret .= $message;
+		$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
+		$ret .= '<label for="utilisateur">Nom : </label><input type="text" name="utilisateur" value="" />';
+		$ret .= '<br />';
+		$ret .= '<label for="mdp">Mot de passe : </label><input type="password" name="mdp" value="" />';
+		$ret .= '<br />';
+		$ret .= '<input type="hidden" name="action" value="connexion" />';
+		$ret .= '<input type="submit" value="Connexion" />';
+		$ret .= '</form>';
+		return $ret;
 	}
 }
 
-Modules::enregister_module("AdminConnexion", "admin-connexion", "vue");
+Modules::enregister_module("AdminConnexion", "admin-connexion", "vue", "utilisateur mdp");
 
 ?>

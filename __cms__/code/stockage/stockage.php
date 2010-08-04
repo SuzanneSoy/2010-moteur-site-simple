@@ -73,7 +73,8 @@ class Stockage {
 		if ($forcer_permissions || Permissions::vérifier_permission($chemin, "get_prop")) {
 			return Système_fichiers::lire(self::fichier_prop($chemin, $prop));
 		} else {
-			return false;
+			Erreur::fatale("Permission non accordée pour la lecture de chemin: " . $chemin->get() . " propriété: " . $prop);
+			// return false;
 		}
 	}
 	
