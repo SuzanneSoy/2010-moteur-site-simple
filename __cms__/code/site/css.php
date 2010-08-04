@@ -50,8 +50,7 @@ function get_css() {
     float: left;
     margin: 1em;
 	padding: 0;
-    padding: 0.1em;
-	width: 7em;
+	width: 9em;
 	text-align: center;
 }
 
@@ -61,6 +60,7 @@ function get_css() {
 
 .galerie.photos .miniature {
 	border: thin solid gray;
+	height: 70px;
 }
 
 .galerie.photos img {
@@ -68,13 +68,16 @@ function get_css() {
 }
 
 .galerie.photos .titre {
-	border: thin solid gray;
-	border-top: none;
 	padding: 0.2em 0.4em;
+	height: 5em;
 }
 
-.galerie.photos a:hover .titre {
-	background-color: #ff6;
+.galerie.photos li:hover .miniature {
+	border-color: #ff6;
+}
+
+.galerie.photos li:hover .titre {
+	color: #7f7f33;
 }
 
 .clearboth {

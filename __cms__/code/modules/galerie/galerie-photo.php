@@ -51,9 +51,9 @@ class GaleriePhoto {
 			
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image") {
-			return new Page($chemin, "image", "sendfile");
+			return new Page($chemin, "image", "sendprop");
 		} else if ($vue == "image_mini") {
-			return new Page($chemin, "image_mini", "sendfile");
+			return new Page($chemin, "image_mini", "sendprop");
 		}
 		return new Page('',''); // TODO : devrait renvoyer une page d'erreur !
 	}

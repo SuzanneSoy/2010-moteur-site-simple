@@ -3,8 +3,9 @@
 class Page {
 	public $contenu = "";
 	public $titre = "";
-	public $sendfile_chemin = "";
-	public $sendfile_prop = "";
+	public $sendfile_fichier = "";
+	public $sendprop_chemin = "";
+	public $sendprop_prop = "";
 	public $redirect_destination = "";
 	public $type = "page";
 	
@@ -12,7 +13,9 @@ class Page {
 		if ($type == "page") {
 			$this->set_page($a, $b);
 		} else if ($type == "sendfile") {
-			$this->set_sendfile($a, $b);
+			$this->set_sendfile($a);
+		} else if ($type == "sendprop") {
+			$this->set_sendprop($a, $b);
 		} else if ($type == "raw") {
 			$this->set_raw($a, $b);
 		} else if ($type == "redirect") {
@@ -26,10 +29,15 @@ class Page {
 		$this->type = "page";
 	}
 	
-	public function set_sendfile($chemin, $prop) {
-		$this->sendfile_chemin = $chemin;
-		$this->sendfile_prop = $prop;
+	public function set_sendfile($fichier) {
+		$this->sendfile_fichier = $fichier;
 		$this->type = "sendfile";
+	}
+	
+	public function set_sendprop($chemin, $prop) {
+		$this->sendprop_chemin = $chemin;
+		$this->sendprop_prop = $prop;
+		$this->type = "sendprop";
 	}
 
 	public function set_raw($données, $mime) {
@@ -49,7 +57,9 @@ class Page {
 		if ($this->type == "page") {
 			echo Squelette::enrober($this);
 		} else if ($this->type == "sendfile") {
-			Stockage::get_prop_sendfile($this->sendfile_chemin, $this->sendfile_prop);
+			Système_fichiers::envoyer_fichier_directement($this->sendfile_fichier);
+		} else if ($this->type == "sendprop") {
+			Stockage::get_prop_sendfile($this->sendprop_chemin, $this->sendprop_prop);
 		} else if ($this->type == "raw") {
 			header("Content-Type: " . $this->raw_mime);
 			echo $this->raw_données;

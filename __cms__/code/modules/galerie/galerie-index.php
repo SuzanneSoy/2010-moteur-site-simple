@@ -27,8 +27,9 @@ class GalerieIndex {
 	}
 	
 	public static function vue($chemin, $vue = "normal") {
-		$ret = '';
 		if ($vue == "normal") {
+			$ret = '';
+			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
@@ -56,6 +57,7 @@ class GalerieIndex {
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="miniature">';
+				$ret .= '<img src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
 				$ret .= '</div>';
 				$ret .= '<div class="titre">';
 				
@@ -71,8 +73,12 @@ class GalerieIndex {
 			$ret .= '</ul>';
 			$ret .= '<div class="clearboth"></div>';
 			$ret .= '</div>';
+			
+			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+		} else if ($vue == "image_nouvelle_periode") {
+			// Houlàlà ça sent le hack pas beau !
+			return new Page(Path::combine(Config::get("chemin_base"), "/code/site/nouvelle_image.jpg"), null, "sendfile");
 		}
-		return new Page($ret, Stockage::get_prop($chemin, "titre"));
 	}
 }
 
