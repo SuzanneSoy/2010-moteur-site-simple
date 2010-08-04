@@ -22,7 +22,7 @@ class AdminPermissions {
 		$singleton = new Chemin("/admin/permissions/");
 		if ($vue == "normal") {
 			$ret = "";
-			$ret .= "<h1>Règles de sécurité</h1>";
+			$ret .= "<h2>Règles de sécurité</h2>";
 			$ret .= "<p>La première règle correspondant à une action de l'utilisateur est appliquée. Bla-bla blabla sur le fonctionnement.</p>";
 			if (Permissions::vérifier_permission($singleton, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= "<textarea ...>" . Stockage::get_prop($singleton, "regles") . "</textarea>"; // TODO : html escape chars etc.

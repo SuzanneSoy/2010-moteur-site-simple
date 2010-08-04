@@ -16,7 +16,7 @@ class Modules {
 	public static function get_module($chemin) {
 		$type = Stockage::get_prop($chemin, "type");
 		if ($type === false || !isset(self::$liste_modules[$type])) {
-			Erreur::fatale("Type inconnu (" . $type . ") pour la page " . $chemin->get() . ".");
+			Erreur::fatale("Type inconnu (" . var_export($type, true) . ") pour la page " . $chemin->get() . ".");
 			// return false;
 		}
 		return self::$liste_modules[$type];

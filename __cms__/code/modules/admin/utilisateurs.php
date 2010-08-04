@@ -59,7 +59,7 @@ class AdminUtilisateurs {
 		$singleton = new Chemin("/admin/utilisateurs/");
 		if ($vue == "normal") {
 	        $ret = '';
-			$ret .= "<h1>Utilisateurs</h1>";
+			$ret .= "<h2>Utilisateurs</h2>";
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				// afficher le lien "Nouvel utilisateur"
 			}

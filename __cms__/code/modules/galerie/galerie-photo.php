@@ -41,7 +41,7 @@ class GaleriePhoto {
 				$ret .= '<input type="filename" .../>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
 			} else {
-				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>';
+				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<img src="' . $chemin->get_url("?vue=image") . '"/>';
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
 			}

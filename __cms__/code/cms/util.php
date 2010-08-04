@@ -1,9 +1,9 @@
 <?php
 
-function qw($arg) {
+function qw($arg, $sep = " ") {
 	if (is_array($arg)) return $arg;
 	$ret = array();
-	foreach(explode(" ", $arg) as $v) {
+	foreach(explode($sep, $arg) as $v) {
 		if ($v !== "") array_push($ret, $v);
 	}
 	return $ret;

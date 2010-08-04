@@ -39,7 +39,7 @@ class ForumSujet {
 				$ret .= '<input type="submit" value="renomer" />';
 				$ret .= '</form>';
 			} else {
-				$ret .= '<h1 class="forum sujet titre affichage">' . Stockage::get_prop($chemin, "titre") . '</h1>';
+				$ret .= '<h2 class="forum sujet titre affichage">' . Stockage::get_prop($chemin, "titre") . '</h2>';
 			}
 			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';

@@ -16,10 +16,8 @@ class SiteIndex {
 	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 			$ret = '';
-			$ret .= "<h1>" . Stockage::get_prop($chemin, "nom_site") . "</h1>";
-			$ret .= "<ul>";
-			$ret .= "<li><a href=\"" . $chemin->enfant("galerie")->get_url() . "\">Galerie</a>";
-			$ret .= "</ul>";
+			$ret .= "<h2>" . Stockage::get_prop($chemin, "nom_site") . "</h2>";
+			$ret .= "<p>Bienvenue sur le site d'exemple.</p>";
 			return new Page($ret, Stockage::get_prop($chemin, "nom_site"));
 		} else if ($vue == "css") {
 			return new Page(get_css(), "text/css", "raw");

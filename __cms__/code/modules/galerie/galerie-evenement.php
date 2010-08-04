@@ -36,7 +36,7 @@ class GalerieÉvènement {
 				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
 			} else {
-				$ret .= '<h1>' . Stockage::get_prop($chemin, "titre") . '</h1>';
+				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<p class="galerie evenement description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
 			}
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {

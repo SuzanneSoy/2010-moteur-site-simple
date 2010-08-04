@@ -9,7 +9,7 @@ class Erreur {
 		<title>Erreur</title>
 	</head>
 	<body>
-		<h1>Erreur</h1>
+		<h2>Erreur</h2>
 		<p>Désolé, une erreur est survenue. Contactez le créateur du site SVP :
 		<a href="mailto:' . htmlspecialchars(Config::get('courriel_admin'))
 		. '?subject=Erreur%20dans%20le%20programme%202010-moteur-site-simple&body='
@@ -19,7 +19,7 @@ class Erreur {
 		<p><strong>' . htmlspecialchars($message) . '</strong></p>
 	</body>
 </html>';
-		
+		//echo "\n"; debug_print_backtrace();
 		exit;
 	}
 }

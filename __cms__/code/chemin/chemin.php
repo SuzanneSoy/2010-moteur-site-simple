@@ -36,7 +36,7 @@ class Chemin {
 			if ($motif[$i] == CHEMIN_JOKER_SEGMENT) {
 				continue;
 			}
-			if ($motif[$i] == $this->segments[$i]) {
+			if ($i < count($this->segments) && $motif[$i] == $this->segments[$i]) {
 				continue;
 			}
 			return false;
@@ -103,7 +103,7 @@ class Chemin {
         $chemin = preg_replace("/^\\/*/", '', $chemin);
         $chemin = preg_replace("/\\/*$/", '', $chemin);
         
-        $segments = explode('/', $chemin);
+        $segments = qw($chemin, '/');
         if ($est_un_motif) {
 			$segments = array_map(array("self", "nettoyer_segment_motif"), $segments);
 		} else {
@@ -115,12 +115,13 @@ class Chemin {
     
     public static function nettoyer_segment($segment, $est_un_motif = false) {
 		// SÉCURITÉ : $segment nettoyé :
-		//   * /!\ Peut être vide /!\
+		//   * /!\ Ne peut pas être vide /!\
         //   * Ne doit pas contenir '\0' (octet NULL).
 		//   * Ne doit pas contenir '/' non plus, remplacer par '-'.
 		//   * Ne doit pas contenir '*' non plus, remplacer par '-'.
         //   * Ne contient pas "__prop__", remplacer par "___prop___".
 		
+		if ($segment == "") $segment = "_vide_";
         $segment = preg_replace("/\\0/", '', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
         $segment = preg_replace("/\\//", '-', $segment); // TODO : vérifier si c'est bien ça ! (supprime _toutes_ les occurences ???)
         if (!$est_un_motif) $segment = preg_replace("/\\*/", '-', $segment); // TODO : vérifier ...

@@ -22,7 +22,7 @@ class ForumIndex {
 	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
 	        $ret = '';
-			$ret .= "<h1>Forum</h1>";
+			$ret .= "<h2>Forum</h2>";
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				// afficher le lien "Nouveau sujet"
 			}

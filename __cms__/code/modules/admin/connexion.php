@@ -28,7 +28,7 @@ class AdminConnexion {
 		if ($vue == "normal") {
 			return formulaire_connexion();
 		} else if ($vue == "connexion réussie") {
-			$ret = "<h1>Connexion réussie</h1>";
+			$ret = "<h2>Connexion réussie</h2>";
 			$ret .= "<p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p>";
 			$ret .= "<p><a href=\"" . Config::get("url_base") . "\">Retour à la page d'accueil</a>.</p>";
 			return $ret;
@@ -38,7 +38,7 @@ class AdminConnexion {
 			$msg .= ".</strong></p>";
 			return formulaire_connexion($msg);
 		}else if ($vue == "déconnexion") {
-			$ret = "<h1>Déconnexion réussie</h1>";
+			$ret = "<h2>Déconnexion réussie</h2>";
 			$ret .= "<p>Vous êtes déconnecté. Vous pouvez à présent retourner à la ";
 			$ret .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
 			$ret .= ".</p>";
@@ -48,7 +48,7 @@ class AdminConnexion {
 	
 	public static function formulaire_connexion($message = "") {
 		// TODO
-		return "<h1>Connexion</h1>" . $message . "<input type=\"text\" name=\"nom\" value=\"Nom\" />...";
+		return "<h2>Connexion</h2>" . $message . "<input type=\"text\" name=\"nom\" value=\"Nom\" />...";
 	}
 }
 
