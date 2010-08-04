@@ -39,7 +39,7 @@ class Page {
 	public function envoyer() {
 		// Yeeeeeeeeeeeeeeeeeeeeeeha ! Et on envoie !
 		if ($this->type == "page") {
-			Squelette::enrober($this);
+			echo Squelette::enrober($this);
 		} else if ($this->type == "sendfile") {
 			Stockage::get_prop_sendfile($this->sendfile_chemin, $this->sendfile_prop);
 		} else if ($this->type == "redirect") {

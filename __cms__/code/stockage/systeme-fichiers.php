@@ -48,6 +48,13 @@ class Système_fichiers {
 	}
 	
 	public static function envoyer_fichier_directement($chemin_fs) {
+		// TODO : utiliser http://www.php.net/manual/en/function.readfile.php#86244 pour les téléchargements partiels
+		// TODO : utiliser http://www.php.net/manual/en/function.readfile.php#52722 pour les types mimes
+		// TODO : ou bien http://www.php.net/manual/en/function.header.php#48538 pour les types mimes
+		//        (ou mieux, l'utiliser au cas où on ne trouve pas dans le fichier d'apache).
+		// TODO : stocker le type mime dans $chemin_fs . '__mime' et utiliser celui-là si possible, sinon les méthodes ci-dessus.
+		// Licence des bouts de code du manuel PHP : CC-Attribution http://php.net/manual/en/about.notes.php
+		header("Content-Type: image/jpg");
 		return readfile($chemin_fs);
 	}
 }
