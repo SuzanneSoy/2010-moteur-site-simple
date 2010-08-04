@@ -19,13 +19,17 @@ class Authentification {
 		}
 	}
 	
+	public static function est_connecté() {
+		return get_utilisateur() == "Anonyme";
+	}
+	
 	public static function déconnexion() {
 		Session::effacer("utilisateur");
 	}
 	
 	public static function get_utilisateur() {
 		$u = Session::get("utilisateur");
-		return ($u === false) ? "Anonyme" : $u;
+		return (Erreur::is_erreur($u)) ? "Anonyme" : $u;
 	}
 	
 	public static function nouvel_utilisateur($nom_utilisateur) {

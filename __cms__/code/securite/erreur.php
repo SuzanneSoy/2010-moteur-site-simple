@@ -40,6 +40,10 @@ class Erreur {
 	public function __toString() {
 		return $this->string;
 	}
+	
+	public static function is_erreur($obj) {
+		return get_class($obj) === "Erreur";
+	}
 }
 
 ?>

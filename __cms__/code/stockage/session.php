@@ -12,7 +12,7 @@ class Session {
 	
 	public static function get($k) {
 		self::démarrer();
-		return isset($_SESSION[$k]) ? $_SESSION[$k] : false;
+		return isset($_SESSION[$k]) ? $_SESSION[$k] : Erreur::lecture("N'a pas pu lire la variable de session " . $k);
 	}
 	
 	public static function effacer($k) {
