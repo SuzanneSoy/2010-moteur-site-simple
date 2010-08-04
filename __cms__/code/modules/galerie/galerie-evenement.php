@@ -51,7 +51,7 @@ class GalerieÉvènement {
 				$ret .= '<input type="submit" value="Supprimer"/>';
 				$ret .= '</form>';
 			}
-	        $ret .= '<ul class="galerie evenement">';
+	        $ret .= '<ul class="galerie photos evenement">';
 	        foreach (Stockage::liste_enfants($chemin) as $k) {
 				// TODO : escape l'url !
 	            $ret .= '<li><a href="' . $k->get_url() . '">' . Modules::vue($k, 'miniature')->contenu . '</a></li>';

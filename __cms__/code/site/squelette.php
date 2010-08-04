@@ -37,6 +37,7 @@ class Squelette {
 		$ret .= '		</div>' . $nl;
 		$ret .= '		<div class="site navigation">' . $nl;
 		$ret .= '			<ul>' . $nl;
+		$ret .= '				<li><a href="' . $racine->get_url() . '">Accueil</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("galerie")->get_url() . '">Galerie</a></li>' . $nl;
 		$ret .= '			</ul>' . $nl;
 		$ret .= '		</div>' . $nl;

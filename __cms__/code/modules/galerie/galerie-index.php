@@ -8,9 +8,6 @@ class GalerieIndex {
 			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			return new Page($np, '', "redirect");
-		} else if ($action == "supprimer") {
-			Stockage::supprimer($chemin);
-			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {
 				Stockage::renomer($chemin, $paramètres["titre"]);
@@ -33,31 +30,47 @@ class GalerieIndex {
 		$ret = '';
 		if ($vue == "normal") {
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" />';
+				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<p class="galerie index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
 			}
+			
+			$ret .= '<div class="galerie photos index">';
+			$ret .= '<ul>';
+			foreach (Stockage::liste_enfants($chemin) as $k) {
+				$mini = Modules::vue($k, 'miniature');
+				$ret .= '<li>';
+				$ret .= '<a href="' . $k->get_url() . '">'; // TODO : escape l'url !
+				$ret .= '<div class="miniature">';
+ 				$ret .= $mini->contenu; // TODO : escape l'url !
+				$ret .= '</div>';
+				$ret .= '<div class="titre">';
+				$ret .= $mini->titre;
+				$ret .= '</div>';
+				$ret .= '</a>';
+				$ret .= '</li>';
+			}
+			
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
-				$ret .= '<form action="' . $chemin->get_url() . '">';
+				$ret .= '<li>';
+				$ret .= '<div class="miniature">';
+				$ret .= '</div>';
+				$ret .= '<div class="titre">';
+				
+				$ret .= '<form class="galerie nouvelle_page" action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle page"/>';
 				$ret .= '</form>';
+				
+				$ret .= '</div>';
+				$ret .= '</li>';
 			}
-			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
-				$ret .= '<form action="' . $chemin->get_url() . '">';
-				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
-				$ret .= '<input type="submit" value="Supprimer"/>';
-				$ret .= '</form>';
-			}
-			$ret .= '<ul class="galerie index">';
-			foreach (Stockage::liste_enfants($chemin) as $k) {
-				$ret .= '<li><a href="' . $k->get_url() . '">'
-					. Modules::vue($k, 'miniature')->contenu
-					. '</a></li>'; // TODO : escape l'url !
-			}
+			
 			$ret .= '</ul>';
+			$ret .= '<div class="clearboth"></div>';
+			$ret .= '</div>';
 		}
 		return new Page($ret, Stockage::get_prop($chemin, "titre"));
 	}
