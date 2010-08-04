@@ -26,7 +26,7 @@ class Stockage {
 		$b = Path::combine(Config::get("chemin_base"), "cms.php");
 		
 		$php_str = "<?php\n\n";
-		$php_str .= "require_once(dirname(__FILE__) . \"" . Path::relative($a, $b) . "\");\n\n";
+		$php_str .= "require_once(dirname(__FILE__) . \"/" . Path::relative($a, $b) . "\");\n\n";
 		$php_str .= "CMS::page(\"" . $chemin_vers->get() . "\");\n\n";
 		$php_str .= "?>";
 		return Système_fichiers::écrire(Path::combine($a, "/index.php"), $php_str);
