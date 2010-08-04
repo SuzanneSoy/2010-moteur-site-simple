@@ -28,7 +28,7 @@ class Erreur {
 	}
 	
 	public static function lecture($message) {
-		$t = new self("lecture", $message);
+		return new self("lecture", $message);
 	}
 	
 	public function __construct($type, $message, $string = "[debug:erreur]") {

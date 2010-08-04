@@ -20,7 +20,7 @@ class Authentification {
 	}
 	
 	public static function est_connecté() {
-		return get_utilisateur() == "Anonyme";
+		return self::get_utilisateur() != "Anonyme";
 	}
 	
 	public static function déconnexion() {

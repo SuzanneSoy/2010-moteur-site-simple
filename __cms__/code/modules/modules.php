@@ -10,12 +10,12 @@ class Modules {
 			"post" => qw($post),
 			"file" => qw($file)
 		);
-                self::$liste_modules[$type]["get_post"][] = "action"; // Toujours présent.
+		self::$liste_modules[$type]["get_post"][] = "action"; // Toujours présent.
 	}
 	
 	public static function get_module($chemin) {
 		$type = Stockage::get_prop($chemin, "type");
-		if ($type === false || !isset(self::$liste_modules[$type])) {
+		if (Erreur::is_erreur($type) || !isset(self::$liste_modules[$type])) {
 			Erreur::fatale("Type inconnu (" . var_export($type, true) . ") pour la page " . $chemin->get() . ".");
 			// return false;
 		}

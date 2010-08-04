@@ -8,7 +8,7 @@ class AdminConnexion {
 			} else {
 				return self::vue($chemin, "connexion échouée");
 			}
-		} else if ($action == "déconnexion") {
+		} else if ($action == "deconnexion") {
 			Authentification::déconnexion();
 			return self::vue($chemin, "déconnexion");
 		} else {
