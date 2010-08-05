@@ -23,6 +23,7 @@ function get_css() {
 .site.navigation ul {
 	padding: 0;
 	margin: 0;
+	text-align: center;
 }
 
 .site.navigation li:hover {

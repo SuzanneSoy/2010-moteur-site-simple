@@ -39,6 +39,9 @@ class Squelette {
 		$ret .= '			<ul>' . $nl;
 		$ret .= '				<li><a href="' . $racine->get_url() . '">Accueil</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("galerie")->get_url() . '">Galerie</a></li>' . $nl;
+		if (Permissions::vérifier_permission($racine->enfant("admin"), "set_prop", Authentification::get_utilisateur())) {
+			$ret .= '<li><a href="' . $racine->enfant("admin")->get_url() . '">Administration</a></li>' . $nl;
+		}
 		$ret .= '			</ul>' . $nl;
 		$ret .= '		</div>' . $nl;
 		$ret .= '		<div class="site contenu">' . $nl;
