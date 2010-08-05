@@ -88,6 +88,10 @@ function get_css() {
 	color: #7f7f33;
 }
 
+.admin.permissions.regles {
+	width: 100%;
+}
+
 .clearboth {
 	clear: both;
 }

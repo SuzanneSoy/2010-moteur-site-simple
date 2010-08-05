@@ -48,9 +48,9 @@ class AdminUtilisateurs {
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
@@ -72,7 +72,7 @@ class AdminUtilisateurs {
 					. '<td>' . $u . '</td>' // TODO : Prénom
 					. '<td>' . Authentification::get_groupe($u) . '</td>'
 					. '<td>' . Authentification::get_mot_de_passe($u) . '<input type="submit" value="Générer un nouveau mot de passe"/></td>'
-					. '<td>' . Authentification::get_peut_se_connecter($u) . '</td>'
+					. '<td>' . (Authentification::get_peut_se_connecter($u) ? "oui" : "non") . '</td>'
 					. '<td><input type="submit" value="appliquer"/></td>'
 					. '<td><input type="submit" value="supprimer"/></td>' // TODO
 					. '</form>'
@@ -82,7 +82,7 @@ class AdminUtilisateurs {
 	            // $chemin->enfant("$utilisateur") ?action=gen_mdp .
 	        }
 	        $ret .= '</tbody></table>';
-			return $ret;
+			return new Page($ret, "Utilisateurs");
 		}
 	}
 }

@@ -11,9 +11,9 @@ class AdminPermissions {
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
@@ -23,9 +23,9 @@ class AdminPermissions {
 		if ($vue == "normal") {
 			$ret = "";
 			$ret .= "<h2>Règles de sécurité</h2>";
-			$ret .= "<p>La première règle correspondant à une action de l'utilisateur est appliquée. Bla-bla blabla sur le fonctionnement.</p>";
+			$ret .= "<p>La première règle correspondant à une action de l'utilisateur est appliquée. TODO Bla-bla blabla sur le fonctionnement.</p>";
 			if (Permissions::vérifier_permission($singleton, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= "<textarea ...>" . Stockage::get_prop($singleton, "regles") . "</textarea>"; // TODO : html escape chars etc.
+				$ret .= '<textarea class="admin permissions regles" cols="200" rows="20">' . Stockage::get_prop($singleton, "regles") . "</textarea>"; // TODO : html escape chars etc.
 			} else {
 				$ret .= "<pre><code>" . Stockage::get_prop($singleton, "regles") . "</code></pre>"; // TODO : html escape chars etc.
 			}

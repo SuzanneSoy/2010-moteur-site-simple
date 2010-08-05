@@ -17,7 +17,7 @@ class Modules {
 		$type = Stockage::get_prop($chemin, "type");
 		if (Erreur::is_erreur($type)) {
 			// TODO : permettre l'empilement des erreurs. Quelle syntaxe utiliser ?
-			Erreur::fatale($type, "Erreur lors de la lecture du type de la page " . $chemin->get() . ".");
+			Erreur::fatale("Erreur lors de la lecture du type de la page " . $chemin->get() . ".", $type);
 		} else if (!isset(self::$liste_modules[$type])) {
 			Erreur::fatale("Type inconnu (" . var_export($type, true) . ") pour la page " . $chemin->get() . ".");
 		}

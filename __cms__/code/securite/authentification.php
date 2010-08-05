@@ -50,7 +50,7 @@ class Authentification {
 	
 	public static function liste_utilisateurs() {
 		$liste = array();
-		foreach (stockage::liste_enfants($chemin) as $k) {
+		foreach (stockage::liste_enfants(self::singleton()) as $k) {
 			array_push($liste, $k->dernier());
 		}
 		sort($liste);
