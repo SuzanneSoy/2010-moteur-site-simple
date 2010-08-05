@@ -2,3 +2,4 @@ Sécurité : les noms de propriétés passés à stockage ne doivent pas
    contenir de '/' (doivent valider "nettoyer_segment()".
 Les actions ne devraient être que des POST... ça pose problème sur certains liens (connexion, ...).
 Les titres devraient renomer _+_ set_prop (sachant que le renomage peut déteriorer le texte du titre (sécurité sur le chemin)).
+Gérer ces saletées de magic quotes dans les biscuits aux brisures de chocolat (cookies).

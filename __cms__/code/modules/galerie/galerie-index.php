@@ -10,9 +10,7 @@ class GalerieIndex {
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {
-				Stockage::renomer($chemin, $paramètres["titre"]);
-				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être new Page($chemin, '', "redirect") ?
+				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
 			}
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -31,8 +29,12 @@ class GalerieIndex {
 			$ret = '';
 			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
+				$ret .= '<form class="galerie infos" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
-				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "message");
+				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
+				$ret .= '<br />';
+				$ret .= '<input type="submit" value="appliquer" />';
+				$ret .= '</form>';
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<p class="galerie index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
@@ -61,9 +63,9 @@ class GalerieIndex {
 				$ret .= '</div>';
 				$ret .= '<div class="titre">';
 				
-				$ret .= '<form class="galerie nouvelle_page" action="' . $chemin->get_url() . '">';
+				$ret .= '<form class="galerie nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouvelle page"/>';
+				$ret .= '<input type="submit" value="Nouvelle période"/>';
 				$ret .= '</form>';
 				
 				$ret .= '</div>';

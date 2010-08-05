@@ -5,6 +5,9 @@ error_reporting(E_ALL | E_STRICT);
 require_once(dirname(__FILE__) . "/configuration.php");
 require_once(dirname(__FILE__) . "/include_tous.php");
 
+// It's not a bug, its a feature
+if (get_magic_quotes_runtime()) set_magic_quotes_runtime(false);
+
 class CMS {
     public static function page($chemin_str) {
 		// TODO : appeller Modules::action($chemin, $action, $paramètres);
@@ -15,11 +18,11 @@ class CMS {
 		$paramètres = array("action" => "vue");
 		
 		foreach ($module["get_post"] as $param) {
-			if (isset($_GET[$param])) $paramètres[$param] = $_GET[$param];
-			if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+			if (isset($_GET[$param])) $paramètres[$param] = self::param_get($param);
+			if (isset($_POST[$param])) $paramètres[$param] = self::param_post($param);
 		}
 		foreach ($module["post"] as $param) {
-			if (isset($_POST[$param])) $paramètres[$param] = $_POST[$param];
+			if (isset($_POST[$param])) $paramètres[$param] = self::param_post($param);
 		}
 		foreach ($module["file"] as $param) {
 			if (isset($_FILE[$param])) $paramètres[$param] = $_FILE[$param];
@@ -30,6 +33,15 @@ class CMS {
 		
 		$ret->envoyer();
     }
+	
+	// Not even beneath my contempt...
+	public static function param_get($param) {
+		return get_magic_quotes_gpc() ? stripslashes($_GET[$param]) : $_GET[$param];
+	}
+	
+	public static function param_post($param) {
+		return get_magic_quotes_gpc() ? stripslashes($_POST[$param]) : $_POST[$param];
+	}
 }
 
 ?>

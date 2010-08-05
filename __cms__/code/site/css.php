@@ -40,6 +40,11 @@ function get_css() {
 	float: left;
 }
 
+.galerie.infos {
+	border-bottom: thick solid gray;
+	padding-bottom: 1em;
+}
+
 .galerie.photos ul {
 	padding: 0;
 	margin: 0;
