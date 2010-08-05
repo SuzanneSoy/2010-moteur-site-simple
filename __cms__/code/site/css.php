@@ -1,7 +1,11 @@
 <?php
 
 function get_css() {
-	return ".site.connexion {
+	return "h1 a {
+	color: #7f7f33;
+}
+
+.site.connexion {
 	position: absolute;
 	top: 0;
 	right: 0;
