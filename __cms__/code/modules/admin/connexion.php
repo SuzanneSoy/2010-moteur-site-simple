@@ -54,12 +54,12 @@ class AdminConnexion {
 		$ret = "<h2>" . $titre . "</h2>";
 		$ret .= $message;
 		$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
-		$ret .= '<label for="utilisateur">Nom : </label><input type="text" name="utilisateur" value="" />';
-		$ret .= '<br />';
-		$ret .= '<label for="mdp">Mot de passe : </label><input type="password" name="mdp" value="" />';
-		$ret .= '<br />';
+		$ret .= '<p><label for="utilisateur">Nom : </label><input type="text" id="utilisateur" name="utilisateur" value="" /></p>';
+		$ret .= '<p><label for="mdp">Mot de passe : </label><input type="password" id="mdp" name="mdp" value="" /></p>';
+		$ret .= '<p>';
 		$ret .= '<input type="hidden" name="action" value="connexion" />';
 		$ret .= '<input type="submit" value="Connexion" />';
+		$ret .= '</p>';
 		$ret .= '</form>';
 		return $ret;
 	}

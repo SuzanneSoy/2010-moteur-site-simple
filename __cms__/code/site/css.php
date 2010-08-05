@@ -60,10 +60,12 @@ function get_css() {
 }
 
 .galerie.photos li a {
+	display:block;
 	color: black;
 }
 
 .galerie.photos .miniature {
+	display:block;
 	border: thin solid gray;
 	height: 70px;
 }
@@ -73,6 +75,7 @@ function get_css() {
 }
 
 .galerie.photos .titre {
+	display:block;
 	padding: 0.2em 0.4em;
 	height: 5em;
 }

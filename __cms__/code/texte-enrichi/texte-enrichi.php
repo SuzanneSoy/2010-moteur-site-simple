@@ -12,7 +12,7 @@ function formulaire_édition_texte_enrichi($données, $nom_champ) {
 	// enrichi ?
 	
 	// Pour l'instant, juste du texte brut. TODO : éditeur wysiwym
-	return '<textarea name="' . $nom_champ . '">' . $données . '</textarea>'; // TODO : escape html chars & co.
+	return '<p><textarea cols="80" rows="10" name="' . $nom_champ . '">' . $données . '</textarea></p>'; // TODO : escape html chars & co.
 }
 
 function affichage_texte_enrichi($données) {

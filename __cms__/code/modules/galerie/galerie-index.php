@@ -32,8 +32,7 @@ class GalerieIndex {
 				$ret .= '<form class="galerie infos" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
-				$ret .= '<br />';
-				$ret .= '<input type="submit" value="appliquer" />';
+				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
@@ -46,12 +45,12 @@ class GalerieIndex {
 				$mini = Modules::vue($k, 'miniature');
 				$ret .= '<li>';
 				$ret .= '<a href="' . $k->get_url() . '">'; // TODO : escape l'url !
-				$ret .= '<div class="miniature">';
+				$ret .= '<span class="miniature">';
  				$ret .= $mini->contenu; // TODO : escape l'url !
-				$ret .= '</div>';
-				$ret .= '<div class="titre">';
+				$ret .= '</span>';
+				$ret .= '<span class="titre">';
 				$ret .= $mini->titre;
-				$ret .= '</div>';
+				$ret .= '</span>';
 				$ret .= '</a>';
 				$ret .= '</li>';
 			}
@@ -59,13 +58,15 @@ class GalerieIndex {
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="miniature">';
-				$ret .= '<img src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
+				$ret .= '<img alt="nouvelle période" src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
 				$ret .= '</div>';
 				$ret .= '<div class="titre">';
 				
 				$ret .= '<form class="galerie nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<p>';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
 				$ret .= '<input type="submit" value="Nouvelle période"/>';
+				$ret .= '</p>';
 				$ret .= '</form>';
 				
 				$ret .= '</div>';
