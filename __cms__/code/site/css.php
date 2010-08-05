@@ -22,7 +22,7 @@ function get_css() {
 }
 
 .site.navigation li:hover {
-	background-color: yellow; /* Flashy <3 */
+	background-color: #ff0; /* Flashy <3 */
 }
 
 .site.navigation li {

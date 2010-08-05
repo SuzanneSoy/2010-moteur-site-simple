@@ -31,7 +31,11 @@ class CMS {
 		$action = $paramètres["action"];
 		$ret = Modules::action($chemin, $action, $paramètres);
 		
-		$ret->envoyer();
+		if (!Page::is_page($ret)) {
+			Erreur::fatale("Le module de " . $chemin->get() . " n'a pas renvoyé une page mais à la place : " . var_export($ret, true));
+		} else {
+			$ret->envoyer();
+		}
     }
 	
 	// Not even beneath my contempt...

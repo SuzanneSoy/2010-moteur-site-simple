@@ -71,6 +71,10 @@ class Page {
 		}
 		// TODO : else erreur
 	}
+	
+	public static function is_page($obj) {
+		return get_class($obj) === __CLASS__;
+	}
 }
 
 ?>
