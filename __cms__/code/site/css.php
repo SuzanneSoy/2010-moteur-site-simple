@@ -22,7 +22,7 @@ function get_css() {
 }
 
 .site.navigation li:hover {
-	background-color: yellow; // Flashy <3
+	background-color: yellow; /* Flashy <3 */
 }
 
 .site.navigation li {
@@ -97,7 +97,7 @@ function get_css() {
 textarea {
 	width: 50%;
 	margin: 1em 0;
-	// font-size: large; // Activer pour plus d'accessibilité.
+	/* font-size: large; */ /* Activer pour plus d'accessibilité. */
 }
 
 h2 input {
