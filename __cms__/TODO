@@ -3,3 +3,5 @@ Sécurité : les noms de propriétés passés à stockage ne doivent pas
 Les actions ne devraient être que des POST... ça pose problème sur certains liens (connexion, ...).
 Les titres devraient renomer _+_ set_prop (sachant que le renomage peut déteriorer le texte du titre (sécurité sur le chemin)).
 Gérer ces saletées de magic quotes dans les biscuits aux brisures de chocolat (cookies).
+Mettre le css dans une page (dossier) qui s'appelle "style.css", comme ça ça donne l'impression que c'est un fichier (même si en réalité
+   c'est le index.php de cette page qui le génère).

@@ -1,7 +1,7 @@
 <?php
 
 class AdminPermissions {
-	function action($chemin, $action, $paramètres) {
+	public static function action($chemin, $action, $paramètres) {
 		$singleton = new Chemin("/admin/permissions/");
 		if ($action == "anuler") {
 			return new Page($chemin, '', "redirect");
@@ -18,7 +18,7 @@ class AdminPermissions {
 		}
 	}
 	
-	function vue($chemin, $vue = "normal") {
+	public static function vue($chemin, $vue = "normal") {
 		$singleton = new Chemin("/admin/permissions/");
 		if ($vue == "normal") {
 			$ret = "";
@@ -29,7 +29,7 @@ class AdminPermissions {
 			} else {
 				$ret .= "<pre><code>" . Stockage::get_prop($singleton, "regles") . "</code></pre>"; // TODO : html escape chars etc.
 			}
-			return $ret;
+			return new Page($ret, "Permissions");
 		}
 	}
 }

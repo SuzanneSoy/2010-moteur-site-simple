@@ -1,6 +1,7 @@
 <?php
-	require_once(dirname(__FILE__) . "/connexion.php");
-	require_once(dirname(__FILE__) . "/permissions.php");
-	require_once(dirname(__FILE__) . "/utilisateurs.php");
-	require_once(dirname(__FILE__) . "/couleurs.php");
+	require_once(dirname(__FILE__) . "/admin-connexion.php");
+	require_once(dirname(__FILE__) . "/admin-permissions.php");
+	require_once(dirname(__FILE__) . "/admin-utilisateurs.php");
+	require_once(dirname(__FILE__) . "/admin-apparence.php");
+	require_once(dirname(__FILE__) . "/admin-index.php");
 ?>

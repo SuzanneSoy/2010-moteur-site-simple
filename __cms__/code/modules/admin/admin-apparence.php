@@ -1,6 +1,6 @@
 <?php
 
-class AdminCouleurs {
+class AdminApparence {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
 			return new Page($chemin, '', "redirect");
@@ -33,7 +33,7 @@ class AdminCouleurs {
 			$ret .= "<input ... Couleur B />";
 			$ret .= "<input ... Couleur C />";
 			// $ret .= ...
-			return "Vue normale de la page.";
+			return new Page($ret, "Apparence");
 		} else if ($vue == "css") {
 			// TODO : où mettre ce gen_css... ?
 			return Site::gen_css(array(
@@ -45,6 +45,6 @@ class AdminCouleurs {
 	}
 }
 
-Modules::enregister_module("AdminCouleurs", "admin-couleurs", "vue", "Couleur_A Couleur_B Couleur_C");
+Modules::enregister_module("AdminApparence", "admin-apparence", "vue", "Couleur_A Couleur_B Couleur_C");
 
 ?>
