@@ -11,7 +11,9 @@ class Stockage {
 			$enfant = $chemin->enfant($nom);
 			Système_fichiers::créer_dossier($enfant->get_fs_stockage());
 			self::set_prop($enfant, "type", $type);
-			self::activer_réécriture($enfant);
+                        $e = self::activer_réécriture($enfant);
+			if (Erreur::is_erreur($e)) return Erreur::fatale("Erreur lors de la mise en place de la redirection pour " . $enfant->get() . ".", $e);
+                        exit;
 			return $enfant;
 		} else {
 			return false;

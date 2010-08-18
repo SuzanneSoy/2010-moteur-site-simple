@@ -5,8 +5,9 @@
 class Système_fichiers {
 	public static function créer_dossier($chemin_fs) {
 		$d = dirname($chemin_fs);
-		if (!is_dir($d)) self::créer_dossier($d);
-		if (!is_dir($chemin_fs)) mkdir($chemin_fs);
+                $r = true;
+		if (!is_dir($d)) $r = self::créer_dossier($d);
+		if (!is_dir($chemin_fs)) return $r && mkdir($chemin_fs);
 	}
 	
 	/*public static function créer_fichier($chemin_fs) {
@@ -33,7 +34,9 @@ class Système_fichiers {
 	
 	public static function écrire($chemin_fs, $données) {
 		$d = dirname($chemin_fs);
-		if (!is_dir($d)) self::créer_dossier($d);
+		if (!is_dir($d) || self::créer_dossier($d)) {
+                    return Erreur::écriture("Impossible d'écrire dans $chemin_fs : le dossier $d n'existe pas");
+                }
 		return file_put_contents($chemin_fs, $données);
 	}
 	

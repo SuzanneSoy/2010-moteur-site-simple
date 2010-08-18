@@ -31,7 +31,12 @@ class Erreur {
 		return new self("lecture", $message);
 	}
 	
-	public function __construct($type, $message, $string = "[ debug : erreur de lecture ]") {
+	public static function écriture($message) {
+		return new self("écriture", $message);
+	}
+	
+	public function __construct($type, $message, $string = null) {
+		if (is_null($string)) $string = "[ debug : erreur de " . $type . " ]";
 		$this->type = $type;
 		$this->message = $message;
 		$this->string = $string;
