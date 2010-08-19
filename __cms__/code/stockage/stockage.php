@@ -88,6 +88,11 @@ class Stockage {
 		}
 	}
 	
+	public static function prop_diff($chemin, $prop, $valeur) {
+		// Renvoie true si la valeur actuelle de $prop est différente de $valeur.
+		return self::get_prop($chemin, $prop) != $valeur;
+	}
+	
 	// TODO : la suppression non récursive d'une page implique de supprimer
 	// ses propriétés, or pour ça, il faudrait que la suppression soit
 	// récursive sur un niveau seulement, ce qui n'est pas possible avec ce

@@ -11,11 +11,12 @@ class GalerieIndex {
 			Stockage::set_prop($np, "description", "");
 			return new Page($np, '', "redirect");
 		} else {
-			if (isset($paramètres["titre"])) {
-				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
-			}
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
+			}
+			
+			if (isset($paramètres["titre"])) {
+				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
 			}
 			
 			if (isset($paramètres["vue"])) {
