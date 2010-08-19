@@ -11,7 +11,7 @@ class Stockage {
 			$enfant = $chemin->enfant($nom);
 			Système_fichiers::créer_dossier($enfant->get_fs_stockage());
 			self::set_prop($enfant, "type", $type);
-                        $e = self::activer_réécriture($enfant);
+			$e = self::activer_réécriture($enfant);
 			if (Erreur::is_erreur($e)) return Erreur::fatale("Erreur lors de la mise en place de la redirection pour " . $enfant->get() . ".", $e);
 			return $enfant;
 		} else {
@@ -123,9 +123,9 @@ class Stockage {
 			return true;
 		}
 		
-		if (Permissions::vérifier_permission($chemin->parent(), "nouvelle_page") && vérifier_permission($chemin, "supprimer")) {
-			// TODO : désactiver_réécriture($chemin) récursivement
-			// TODO : puis activer_réécriture($chemin) récursivement
+		if (Permissions::vérifier_permission($chemin->parent(), "nouvelle_page") && Permissions::vérifier_permission($chemin, "supprimer")) {
+			self::désactiver_réécriture($chemin); // TODO : récursivement !
+			self::activer_réécriture($chemin->renomer($nouveau_nom)); // TODO : récursivement !
 			return Système_fichiers::déplacer($chemin->get_fs_stockage(), $chemin->renomer($nouveau_nom)->get_fs_stockage());
 		} else {
 			return false;
