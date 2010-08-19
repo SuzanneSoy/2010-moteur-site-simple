@@ -1,6 +1,7 @@
 <?php
 
 error_reporting(E_ALL | E_STRICT);
+ini_set("display_errors", 1); // Ne s'appliquera pas au fichier courant !
 
 require_once(dirname(__FILE__) . "/configuration.php");
 require_once(dirname(__FILE__) . "/include_tous.php");

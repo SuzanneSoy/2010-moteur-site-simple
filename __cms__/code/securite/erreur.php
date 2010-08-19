@@ -47,7 +47,7 @@ class Erreur {
 	}
 	
 	public static function is_erreur($obj) {
-		return get_class($obj) === __CLASS__;
+		return is_object($obj) && get_class($obj) === __CLASS__;
 	}
 }
 

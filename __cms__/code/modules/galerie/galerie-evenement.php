@@ -92,7 +92,7 @@ class GalerieÉvènement {
 			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
-				$ret .= '<input type="submit" value="Supprimer l'évènement"/>';
+				$ret .= '<input type="submit" value="Supprimer l\'évènement"/>';
 				$ret .= '</form>';
 			}
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
