@@ -15,16 +15,21 @@ class Système_fichiers {
 	}*/
 	
 	public static function supprimer($chemin_fs, $récursif) {
+            var_dump($chemin_fs);
 		if (is_link($chemin_fs) || is_file($chemin_fs)) {
 			unlink($chemin_fs);
-		} else if ($récursif) {
+		} else if ($récursif && is_dir($chemin_fs)) {
 			$d = dir($chemin_fs);
-			while (false !== ($entrée = $d->read())) {
+			while (false !== ($entrée = $d->read())) {
+				if ($entrée == '.') continue; // TODO : gérer correctement les boucles dans le système de fichiers (liens durs, ...)
+				if ($entrée == '..') continue;
 				self::supprimer($chemin_fs . '/' . $entrée, $récursif);
 			}
 			$d->close();
 			rmdir($chemin_fs);
-		}
+		} else if (is_dir($chemin_fs)) {
+                    rmdir($chemin_fs);
+                }
 	}
 	
 	public static function lire($chemin_fs) {
@@ -34,7 +39,7 @@ class Système_fichiers {
 	
 	public static function écrire($chemin_fs, $données) {
 		$d = dirname($chemin_fs);
-		if (!is_dir($d) || self::créer_dossier($d)) {
+		if (!is_dir($d) && !self::créer_dossier($d)) {
                     return Erreur::écriture("Impossible d'écrire dans $chemin_fs : le dossier $d n'existe pas");
                 }
 		return file_put_contents($chemin_fs, $données);

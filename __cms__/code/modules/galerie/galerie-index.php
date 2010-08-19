@@ -7,6 +7,8 @@ class GalerieIndex {
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
+			Stockage::set_prop($np, "titre", "Nouvelle période");
+			Stockage::set_prop($np, "description", "");
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {

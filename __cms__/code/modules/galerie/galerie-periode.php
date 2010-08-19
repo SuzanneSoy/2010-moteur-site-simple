@@ -9,7 +9,7 @@ class GaleriePériode {
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			return new Page($np, '', "redirect");
 		} else if ($action == "supprimer") {
-			Stockage::supprimer($chemin);
+			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
 			return new Page($chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"])) {

@@ -13,7 +13,6 @@ class Stockage {
 			self::set_prop($enfant, "type", $type);
                         $e = self::activer_réécriture($enfant);
 			if (Erreur::is_erreur($e)) return Erreur::fatale("Erreur lors de la mise en place de la redirection pour " . $enfant->get() . ".", $e);
-                        exit;
 			return $enfant;
 		} else {
 			return false;
@@ -96,7 +95,7 @@ class Stockage {
 	public static function supprimer($chemin, $récursif) {
 		if (Permissions::vérifier_permission($chemin, "supprimer")) {
 			// TODO : désactiver_réécriture($chemin) récursivement
-			return SystèmeFichier::supprimer($chemin->get_fs_stockage(), $récursif);
+			return Système_fichiers::supprimer($chemin->get_fs_stockage(), $récursif);
 		} else {
 			return false;
 		}

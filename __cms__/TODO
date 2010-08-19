@@ -5,3 +5,4 @@ Les titres devraient renomer _+_ set_prop (sachant que le renomage peut déterio
 Gérer ces saletées de magic quotes dans les biscuits aux brisures de chocolat (cookies).
 Mettre le css dans une page (dossier) qui s'appelle "style.css", comme ça ça donne l'impression que c'est un fichier (même si en réalité
    c'est le index.php de cette page qui le génère).
+Si on ne peut lire la propriété __prop_type, afficher un "Access Denied" au lieu de dire qu'on n'a pas pu lire la propriété.
