@@ -26,7 +26,7 @@ class CMS {
 			if (isset($_POST[$param])) $paramètres[$param] = self::param_post($param);
 		}
 		foreach ($module["file"] as $param) {
-			if (isset($_FILE[$param])) $paramètres[$param] = $_FILE[$param];
+			if (isset($_FILES[$param])) $paramètres[$param] = $_FILES[$param];
 		}
         
 		$action = $paramètres["action"];

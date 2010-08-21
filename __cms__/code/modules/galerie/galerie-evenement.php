@@ -7,7 +7,7 @@ class GalerieÉvènement {
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvelle photo", "galerie-photo");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			Stockage::set_prop($np, "titre", "Nouvel évènement");
+			Stockage::set_prop($np, "titre", "Nouvelle photo");
 			Stockage::set_prop($np, "description", "");
 			return new Page($np, '', "redirect");
 		} else if ($action == "supprimer") {
@@ -24,7 +24,6 @@ class GalerieÉvènement {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : transmettre le paramètre "vue"
-				// TODO : ne marche pas.
 				return new Page($chemin, '', "redirect");
 			}
 			
@@ -70,7 +69,7 @@ class GalerieÉvènement {
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="miniature">';
-				$ret .= '<img alt="nouvel évènement" src="' . $chemin->get_url("?vue=image_nouvelle_photo") . '" />';
+				$ret .= '<img alt="nouvelle photo" src="' . $chemin->get_url("?vue=image_nouvelle_photo") . '" />';
 				$ret .= '</div>';
 				$ret .= '<div class="titre">';
 				

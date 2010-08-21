@@ -5,7 +5,7 @@ class GaleriePériode {
 		if ($action == "anuler") {
 			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
-			$np = Stockage::nouvelle_page($chemin, "Nouvel évènement", "galerie-periode");
+			$np = Stockage::nouvelle_page($chemin, "Nouvel évènement", "galerie-evenement");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouvel évènement");
 			Stockage::set_prop($np, "description", "");
