@@ -33,7 +33,7 @@ class CMS {
 		$ret = Modules::action($chemin, $action, $paramètres);
 		
 		if (!Page::is_page($ret)) {
-			Erreur::fatale("Le module de " . $chemin->get() . " n'a pas renvoyé une page mais à la place : " . var_export($ret, true));
+			Erreur::fatale("Le module de " . htmlspecialchars($chemin->get()) . " n'a pas renvoyé une page mais à la place : <pre><code>" . htmlspecialchars(var_export($ret, true)) . "</code></pre>", true);
 		} else {
 			$ret->envoyer();
 		}

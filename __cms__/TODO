@@ -7,3 +7,32 @@ Mettre le css dans une page (dossier) qui s'appelle "style.css", comme ça ça d
    c'est le index.php de cette page qui le génère).
 Si on ne peut lire la propriété __prop_type, afficher un "Access Denied" au lieu de dire qu'on n'a pas pu lire la propriété.
 Ajouter une petite horloge sur nouvel_evenement.jpg et un petit calendrier sur nouvelle_periode.jpg
+Pour les "Nouveau xx", mettre un numéro pour éviter que deux personnes créent la même page mais l'éditent différemment.
+
+Pour la gestion d'erreurs :
+public static function foo() {
+	enter("Création d'un fou :-p .");
+	if (!Permission::vérifier_truc()) { return fail("Accès interdit"); }
+	$x = nofail(Stockage::créer_foo()); // Si Stockage::créer_foo() fait un fail, nous aussi.
+	$y = fatal_fail(truc_machin($x)); // Si truc_machin fait un fail, on affiche une erreur et on quite.
+	leave();
+}
+
+
+= API =
+L'API fournie aux modules est trop verbeuse et n'a pas tout à fait les bonnes abstractions. Il faudrait refactoriser tout ça un de ces
+   jours. Nottemment, il faut pouvoir indiquer les éléments de la page de manière plus déclarative. Leur partie éditable et leur partie
+   affichage et la modification des propriétés associées et les valeurs par défaut doivent être gérées plus ou moins automatiquement. Ex :
+
+// Crée un <textarea> ou un <p>, dont la source / destination est le champ "description", et dont la valeur par défaut lors de la création
+// de la page est "Description de la page." .
+champ("description", "Description de la page.", "texte-long");
+
+// Crée un bouton Appliquer, qui soumet le formulaire en cours.
+// À étudier...
+action("Appliquer", "submit");
+
+// Crée un champ titre avec les trucs spéciaux du titre (renomage de la page + redirect).
+// champ-special-titre est une fonction de rappel ?
+// À étudier.
+champ("titre", "Nouvelle page", "texte-court", "champ-special-titre");

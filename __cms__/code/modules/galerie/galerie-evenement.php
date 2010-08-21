@@ -46,7 +46,7 @@ class GalerieÉvènement {
 				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
-				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
+				$ret .= '<h2 class="galerie evenement titre affichage">' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<p class="galerie evenement description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
 			}
 			

@@ -10,33 +10,37 @@ class ForumSujet {
 			Stockage::set_prop($chemin, "dernier_numero", $numéro_message);
 			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message, "forum-message");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-	
+			Stockage::set_prop($np, "message", "");
+			
 			return new Page($chemin, "#message" . $numéro_message, "redirect");
 		} else if ($action == "supprimer") {
-			Stockage::supprimer($chemin);
+			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
 			return new Page($chemin->parent(), '', "redirect");
 		} else {
-			if (isset($paramètres["titre"])) {
+			if (isset($paramètres["titre"]) && Stockage::prop_diff($chemin, "titre", $paramètres["titre"])) {
+				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : peut-être new Page($chemin, '', "redirect") ?
+				// TODO : transmettre le paramètre "vue"
+				return new Page($chemin, '', "redirect");
 			}
 			
 			if (isset($paramètres["vue"])) {
-				self::vue($chemin, $paramètres["vue"]);
+				return self::vue($chemin, $paramètres["vue"]);
 			} else {
-				self::vue($chemin);
+				return self::vue($chemin);
 			}
 		}
 	}
 	
 	public static function vue($chemin, $vue = "normal") {
 		if ($vue == "normal") {
-	        $ret = '';
+			$ret = '';
+			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form action="' . $chemin->get_url() . '">';
-				$ret .= '<input type="text" name="titre" class="forum sujet titre edition" value="' . Stockage::get_prop($chemin, "titre") . '"/>';
-				$ret .= '<input type="submit" value="renomer" />';
+				$ret .= '<form class="forum sujet infos" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
+				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
 				$ret .= '<h2 class="forum sujet titre affichage">' . Stockage::get_prop($chemin, "titre") . '</h2>';
@@ -44,23 +48,31 @@ class ForumSujet {
 			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
 				$ret .= '<form action="' . $chemin->get_url() . '">';
 				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
-				$ret .= '<input type="submit" value="Supprimer"/>';
+				$ret .= '<input type="submit" value="Supprimer le sujet"/>';
 				$ret .= '</form>';
 			}
 	        $ret .= '<ul class="forum sujet">';
+			
 	        foreach (stockage::liste_enfants($chemin) as $k) {
-	            $ret .= '<li>' . Modules::vue($k) . '</li>';
+	            $ret .= '<li>' . Modules::vue($k)->contenu . '</li>';
 	        }
-	        $ret .= '</ul>';
+			
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
-				$ret .= '<form action="' . $chemin->get_url() . '">';
+				$ret .= '<li>';
+				$ret .= '<form class="forum sujet nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<p>';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouvelle page"/>';
+				$ret .= '<input type="submit" value="Nouveau message"/>';
+				$ret .= '</p>';
 				$ret .= '</form>';
+				$ret .= '</li>';
 			}
-			return $ret;
+			
+	        $ret .= '</ul>';
+			
+			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature") {
-			return Stockage::get_prop($chemin, "titre");
+			return new Page("Sujet.", Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

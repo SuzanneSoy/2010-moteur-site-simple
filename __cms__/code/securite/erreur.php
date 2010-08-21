@@ -5,7 +5,7 @@ class Erreur {
 	public $message = "erreur";
 	public $string = "";
 	
-	public static function fatale($message) {
+	public static function fatale($message, $html = false) {
 		echo '<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -20,7 +20,7 @@ class Erreur {
 		. htmlspecialchars(rawurlencode("Code de l'erreur : " . $message)) . '">'
 		. htmlspecialchars(Config::get('courriel_admin'))
 		. '</a>. Indiquez l\'erreur ci-dessous dans votre courriel.</p>
-		<p><strong>' . htmlspecialchars($message) . '</strong></p>
+		<p><strong>' . ($html ? $message : htmlspecialchars($message)) . '</strong></p>
 	</body>
 </html>';
 		//echo "\n"; debug_print_backtrace();

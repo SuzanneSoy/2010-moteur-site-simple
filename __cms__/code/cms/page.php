@@ -73,7 +73,7 @@ class Page {
 	}
 	
 	public static function is_page($obj) {
-		return get_class($obj) === __CLASS__;
+		return is_object($obj) && get_class($obj) === __CLASS__;
 	}
 }
 
