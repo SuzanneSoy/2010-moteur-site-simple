@@ -9,6 +9,7 @@ class ArticlesIndex {
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouvel article");
 			Stockage::set_prop($np, "contenu", "Bla bla bla.");
+			enregistrer_nouveaute($np);
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {

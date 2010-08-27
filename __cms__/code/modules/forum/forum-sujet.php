@@ -6,11 +6,13 @@ class ForumSujet {
 			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
+			// CONCURENCE : Faire un lock quelque part...
 			$numéro_message = 1 + Stockage::get_prop($chemin, "dernier_numero");
 			Stockage::set_prop($chemin, "dernier_numero", $numéro_message);
 			$np = Stockage::nouvelle_page($chemin, "" . $numéro_message, "forum-message");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "message", "");
+			enregistrer_nouveaute($np);
 			
 			return new Page($chemin, "#message" . $numéro_message, "redirect");
 		} else if ($action == "supprimer") {

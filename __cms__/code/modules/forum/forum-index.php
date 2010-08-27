@@ -9,6 +9,7 @@ class ForumIndex {
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouveau sujet");
 			Stockage::set_prop($np, "dernier_numero", 0);
+			enregistrer_nouveaute($np);
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
