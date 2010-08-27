@@ -24,4 +24,8 @@ function affichage_texte_enrichi($données) {
 	return "<p>" . $données . "</p>"; // escape html chars & co.
 }
 
+function miniature_texte_enrichi($données) {
+	return substr($données, 0, 50) . "..."; // escape html chars & co.
+}
+
 ?>

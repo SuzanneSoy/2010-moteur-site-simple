@@ -1,14 +1,14 @@
 <?php
 
-class ForumIndex {
+class ArticlesIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
 			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
-			$np = Stockage::nouvelle_page($chemin, "Nouveau sujet", "forum-sujet");
+			$np = Stockage::nouvelle_page($chemin, "Nouvel article", "articles-article");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			Stockage::set_prop($np, "titre", "Nouveau sujet");
-			Stockage::set_prop($np, "dernier_numero", 0);
+			Stockage::set_prop($np, "titre", "Nouvel article");
+			Stockage::set_prop($np, "contenu", "Bla bla bla.");
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
@@ -32,27 +32,27 @@ class ForumIndex {
 			$ret = '';
 			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form class="forum infos" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<form class="articles infos" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
 				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
-				$ret .= '<p class="forum index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
+				$ret .= '<p class="articles index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
 			}
 			
-			$ret .= '<div class="forum sujets index">';
+			$ret .= '<div class="articles liste-articles index">';
 			$ret .= '<ul>';
 			
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="titre">';
 				
-				$ret .= '<form class="forum nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<form class="articles nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<p>';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouveau sujet de discussion"/>';
+				$ret .= '<input type="submit" value="Nouvel article"/>';
 				$ret .= '</p>';
 				$ret .= '</form>';
 				
@@ -68,6 +68,9 @@ class ForumIndex {
 				$ret .= '<span class="titre">';
 				$ret .= $mini->titre;
 				$ret .= '</span>';
+				$ret .= '<p class="contenu">';
+				$ret .= $mini->contenu;
+				$ret .= '</p>';
 				$ret .= '</a>';
 				$ret .= '</li>';
 			}
@@ -79,6 +82,6 @@ class ForumIndex {
 	}
 }
 
-Modules::enregister_module("ForumIndex", "forum-index", "vue", "titre description");
+Modules::enregister_module("ArticlesIndex", "articles-index", "vue", "titre description");
 
 ?>
