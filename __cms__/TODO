@@ -18,6 +18,10 @@ public static function foo() {
 	leave();
 }
 
+Unicode Normalization Form C (De quoi s'amuser \o/)
+
+html5 : <header> <footer> <nav> <aside> <article> <section> <p> <mark?>
+http://dev.w3.org/html5/spec/Overview.html#kinds-of-content
 
 = API =
 L'API fournie aux modules est trop verbeuse et n'a pas tout à fait les bonnes abstractions. Il faudrait refactoriser tout ça un de ces
