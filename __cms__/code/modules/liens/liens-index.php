@@ -14,7 +14,6 @@ class LiensIndex {
 			Stockage::set_prop($np, "texte", "Un lien");
 			Stockage::set_prop($np, "cible", "http://www.example.com/page/");
 			Stockage::set_prop($np, "description", "Un lien d'exemple très utile.");
-			enregistrer_nouveaute($np);
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {

@@ -14,7 +14,6 @@ class ÉquipesÉquipe {
 			Stockage::set_prop($np, "nom", "Dupondt");
 			Stockage::set_prop($np, "prenom", "Jean");
 			Stockage::set_prop($np, "description", "");
-			enregistrer_nouveaute($np);
 			
 			return new Page($chemin, '', "redirect");
 		} else if ($action == "supprimer") {

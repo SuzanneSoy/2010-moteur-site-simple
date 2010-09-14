@@ -14,7 +14,6 @@ class ContactIndex {
 			Stockage::set_prop($np, "nom", "Dupondt");
 			Stockage::set_prop($np, "prenom", "Jean");
 			Stockage::set_prop($np, "description", "");
-			enregistrer_nouveaute($np);
 			return new Page($np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {

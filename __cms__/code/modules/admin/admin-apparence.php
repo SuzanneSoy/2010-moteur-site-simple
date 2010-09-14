@@ -32,6 +32,7 @@ class AdminApparence {
 			// on affiche la version modifiable plutôt que la "vue".
 			$ret = '';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
+				$ret .= '<p><strong>Attention :</strong> Les couleurs du site ne peuvent pas encore être modifiées...</p>';
 				$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<ul>';
 				$ret .= '<li><label for="Couleur_A">Couleur A : </label><input type="text" id="Couleur_A" name="Couleur_A" value="#000" /></li>';
