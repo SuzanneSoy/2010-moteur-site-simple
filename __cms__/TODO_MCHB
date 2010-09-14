@@ -1,0 +1,22 @@
+Ok (00:54:06) js: Ha oui, avant que je commit n'importe quoi, pour le site de MCHB, je laisse la structure de base sur github ? Ou je fais un fork privé que je garde que sur mon PC (pour que ça soit pas public).
+Ok (00:55:01) bbrun: je pense qu'il vaux mieux un truc privee
+~~ (23:12:54) js: Design noir et jaune (OMG je vais avoir du mal!)
+Ok (23:13:38) js: Toutes les pages : Titre du site en haut, barre de navigation latérale, contenu à droite
+Ok (23:14:40) js: Page d'accueil : Gros encadré rouge fluo qui clignote avec un son de sirène de porte-container avec marqué dedans Prochain évènement : <le prochain évènement>
+Ok (23:15:06) js: Page d'accueil : mini-article avec du blabla sur le club en-dessous du gros encadré rouge.
+Ok (23:16:14) js: Un forum simple (Forum > Sujet > Message), _pas_ de bouton "citer" sur les messages, bouton supprimer uniquement pour les admins.
+Ok (23:17:17) js: Galerie : Seuls les admins peuvent poster des images, 3 niveaux (Galerie > Période > Évènement > Photo)
+Ok (23:19:34) js: Section Nouveautés : tri par date d'ajout, seuls les admins peuvent poster. Pas de fioritures spéciales, juste des articles avec une date.
+Ok (23:20:45) js: Section "Nos équipes de super-handballeurs" : 3 niveaux (Équipes > équipe n°1 > joueur)
+Ok (23:24:07) js: Section Liens utiles : Une série de liens avec description de qqes lignes.
+Ok (23:25:16) js: Section Contact : Une série de personnes avec Nom, Prénom, mail (caché pour les spambots), fonction (grand chef, petit chef, etc.), éventuellement notes/description
+Ok (23:26:03) js: Les logins se font avec nom et prénom. (+ mot de passe)
+   (23:27:31) js: Et il y a la section Résultats que j'y ai rien compris XD donc va falloir qu'ils me ré-expliquent (il me semble qu'eux aussi ils étaient paumés donc... je compte sur toi pour la traduction sport - geek).
+
+   (23:21:28) js: Après mon refactor (!), je pourrai ajouter la possibilité de faire des liens entre un joueurs, un utilisateur et une ou +ieurs photos.
+   (23:22:07) js: Ainsi que des liens entre actualité et saison ou matche ou photo.
+   (23:23:40) js: Pour l'instant je crois que je vais laisser les champs textes (articles) en texte simple sans liens images etc. et d'ici 1 semaine ou 2, j'aurais fini mon éditeur, donc on pourra avoir des articles "riches".
+   (23:25:34) js: Contact : et après le refactor, photo et lien avec l'utilisateur.
+   (23:34:14) js: ah oui, et après le refactor, vous aurez peut-être droit à un historique complet (archives quoi), ou sinon si j'y arrive pas juste la possibilité de faire des "snapshot" quand ils veulent (archives 2010, archives 2011, ...).
+   (23:34:49) js: j'ai bien dit peut-être parce que je sais pas du tout comment implémenter ça de manière efficace... mais c'est pas ma priorité pour l'instant.
+
