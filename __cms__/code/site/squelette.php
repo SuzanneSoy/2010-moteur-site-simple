@@ -22,7 +22,9 @@ class Squelette {
 		$ret .= '		<meta http-equiv="Content-Language" content="fr" />' . $nl;
 		$ret .= '		<meta name="keywords" lang="fr" content="motcle1,mocle2" />' . $nl;
 		$ret .= '		<meta name="description" content="Description de ma page web." />' . $nl;
-		$ret .= '		<link href="' . $chemin_css . '" rel="stylesheet" type="text/css" />' . $nl;
+		/*$ret .= '		<link href="' . $chemin_css . '" rel="stylesheet" type="text/css" />' . $nl;*/
+		$ret .= '		<link href="' . $racine->get_url("test.less") . '" rel="stylesheet/less" type="text/css" />' . $nl;
+		$ret .= '		<script src="' . $racine->get_url("less/less.js") . '" type="text/javascript"></script>' . $nl;
 		$ret .= '	</head>' . $nl;
 		$ret .= '	<body>' . $nl;
 		$ret .= '		<h1><a href="' . $racine->get_url() . '">' . Stockage::get_prop($racine, "nom_site") . '</a></h1>' . $nl;
@@ -39,9 +41,11 @@ class Squelette {
 		$ret .= '			<ul>' . $nl;
 		$ret .= '				<li><a href="' . $racine->get_url() . '">Accueil</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("galerie")->get_url() . '">Galerie</a></li>' . $nl;
-		$ret .= '				<li><a href="' . $racine->enfant("forum")->get_url() . '">Forum</a></li>' . $nl;
-		$ret .= '				<li><a href="' . $racine->enfant("articles")->get_url() . '">Articles</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("nouveautes")->get_url() . '">Nouveautés</a></li>' . $nl;
+		$ret .= '				<li><a href="' . $racine->enfant("equipes")->get_url() . '">Équipes</a></li>' . $nl;
+		$ret .= '				<li><a href="' . $racine->enfant("forum")->get_url() . '">Forum</a></li>' . $nl;
+		$ret .= '				<li><a href="' . $racine->enfant("liens")->get_url() . '">Liens utiles</a></li>' . $nl;
+		$ret .= '				<li><a href="' . $racine->enfant("contact")->get_url() . '">Contact</a></li>' . $nl;
 		if (Permissions::vérifier_permission($racine->enfant("admin"), "set_prop", Authentification::get_utilisateur())) {
 			$ret .= '<li><a href="' . $racine->enfant("admin")->get_url() . '">Administration</a></li>' . $nl;
 		}

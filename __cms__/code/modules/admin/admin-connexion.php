@@ -3,7 +3,7 @@
 class AdminConnexion {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "connexion") {
-			if (Authentification::connexion($paramètres["utilisateur"], $paramètres["mdp"])) {
+			if (Authentification::connexion(strtolower($paramètres["utilisateurnom"] . "___" . $paramètres["utilisateurprenom"]), $paramètres["mdp"])) {
 				return self::vue($chemin, "connexion réussie");
 			} else {
 				return self::vue($chemin, "connexion échouée");
@@ -54,7 +54,8 @@ class AdminConnexion {
 		$ret = "<h2>" . $titre . "</h2>";
 		$ret .= $message;
 		$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
-		$ret .= '<p><label for="utilisateur">Nom : </label><input type="text" id="utilisateur" name="utilisateur" value="" /></p>';
+		$ret .= '<p><label for="utilisateurnom">Nom : </label><input type="text" id="utilisateurnom" name="utilisateurnom" value="" /></p>';
+		$ret .= '<p><label for="utilisateurprenom">Prénom : </label><input type="text" id="utilisateurprenom" name="utilisateurprenom" value="" /></p>';
 		$ret .= '<p><label for="mdp">Mot de passe : </label><input type="password" id="mdp" name="mdp" value="" /></p>';
 		$ret .= '<p>';
 		$ret .= '<input type="hidden" name="action" value="connexion" />';
@@ -65,6 +66,6 @@ class AdminConnexion {
 	}
 }
 
-Modules::enregister_module("AdminConnexion", "admin-connexion", "vue", "utilisateur mdp");
+Modules::enregister_module("AdminConnexion", "admin-connexion", "vue", "utilisateurnom utilisateurprenom mdp");
 
 ?>

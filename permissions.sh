@@ -1,6 +1,6 @@
 #!/bin/sh
 
-fichiers="index.php galerie forum articles nouveautes admin __cms__/donnees"
+fichiers="index.php galerie forum nouveautes equipes liens contact admin __cms__/donnees"
 
 chgrp -R www-data $fichiers
 chmod -R 664 $fichiers

@@ -1,0 +1,181 @@
+// TODO : dans galerie les images ne sont pas centrées verticalement dans leur boîte.
+
+@largeur-contenu: 63em;
+
+/* Couleurs principales */
+@base: #ffff00;
+@base2: #ba7500;
+@fg: #000000;
+@bg: #ffffff;
+@couleur-important: #ff0000;
+
+/* Couleurs dérivées */
+@softbase: (2*@base + @bg) / 3;
+@softbase2: (4*@bg + @base) / 5;
+@bodybg: @softbase2;
+@demi: (@fg + @bg) / 2;
+
+.nospace {
+	margin: 0;
+	padding: 0;
+}
+
+.lien-monochrome (@couleur: @fg) {
+	color: @couleur;
+	&:link {color: @couleur;}
+	&:visited {color: @couleur;}
+	&:hover {color: @couleur;}
+	&:active {color: @couleur;}
+}
+
+a {
+	&:visited {
+		color: @base2;
+	}
+	&:hover, &:active {
+		color: (@base2 + @fg) / 2;
+	}
+}
+
+body {
+	.nospace;
+	background-color: @bodybg;
+	color: @fg;
+}
+
+h1 {
+	background-color: @softbase; // @softbase2
+	border-bottom: thick solid @fg;
+	margin: 0 0 0.8em 0;
+	padding: 0.2em 1em;
+	a {
+		.lien-monochrome(@fg);
+		text-decoration: none;
+	}
+}
+
+h2 {
+	margin-top: 0;
+	
+	input {
+		font-size: x-large;
+		font-weight: bold;
+	}
+}
+
+.prochain-evenement {
+	color: @couleur-important;
+	background-color: (6*@bg + @couleur-important) / 7;
+	border: thick solid @couleur-important;
+	margin: 0 5em 1em;
+	padding: 1em;
+	text-align: center;
+}
+
+.site {
+	&.connexion {
+		a {
+			.lien-monochrome(@fg);
+		}
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: 0.1em 0.2em;
+	}
+	
+	&.navigation {
+		background-color: @softbase;
+		border: thick solid @fg;
+		float: left;
+		padding: 0em 0em;
+		margin: 0 1em 1em;
+		text-align: center;
+		
+		ul {
+			.nospace;
+		}
+		li:hover {
+			background-color: @fg;
+			a {
+				color: @bg;
+			}
+		}
+		li {
+			border-bottom: thin solid @fg;
+			&:last-child {
+				border:none;
+			}
+			padding: 0.5em 1.5em;
+			list-style-type: none;
+			
+		}
+		a {
+			color: black;
+		}
+	}
+	
+	&.contenu {
+		max-width: @largeur-contenu;
+		float: left;
+	}
+}
+
+.galerie {
+	&.infos {
+		border-bottom: thick solid @demi;
+		padding-bottom: 1em;
+	}
+	&.photos {
+		ul {
+			.nospace;
+			li {
+				list-style-type: none;
+				float: left;
+				margin: 1em;
+				padding: 0;
+				width: 9em;
+				text-align: center;
+				a {
+					.lien-monochrome;
+					display:block;
+				}
+			}
+		}
+		.miniature {
+			border: thin solid @demi;
+			display:block;
+			height: 70px;
+			img {
+				border: none;
+			}
+		}
+		li:hover {
+			.miniature {
+				border-color: (@base2)/2;
+				background-color: (@bg*3 + @base2)/4;
+			}
+			.titre {
+				color: @base2;
+			}
+		}
+		.titre {
+			display:block;
+			padding: 0.2em 0.4em;
+			height: 5em;
+		}
+	}
+}
+
+.admin.permissions.regles {
+	width: 100%;
+}
+
+.clearboth {
+	clear: both;
+}
+
+textarea {
+	width: @largeur-contenu / 2;
+	margin: 1em 0;
+	/* font-size: large; */ /* Activer pour plus d'accessibilité. */
+}

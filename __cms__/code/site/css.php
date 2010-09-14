@@ -1,5 +1,8 @@
 <?php
 
+// #ba7500
+// #c0a700
+
 function get_css() {
 	return "h1 a {
 	color: #7f7f33;
