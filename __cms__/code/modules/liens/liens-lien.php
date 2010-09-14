@@ -8,24 +8,17 @@ class LiensLien {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
 			return new Page($chemin->parent(), '', "redirect");
 		} else {
-			if (isset($paramètres["contenu"])) {
-				Stockage::set_prop($chemin, "contenu", $paramètres["contenu"]);
+			if (isset($paramètres["texte"])) {
+				Stockage::set_prop($chemin, "texte", $paramètres["texte"]);
+			}
+			if (isset($paramètres["cible"])) {
+				Stockage::set_prop($chemin, "cible", $paramètres["cible"]);
+			}
+			if (isset($paramètres["description"])) {
+				Stockage::set_prop($chemin, "cible", $paramètres["cible"]);
 			}
 			
-			// titre après les autres paramètres car il peut générer un redirect.
-			if (isset($paramètres["titre"]) && Stockage::prop_diff($chemin, "titre", $paramètres["titre"])) {
-				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
-				Stockage::renomer($chemin, $paramètres["titre"]);
-				$chemin = $chemin->renomer($paramètres["titre"]);
-				// TODO : transmettre le paramètre "vue"
-				return new Page($chemin, '', "redirect");
-			}
-			
-			if (isset($paramètres["vue"])) {
-				return self::vue($chemin, $paramètres["vue"]);
-			} else {
-				return self::vue($chemin);
-			}
+			return new Page($chemin->parent(), '', "redirect");
 		}
 	}
 	
@@ -34,22 +27,23 @@ class LiensLien {
 			$ret = '';
 			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form class="articles article edition" enctype="multipart/form-data" method="post" action="' . $chemin->get_url() . '">';
-				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
-				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "contenu"), "contenu");
+				$ret .= '<form class="liens lien edition" enctype="multipart/form-data" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<input type="text" name="texte" value="' . Stockage::get_prop($chemin, "texte") . '" />';
+				$ret .= '<input type="text" name="cible" value="' . Stockage::get_prop($chemin, "cible") . '" />';
+				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
 				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
-				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
-				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "contenu"));
+				$ret .= '<a href="' . htmlspecialchars(Stockage::get_prop($chemin, "cible")) . '">' . Stockage::get_prop($chemin, "texte") . '</a>';
+				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "description"));
 			}
 			if (Permissions::vérifier_permission($chemin, "supprimer", Authentification::get_utilisateur())) {
-				// TODO : afficher le bouton "Supprimer".
+				$ret .= '<form action="' . $chemin->get_url() . '">';
+				$ret .= '<input type="hidden" name="action" value="supprimer"/>';
+				$ret .= '<input type="submit" value="Supprimer le lien ' . htmlspecialchars(Stockage::get_prop($chemin, "cible")) . '"/>';
+				$ret .= '</form>';
 			}
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
-		} elseif ($vue == "miniature") {
-			$ret = miniature_texte_enrichi(Stockage::get_prop($chemin, "contenu"));
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}

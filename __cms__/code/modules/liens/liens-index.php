@@ -5,10 +5,15 @@ class LiensIndex {
 		if ($action == "anuler") {
 			return new Page($chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
-			$np = Stockage::nouvelle_page($chemin, "Nouvel article", "articles-article");
+			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
+			// CONCURENCE : Faire un lock quelque part...
+			$numéro_lien = 1 + Stockage::get_prop($chemin, "dernier_numero");
+			Stockage::set_prop($chemin, "dernier_numero", $numéro_lien);
+			$np = Stockage::nouvelle_page($chemin, "Lien" . $numéro_lien, "liens-lien");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			Stockage::set_prop($np, "titre", "Nouvel article");
-			Stockage::set_prop($np, "contenu", "Bla bla bla.");
+			Stockage::set_prop($np, "texte", "Un lien");
+			Stockage::set_prop($np, "cible", "http://www.example.com/page/");
+			Stockage::set_prop($np, "description", "Un lien d'exemple très utile.");
 			enregistrer_nouveaute($np);
 			return new Page($np, '', "redirect");
 		} else {
@@ -33,27 +38,27 @@ class LiensIndex {
 			$ret = '';
 			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form class="articles infos" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<form class="liens infos" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
 				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
 				$ret .= '<p><input type="submit" value="appliquer" /></p>';
 				$ret .= '</form>';
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
-				$ret .= '<p class="articles index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
+				$ret .= '<p class="liens index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
 			}
 			
-			$ret .= '<div class="articles liste-articles index">';
+			$ret .= '<div class="liens liste-liens index">';
 			$ret .= '<ul>';
 			
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="titre">';
 				
-				$ret .= '<form class="articles nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
+				$ret .= '<form class="liens nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<p>';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouvel article"/>';
+				$ret .= '<input type="submit" value="Nouveau lien"/>';
 				$ret .= '</p>';
 				$ret .= '</form>';
 				
@@ -61,20 +66,10 @@ class LiensIndex {
 				$ret .= '</li>';
 			}
 			
-			foreach (Stockage::liste_enfants($chemin) as $k) { // TODO : trier par numéro !
-				$mini = Modules::vue($k, 'miniature');
-				$ret .= '<li>';
-				// TODO : mettre une ancre "#message<numéro>"
-				$ret .= '<a href="' . $k->get_url() . '">'; // TODO : escape l'url !
-				$ret .= '<span class="titre">';
-				$ret .= $mini->titre;
-				$ret .= '</span>';
-				$ret .= '<p class="contenu">';
-				$ret .= $mini->contenu;
-				$ret .= '</p>';
-				$ret .= '</a>';
-				$ret .= '</li>';
-			}
+			
+	        foreach (stockage::liste_enfants($chemin) as $k) {
+	            $ret .= '<li>' . Modules::vue($k)->contenu . '</li>';
+	        }
 			
 			$ret .= '</ul>';
 			
