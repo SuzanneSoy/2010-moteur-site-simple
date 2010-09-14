@@ -11,8 +11,6 @@ if (get_magic_quotes_runtime()) set_magic_quotes_runtime(false);
 
 class CMS {
     public static function page($chemin_str) {
-		// TODO : appeller Modules::action($chemin, $action, $paramètres);
-		
 		$chemin = new Chemin($chemin_str);
 		$module = Modules::get_module($chemin);
                 

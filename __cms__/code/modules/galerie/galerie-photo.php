@@ -8,7 +8,7 @@ class GaleriePhoto {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
 			return new Page($chemin->parent(), '', "redirect");
 		} else {
-			if (isset($paramètres["fichier_image"])) {
+			if (isset($paramètres["fichier_image"]) && ($paramètres["fichier_image"]["tmp_name"] != "")) {
 				$fichier_image = $paramètres["fichier_image"]["tmp_name"];
 				$fichier_image_mini = self::creer_miniature($fichier_image, 64, 64);
 				Stockage::set_prop_fichier($chemin, "image_mini", $fichier_image_mini);
