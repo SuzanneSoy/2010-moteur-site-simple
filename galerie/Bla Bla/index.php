@@ -2,6 +2,6 @@
 
 require_once(dirname(__FILE__) . "/./../../__cms__/cms.php");
 
-CMS::page("/equipes/Nouvelle équipe");
+CMS::page("/galerie/Bla Bla");
 
 ?>

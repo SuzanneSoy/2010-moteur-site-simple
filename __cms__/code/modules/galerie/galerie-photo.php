@@ -53,7 +53,7 @@ class GaleriePhoto {
 			} else {
 				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
 				$ret .= '<img alt="' . Stockage::get_prop($chemin, "titre") . '" src="' . $chemin->get_url("?vue=image") . '"/>';
-				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "message"));
+				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "description"));
 			}
 			return new Page($ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature" || $vue == "mini") {

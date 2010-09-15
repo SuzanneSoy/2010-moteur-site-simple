@@ -14,9 +14,8 @@ class Système_fichiers {
 		// touch($chemin_fs)
 	}*/
 	
-	public static function supprimer($chemin_fs, $récursif) {
-            var_dump($chemin_fs);
-		if (is_link($chemin_fs) || is_file($chemin_fs)) {
+	public static function supprimer($chemin_fs, $récursif = true) { // TODO ne devrait pas avoir de valeur par défaut, mais certaines fonctions l'appellent sans 2e paramètre.
+	if (is_link($chemin_fs) || is_file($chemin_fs)) {
 			unlink($chemin_fs);
 		} else if ($récursif && is_dir($chemin_fs)) {
 			$d = dir($chemin_fs);
