@@ -10,5 +10,6 @@ require_once(dirname(__FILE__) . "/articles/include.php");
 require_once(dirname(__FILE__) . "/equipes/include.php");
 require_once(dirname(__FILE__) . "/liens/include.php");
 require_once(dirname(__FILE__) . "/contact/include.php");
+require_once(dirname(__FILE__) . "/horaires/include.php");
 
 ?>

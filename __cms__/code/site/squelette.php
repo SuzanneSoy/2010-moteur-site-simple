@@ -46,6 +46,7 @@ class Squelette {
 		$ret .= '				<li><a href="' . $racine->enfant("forum")->get_url() . '">Forum</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("liens")->get_url() . '">Liens utiles</a></li>' . $nl;
 		$ret .= '				<li><a href="' . $racine->enfant("contact")->get_url() . '">Contact</a></li>' . $nl;
+		$ret .= '				<li><a href="' . $racine->enfant("horaires")->get_url() . '">Horaires</a></li>' . $nl;
 		if (Permissions::vérifier_permission($racine->enfant("admin"), "set_prop", Authentification::get_utilisateur())) {
 			$ret .= '<li><a href="' . $racine->enfant("admin")->get_url() . '">Administration</a></li>' . $nl;
 		}
