@@ -3,16 +3,16 @@
 class GaleriePériode {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvel évènement", "galerie-evenement");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouvel évènement");
 			Stockage::set_prop($np, "description", "");
-			return new Page($np, '', "redirect");
+			return new Page($chemin, $np, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -25,7 +25,7 @@ class GaleriePériode {
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : transmettre le paramètre "vue"
 				// TODO : ne marche pas.
-				return new Page($chemin, '', "redirect");
+				return new Page($chemin, $chemin, '', "redirect");
 			}
 			
 			if (isset($paramètres["vue"])) {
@@ -95,17 +95,17 @@ class GaleriePériode {
 				$ret .= '<input type="submit" value="Supprimer la période"/>';
 				$ret .= '</form>';
 			}
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature") {
 			$ret = "Aucune<br/>photo";
 			
 			$enfants = Stockage::liste_enfants($chemin);
 			if (isset($enfants[0])) $ret = Modules::vue($enfants[0], 'miniature')->contenu;
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image_nouvel_evenement") {
 			// Houlàlà ça sent le hack pas beau !
-			return new Page(Path::combine(Config::get("chemin_base"), "/code/site/nouvel_evenement.jpg"), null, "sendfile");
+			return new Page($chemin, Path::combine(Config::get("chemin_base"), "/code/site/nouvel_evenement.jpg"), null, "sendfile");
 		}
 	}
 }

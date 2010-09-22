@@ -3,16 +3,16 @@
 class ForumMessage {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["message"])) {
 				Stockage::set_prop($chemin, "message", $paramètres["message"]);
 			}
 			
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		}
 	}
 	
@@ -34,7 +34,7 @@ class ForumMessage {
 			
 			// Peut-être afficher le bouton "citer" ? ou est-ce trop d'options ?
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

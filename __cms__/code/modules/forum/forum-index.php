@@ -3,13 +3,13 @@
 class ForumIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouveau sujet", "forum-sujet");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouveau sujet");
 			Stockage::set_prop($np, "dernier_numero", 0);
-			return new Page($np, '', "redirect");
+			return new Page($chemin, $np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -74,7 +74,7 @@ class ForumIndex {
 			
 			$ret .= '</ul>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

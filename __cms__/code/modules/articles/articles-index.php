@@ -3,13 +3,13 @@
 class ArticlesIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvel article", "articles-article");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouvel article");
 			Stockage::set_prop($np, "contenu", "Bla bla bla.");
-			return new Page($np, '', "redirect");
+			return new Page($chemin, $np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -77,7 +77,7 @@ class ArticlesIndex {
 			
 			$ret .= '</ul>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

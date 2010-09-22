@@ -27,25 +27,25 @@ class AdminConnexion {
 		// formulaire de connexion, formulaire + "mauvais mdp")
 		if ($vue == "normal") {
 			$ret = self::formulaire_connexion($chemin);
-			return new Page($ret, "Connexion");
+			return new Page($chemin, $ret, "Connexion");
 		} else if ($vue == "connexion réussie") {
 			$ret = "<h2>Connexion réussie</h2>";
 			$ret .= "<p>Pour vous déconnecter, utilisez le lien «déconnexion» en haut à droite.</p>";
 			$ret .= "<p><a href=\"" . Config::get("url_base") . "\">Retour à la page d'accueil</a>.</p>";
-			return new Page($ret, "Connexion réussie");
+			return new Page($chemin, $ret, "Connexion réussie");
 		}else if ($vue == "connexion échouée") {
 			$msg = "<p><strong>Mauvais mot de passe et/ou nom d'utilisateur. Ré-essayez ou retournez à la ";
 			$msg .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
 			$msg .= ".</strong></p>";
 			
 			$ret = self::formulaire_connexion($chemin, "Connexion échouée", $msg);
-			return new Page($ret, "Connexion échouée");
+			return new Page($chemin, $ret, "Connexion échouée");
 		}else if ($vue == "déconnexion") {
 			$ret = "<h2>Déconnexion réussie</h2>";
 			$ret .= "<p>Vous êtes déconnecté. Vous pouvez à présent retourner à la ";
 			$ret .= "<a href=\"" . Config::get("url_base") . "\">page d'accueil</a>";
 			$ret .= ".</p>";
-			return new Page($ret, "Déconnexion réussie");
+			return new Page($chemin, $ret, "Déconnexion réussie");
 		}
 	}
 	

@@ -8,8 +8,10 @@ class Page {
 	public $sendprop_prop = "";
 	public $redirect_destination = "";
 	public $type = "page";
+	public $chemin = null;
 	
-	public function __construct($a, $b, $type = "page") {
+	public function __construct($chemin, $a, $b, $type = "page") {
+		$this->chemin = $chemin;
 		if ($type == "page") {
 			$this->set_page($a, $b);
 		} else if ($type == "sendfile") {

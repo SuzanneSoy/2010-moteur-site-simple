@@ -49,6 +49,18 @@ class Chemin {
     public function get($slash_debut = true) {
         return ($slash_debut ? '/' : '') . join($this->segments, '/');
     }
+
+	public function hiérarchie() {
+		$c = new self($this->segments);
+		$r = new self("/");
+		$ret = array();
+		while (! $c->est_racine()) {
+			array_unshift($ret, $c);
+			$c = $c->parent();
+		}
+		array_unshift($ret, $c);
+		return $ret;
+	}
     
     public function get_url($fin = "") {
 		// Config::get("url_base") DOIT se terminer par '/', tel que spécifié
@@ -86,6 +98,10 @@ class Chemin {
     public function dernier() {
         return end($this->segments);
     }
+
+	public function est_racine() {
+		return (count($this->segments) == 0);
+	}
 
     
     public static function nettoyer_chemin($chemin, $est_un_motif = false) {

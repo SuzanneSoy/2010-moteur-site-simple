@@ -52,6 +52,20 @@ class Squelette {
 		$ret .= '			</ul>' . $nl;
 		$ret .= '		</div>' . $nl;
 		$ret .= '		<div class="site contenu">' . $nl;
+		if (! $page->chemin->est_racine() && ! $page->chemin->parent()->est_racine()) {
+			$ret .= '			<p class="">' . $nl;
+			$premier = true;
+			foreach ($page->chemin->hiérarchie() as $i) {
+				if (!$i->est_racine()) {
+					if (!$premier) {
+						$ret .= ' &gt; ';
+					}
+					$ret .= '				<a href="' . $i->get_url() . '">' . $i->dernier() . '</a>' . $nl;
+					$premier = false;
+				}
+			}
+			$ret .= '			</p>' . $nl;
+		}
 		return $ret;
     }
     

@@ -1,13 +1,14 @@
 // TODO : dans galerie les images ne sont pas centrées verticalement dans leur boîte.
 
-@largeur-contenu: 63em;
+@largeur-contenu: 53em;
 
 /* Couleurs principales */
 @base: #ffff00;
 @base2: #ba7500;
 @fg: #000000;
 @bg: #ffffff;
-@couleur-important: #ff0000;
+@fg-important: #0000ff;
+@bg-important: #ff7f00;
 
 /* Couleurs dérivées */
 @softbase: (2*@base + @bg) / 3;
@@ -64,9 +65,9 @@ h2 {
 }
 
 .prochain-evenement {
-	color: @couleur-important;
-	background-color: (6*@bg + @couleur-important) / 7;
-	border: thick solid @couleur-important;
+	color: @fg;
+	background-color: (2*@bg + @bg-important) / 3;
+	border: thick solid @fg-important;
 	margin: 0 5em 1em;
 	padding: 1em;
 	text-align: center;

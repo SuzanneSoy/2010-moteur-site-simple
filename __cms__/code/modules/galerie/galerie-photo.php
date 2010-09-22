@@ -3,10 +3,10 @@
 class GaleriePhoto {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["fichier_image"]) && ($paramètres["fichier_image"]["tmp_name"] != "")) {
 				$fichier_image = $paramètres["fichier_image"]["tmp_name"];
@@ -25,7 +25,7 @@ class GaleriePhoto {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : transmettre le paramètre "vue"
-				return new Page($chemin, '', "redirect");
+				return new Page($chemin, $chemin, '', "redirect");
 			}
 			
 			if (isset($paramètres["vue"])) {
@@ -55,17 +55,17 @@ class GaleriePhoto {
 				$ret .= '<img alt="' . Stockage::get_prop($chemin, "titre") . '" src="' . $chemin->get_url("?vue=image") . '"/>';
 				$ret .= affichage_texte_enrichi(Stockage::get_prop($chemin, "description"));
 			}
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature" || $vue == "mini") {
 			$ret = '<img alt="' . Stockage::get_prop($chemin, "titre") . '" src="' . $chemin->get_url("?vue=image_mini") . '"/>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image") {
-			return new Page($chemin, "image", "sendprop");
+			return new Page($chemin, $chemin, "image", "sendprop");
 		} else if ($vue == "image_mini") {
-			return new Page($chemin, "image_mini", "sendprop");
+			return new Page($chemin, $chemin, "image_mini", "sendprop");
 		}
-		return new Page('',''); // TODO : devrait renvoyer une page d'erreur !
+		return new Page($chemin, '',''); // TODO : devrait renvoyer une page d'erreur !
 	}
 	
 	public static function creer_miniature($chemin_fs, $largeur_max, $hauteur_max) {

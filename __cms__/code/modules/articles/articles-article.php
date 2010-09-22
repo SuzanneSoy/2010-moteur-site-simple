@@ -3,10 +3,10 @@
 class ArticlesArticle {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["contenu"])) {
 				Stockage::set_prop($chemin, "contenu", $paramètres["contenu"]);
@@ -18,7 +18,7 @@ class ArticlesArticle {
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : transmettre le paramètre "vue"
-				return new Page($chemin, '', "redirect");
+				return new Page($chemin, $chemin, '', "redirect");
 			}
 			
 			if (isset($paramètres["vue"])) {
@@ -47,10 +47,10 @@ class ArticlesArticle {
 				// TODO : afficher le bouton "Supprimer".
 			}
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} elseif ($vue == "miniature") {
 			$ret = miniature_texte_enrichi(Stockage::get_prop($chemin, "contenu"));
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

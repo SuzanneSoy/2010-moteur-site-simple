@@ -3,7 +3,7 @@
 class ÉquipesÉquipe {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
 			// CONCURENCE : Faire un lock quelque part...
@@ -15,17 +15,17 @@ class ÉquipesÉquipe {
 			Stockage::set_prop($np, "prenom", "Jean");
 			Stockage::set_prop($np, "description", "");
 			
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "supprimer") {
 			Stockage::supprimer($chemin, true); // TODO ! gérer correctement le récursif
-			return new Page($chemin->parent(), '', "redirect");
+			return new Page($chemin, $chemin->parent(), '', "redirect");
 		} else {
 			if (isset($paramètres["titre"]) && Stockage::prop_diff($chemin, "titre", $paramètres["titre"])) {
 				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
 				Stockage::renomer($chemin, $paramètres["titre"]);
 				$chemin = $chemin->renomer($paramètres["titre"]);
 				// TODO : transmettre le paramètre "vue"
-				return new Page($chemin, '', "redirect");
+				return new Page($chemin, $chemin, '', "redirect");
 			}
 			
 			if (isset($paramètres["vue"])) {
@@ -73,9 +73,9 @@ class ÉquipesÉquipe {
 			
 	        $ret .= '</ul>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "miniature") {
-			return new Page("Équipe.", Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, "Équipe.", Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

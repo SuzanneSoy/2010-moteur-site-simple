@@ -3,7 +3,7 @@
 class LiensIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			// SECURITE : On ne doit PAS pouvoir modifier dernier_numero arbitrairement
 			// CONCURENCE : Faire un lock quelque part...
@@ -14,7 +14,7 @@ class LiensIndex {
 			Stockage::set_prop($np, "texte", "Un lien");
 			Stockage::set_prop($np, "cible", "http://www.example.com/page/");
 			Stockage::set_prop($np, "description", "Un lien d'exemple très utile.");
-			return new Page($np, '', "redirect");
+			return new Page($chemin, $np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -72,7 +72,7 @@ class LiensIndex {
 			
 			$ret .= '</ul>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

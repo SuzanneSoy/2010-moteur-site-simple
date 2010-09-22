@@ -3,13 +3,13 @@
 class GalerieIndex {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
 			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
 			Stockage::set_prop($np, "titre", "Nouvelle période");
 			Stockage::set_prop($np, "description", "");
-			return new Page($np, '', "redirect");
+			return new Page($chemin, $np, '', "redirect");
 		} else {
 			if (isset($paramètres["description"])) {
 				Stockage::set_prop($chemin, "description", $paramètres["description"]);
@@ -80,10 +80,10 @@ class GalerieIndex {
 			$ret .= '<div class="clearboth"></div>';
 			$ret .= '</div>';
 			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		} else if ($vue == "image_nouvelle_periode") {
 			// Houlàlà ça sent le hack pas beau !
-			return new Page(Path::combine(Config::get("chemin_base"), "/code/site/nouvelle_image.jpg"), null, "sendfile");
+			return new Page($chemin, Path::combine(Config::get("chemin_base"), "/code/site/nouvelle_image.jpg"), null, "sendfile");
 		}
 	}
 }

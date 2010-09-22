@@ -4,7 +4,7 @@ class AdminUtilisateurs {
 	public static function action($chemin, $action, $paramètres) {
 		$singleton = new Chemin("/admin/utilisateurs/");
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		
 		// TODO ...
 		// Solution A (propre) :
@@ -84,7 +84,7 @@ class AdminUtilisateurs {
 	            // $chemin->enfant("$utilisateur") ?action=gen_mdp .
 	        }
 	        $ret .= '</tbody></table>';
-			return new Page($ret, "Utilisateurs");
+			return new Page($chemin, $ret, "Utilisateurs");
 		}
 	}
 }

@@ -3,7 +3,7 @@
 class AdminApparence {
 	public static function action($chemin, $action, $paramètres) {
 		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
+			return new Page($chemin, $chemin, '', "redirect");
 		} else {
 			if (isset($paramètres["Couleur_A"])) {
 				Stockage::set_prop($chemin, "Couleur_A", $paramètres["Couleur_A"]);
@@ -51,7 +51,7 @@ class AdminApparence {
 				$ret .= '<li>Couleur D : #fff</li>';
 				$ret .= '</ul>';
 			}
-			return new Page($ret, "Apparence");
+			return new Page($chemin, $ret, "Apparence");
 		} else if ($vue == "css") {
 			// TODO : où mettre ce gen_css... ?
 			return Site::gen_css(array(

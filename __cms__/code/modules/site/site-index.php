@@ -55,11 +55,11 @@ class SiteIndex {
 				$ret .= Stockage::get_prop($chemin, "description");
 			}
 			$ret .= '</div>';
-			return new Page($ret, Stockage::get_prop($chemin, "nom_site"));
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "nom_site"));
 		} else if ($vue == "css") {
-			return new Page(get_css(), "text/css", "raw");
+			return new Page($chemin, get_css(), "text/css", "raw");
 		}
-		return new Page('',''); // TODO : devrait renvoyer une page d'erreur !
+		return new Page($chemin, '',''); // TODO : devrait renvoyer une page d'erreur !
 	}
 }
 
