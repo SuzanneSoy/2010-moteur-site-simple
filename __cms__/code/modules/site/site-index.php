@@ -37,6 +37,10 @@ class SiteIndex {
 			}
 			$ret .= '</div>';
 			
+			$ret .= '<div class="logo-site">';
+			$ret .= '<img src="' . $chemin->get_url("logo.png") . '">';
+			$ret .= '</div>';
+			
 			$ret .= '<div class="description-site">';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<form class="nom_site infos" method="post" action="' . $chemin->get_url() . '">';
