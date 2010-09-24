@@ -73,6 +73,19 @@ class HorairesIndex {
 			$ret .= '</ul>';
 			
 			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
+		} else if ($vue == "miniature") {
+			$ret = '';
+			
+			$ret .= '<div class="horaires liste-creneaux miniature">';
+			$ret .= '<ul>';
+			
+	        foreach (stockage::liste_enfants($chemin) as $k) {
+	            $ret .= '<li>' . Modules::vue($k)->contenu . '</li>';
+	        }
+			
+			$ret .= '</ul>';
+			
+			return new Page($chemin, $ret, Stockage::get_prop($chemin, "titre"));
 		}
 	}
 }

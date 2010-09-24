@@ -31,6 +31,9 @@ class ÉquipesIndex {
 		if ($vue == "normal") {
 			$ret = '';
 			
+			$ret .= '<h2>Horaires</h2>';
+			$ret .= Modules::vue(new Chemin("/horaires"), 'miniature')->contenu;
+			
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
 				$ret .= '<form class="equipes infos" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
