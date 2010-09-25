@@ -1,94 +1,78 @@
-<?php
+<h2><?php echo this->select("@titre"); ?></h2>
+<p><?php echo this->select("@description"); ?></p>
+<ul>
+	<?php foreach (this->select("periodes") as $k => $periode) { ?>
+	<li>
+		<a href="<?php echo $periode->url(); ?>">
+			<?php $rendu = $periode->rendu(); ?>
+			<span class="miniature">
+				<?php echo $rendu->get("contenu"); ?>
+			</span>
+			<span class="titre">
+				<?php echo $rendu->get("titre"); ?>
+			</span>
+	</li>
+	<?php } ?>
+</ul>
 
-class GalerieIndex {
-	public static function action($chemin, $action, $paramètres) {
-		if ($action == "anuler") {
-			return new Page($chemin, '', "redirect");
-		} else if ($action == "nouvelle_page") {
-			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
-			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			Stockage::set_prop($np, "titre", "Nouvelle période");
-			Stockage::set_prop($np, "description", "");
-			enregistrer_nouveaute($np);
-			return new Page($np, '', "redirect");
-		} else {
-			if (isset($paramètres["description"])) {
-				Stockage::set_prop($chemin, "description", $paramètres["description"]);
-			}
-			
-			if (isset($paramètres["titre"])) {
-				Stockage::set_prop($chemin, "titre", $paramètres["titre"]);
-			}
-			
-			if (isset($paramètres["vue"])) {
-				return self::vue($chemin, $paramètres["vue"]);
-			} else {
-				return self::vue($chemin);
-			}
-		}
-	}
-	
-	public static function vue($chemin, $vue = "normal") {
-		if ($vue == "normal") {
-			$ret = '';
-			
-			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form class="galerie infos" method="post" action="' . $chemin->get_url() . '">';
-				$ret .= '<h2><input type="text" name="titre" value="' . Stockage::get_prop($chemin, "titre") . '" /></h2>';
-				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "description"), "description");
-				$ret .= '<p><input type="submit" value="appliquer" /></p>';
-				$ret .= '</form>';
-			} else {
-				$ret .= '<h2>' . Stockage::get_prop($chemin, "titre") . '</h2>';
-				$ret .= '<p class="galerie index description affichage">' . Stockage::get_prop($chemin, "description") . '</p>';
-			}
-			
-			$ret .= '<div class="galerie photos index">';
-			$ret .= '<ul>';
-			foreach (Stockage::liste_enfants($chemin) as $k) {
-				$mini = Modules::vue($k, 'miniature');
-				$ret .= '<li>';
-				$ret .= '<a href="' . $k->get_url() . '">'; // TODO : escape l'url !
-				$ret .= '<span class="miniature">';
- 				$ret .= $mini->contenu; // TODO : escape l'url !
-				$ret .= '</span>';
-				$ret .= '<span class="titre">';
-				$ret .= $mini->titre;
-				$ret .= '</span>';
-				$ret .= '</a>';
-				$ret .= '</li>';
-			}
-			
-			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
-				$ret .= '<li>';
-				$ret .= '<div class="miniature">';
-				$ret .= '<img alt="nouvelle période" src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
-				$ret .= '</div>';
-				$ret .= '<div class="titre">';
-				
-				$ret .= '<form class="galerie nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
-				$ret .= '<p>';
-				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouvelle période"/>';
-				$ret .= '</p>';
-				$ret .= '</form>';
-				
-				$ret .= '</div>';
-				$ret .= '</li>';
-			}
-			
-			$ret .= '</ul>';
-			$ret .= '<div class="clearboth"></div>';
-			$ret .= '</div>';
-			
-			return new Page($ret, Stockage::get_prop($chemin, "titre"));
-		} else if ($vue == "image_nouvelle_periode") {
-			// Houlàlà ça sent le hack pas beau !
-			return new Page(Path::combine(Config::get("chemin_base"), "/code/site/nouvelle_image.jpg"), null, "sendfile");
-		}
-	}
-}
 
-Modules::enregister_module("GalerieIndex", "galerie-index", "vue", "titre description");
+<%titre @titre %>
+<%texte @description %>
+<%list ./periodes %>
+	<li>
+		<a href="<?php echo $periode->url(); ?>">
+			<?php $rendu = $periode->rendu(); ?>
+			<span class="miniature">
+				<?php echo $rendu->get("contenu"); ?>
+			</span>
+			<span class="titre">
+				<?php echo $rendu->get("titre"); ?>
+			</span>
+	</li>
+<%/list>
 
-?>
+(document @titre
+  (titre @titre)
+  (texte @description)
+  (list ./periodes
+		(lambda (p)
+		  (let ((rendu (rendu p)))
+			(<a> (url p)
+				 (<span> :class miniature
+						 (get "contenu" rendu))
+				 (<span> :class titre
+						 (get "titre" rendu)))))))
+
+(document @titre
+  (titre @titre)
+  (texte @description)
+  (<ul>
+   (foreach/rendu ((p ./periodes))
+			(<li>
+			 (<a> (url p)
+				  (<span> :class miniature
+						  (get "contenu" rendu))
+				  (<span> :class titre
+						  (get "titre" rendu)))))))
+
+La fonction rendu pren en paramètre une "page" renvoie un fragment html.
+Tous les fragments html ont 3 parties :
+ - le titre
+ - le head (scripts, css etc.)
+ - le body
+ - Peut-être séparer le <h2>..</h2> du reste du body ?
+ - et l'url ?
+
+Dans la base de données, chaque "page" a :
+ - un identifiant unique
+ - des propriétés accessibles via @nom-propriété.
+ - des groupes de pages enfant (?) :
+    Pour la page galerie :
+      ./periodes/2009-2010
+      ./periodes/2010-2011
+    Pour accéder au 3e évènement de la 2e période, on ferait :
+      ./periodes/2010-2011/evenements/1er avril
+ - et l'url (canonique) ?
+
+Un module peut déclarer des ressources statiques (par ex. un fragment de less/css).
+Les ressources doivent pouvoir être accédées via une certaine url.
