@@ -60,7 +60,8 @@ Tous les fragments html ont 3 parties :
  - le titre
  - le head (scripts, css etc.)
  - le body
- - Peut-être séparer le <h2>..</h2> du reste du body ?
+ - Peut-être séparer le <h2>...</h2> du reste du body ?
+ - Peut-être séparer le header, footer, article, nav, ...
  - et l'url ?
 
 Dans la base de données, chaque "page" a :
@@ -73,6 +74,12 @@ Dans la base de données, chaque "page" a :
     Pour accéder au 3e évènement de la 2e période, on ferait :
       ./periodes/2010-2011/evenements/1er avril
  - et l'url (canonique) ?
+
+Langage de requêtes :
+ - Récupérer un attribut
+ - Récupérer une page enfant d'une certaine catégorie (?)
+ - Trier selon un certain critère sur les éléments renvoyés.
+ - Limiter le nombre de résultats (LIMIT et OFFSET).
 
 Un module peut déclarer des ressources statiques (par ex. un fragment de less/css).
 Les ressources doivent pouvoir être accédées via une certaine url.
