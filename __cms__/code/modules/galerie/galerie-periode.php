@@ -1,3 +1,23 @@
+@titre : url
+@description :
+
+Enfants : galerie-evenement
+Actions : créer_enfant, supprimer, vue
+
+Vue normale :
+(titre @titre)
+(texte-riche @description)
+(action supprimer "Supprimer cette période.") # ssi permission supprimer
++ liste des enfants :
+  <li>[miniature][titre]</li>
+  si permission créer page :
+  <li>(action nouvelle_page)</li>
+
+Vue miniature :
+Sélectionner le 1er enfant, lui demander sa vue "miniature", en renvoyer la partie image.
+
+Donnée statique : icône "nouvel évènement".
+
 <?php
 
 class GaleriePériode {
