@@ -55,7 +55,7 @@
 				  (<span> :class titre
 						  (get "titre" rendu)))))))
 
-La fonction rendu pren en paramètre une "page" renvoie un fragment html.
+La fonction rendu prend en paramètre une "page" renvoie un fragment html.
 Tous les fragments html ont 3 parties :
  - le titre
  - le head (scripts, css etc.)
@@ -65,8 +65,11 @@ Tous les fragments html ont 3 parties :
  - et l'url ?
 
 Dans la base de données, chaque "page" a :
- - un identifiant unique
+ - un identifiant unique. Chaque élément de la base de données a un identifiant unique construit à partir de
+   son autoincrement, et du nom de la table.
+ - un systemName (optionnel) : pour les "pages" Permissions, Utilisateurs, etc. Permet d'accéder en chemin absolu sans connaître l'uid / le nom.
  - des propriétés accessibles via @nom-propriété.
+ + des propriétés "système" (dates, permissions, composantUrl) avec des droits potentiellement différents.
  - des groupes de pages enfant (?) :
     Pour la page galerie :
       ./periodes/2009-2010
@@ -82,8 +85,21 @@ Langage de requêtes :
  - Limiter le nombre de résultats (LIMIT et OFFSET).
  - Ne renvoie que les éléments que l'utilisateur a la permission de voir.
 
-Un module peut déclarer des ressources statiques (par ex. un fragment de less/css).
+Un module peut déclarer des ressources statiques (par ex. un fragment de less/css) et dynamiques (p. ex. image).
+Les ressources statiques ont une url qui ne dépend pas du chemin de la page en cours, les dynamiques si
+(en général).
 Les ressources doivent pouvoir être accédées via une certaine url.
+ => "Espaces de nommage" : dès la réception de l'url, on s'empresse de trouver son espace de nommage,
+    et on appelle la fonction correspondante. Par ex. : dans /css, on appelle directement la fonction
+    qui renverra le fichier CSS. Ou bien, système de "liens" : /css est un lien vers /admin/style:css
+    (ressource css de /admin/style). La solution "fonction" est plus générale. Par ex. /css/blabla peut
+    appeller la fonction en question avec "blabla" en paramètre (pour récupérer la bonne feuille de style).
+    ATTENTION : éviter les conflits de nommage, vu que les espaces de nommage se recouvrent partiellement.
+    TODO : méthode "shorturl" qui renvoie l'url d'une ressource via son raccourci s'il en existe un, sinon
+           via le chemin normal.
+	TODO : Comment les modules indiquent-ils qu'ils ont une feuille css à mettre dans l'espace de nommage
+	       "CSS" ?
+	NOTE : ça sent le truc bien compliqué avec plein de bugs ça... :( .
 
 Notes en vrac :
 ===============
@@ -101,6 +117,9 @@ Dans les actions de chaque module, il y a :
  - créer_enfant (souvent)
 
 Problème des class css.
+Solution : chaque classe PHP de création d'élément (Document->ul(), Document->div(), ...) a un méthode
+->espaceCSS($class). Lorsqu'on l'appelle, tous les éléments enfants qui ne sont pas déjà dans un espace CSS
+reçoivent la classe $class. (ceci est effectué lors de la conversion Document->(x)html5().)
 
 Pour les aperçus dans la galerie : prendre le 1er enfant (ou l'enfant marqué 'aperçu').
 
@@ -112,16 +131,17 @@ Il faut trouver comment générer automatiquement une url / titre / je-ne-sais-q
 le titre n'est pas renseigné (par ex. pour les 250 photos de la galerie, pour que les utilisateurs
 n'aient pas à indiquer le titre à chaque fois.
 
-Totues les pages ont une date de création et de modification automatiquement.
+Toutes les pages ont une date de création et de modification automatiquement.
 
 TODO : pouvoir accéder l'attribut @image directement depuis l'extérieur.
 
 Abstractions :
- - Valeur avec binding
- - Action (créer page, supprimer)
+ - Valeur avec binding (+ callbacks ?).
+ - Action (créer page, supprimer, ... (générer mot de passe)).
  - Getter et setter optionnels sur les valeurs.
    Ex: getter de titre : Renvoie "Photo [date]" si le titre est indéfini, sinon le titre.
- - Vue vs ressource (chaque ressource a une vue, une page "photo" est une ressource (celle par défaut), l'image elle-même est une autre ressource).
+ - Vue vs ressource (chaque ressource a une ou plusieurs(?) vue(s?), une page "photo" est une ressource (celle par défaut), l'image elle-même est une autre ressource).
+   Ou bien pas de vue, que des ressources (la "vue miniature" est une autre ressource).
 
 Valeurs par défaut pour les @attributs, définies dans le module lui-même.
 
