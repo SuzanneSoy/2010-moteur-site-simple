@@ -19,20 +19,28 @@ class GalerieIndex extends Page {
 	
 	public function res_h_page() {
 		$d = new Document();
-		$d->heading->standard();
-		$l = $d->article(1)->append->liste(select(/*todo*/), function($e) {/*todo*/});
-		// todo $l->append->...
+		$d->w_en_tete(); // En-tête standard.
+		$l = $d->article()->w_liste($this->select("./*", "date desc"), function($e, $li) {
+			$li->a($e->uid())->append(
+				$e->rendu("h_miniature")
+			);
+		});
+		$nouveau = $l->li();
+		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_période"));
+		$nouveau->span("titre")->texte("Nouvelle période");
 	}
 	
 	public function res_h_miniature() {
-		return $this->res_h_miniature_image();
-		// todo : ajouter le titre etc.;
+		$e = new ElementDocument();
+		$e->span("miniature")->append($this->res_h_miniature_image());
+		$e->span("titre")->_field($this->titre);
+		return $e;
 	}
 	
 	public function res_h_miniature_image() {
 		// Prendre le 1er par ordre décroissant sur la date, ou bien :
 		// TODO : prendre l'élément ayant la propriété "aperçu" à true (s'il y en a un, sinon date).
-		return $this->select("./*", "date desc", 1)->mini_miniature;
+		return $this->select("./*", "date desc", 1)->rendu("h_miniature_image");
 	}
 }
 

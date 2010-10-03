@@ -59,6 +59,9 @@ class ElementDocument {
 	}
 }
 
+class Document extends ElementDocument {
+}
+
 ElementDocument::ajouter_type_élément("document", "header footer nav article script style");
 ElementDocument::ajouter_type_élément("header", "title");
 ElementDocument::ajouter_type_élément("footer", "");
@@ -70,6 +73,8 @@ ElementDocument::ajouter_type_élément("ul", "li");
 ElementDocument::ajouter_type_élément("li", "text a strong em");
 ElementDocument::ajouter_type_élément("form", "input_text_line input_text_multi input_text_rich input_file");
 ElementDocument::ajouter_type_élément("a", "text strong em", "href");
+ElementDocument::ajouter_type_élément("span", "text a strong em", "class");
+ElementDocument::ajouter_type_élément("img", "", "alt src");
 // ElementDocument::ajouter_type_élément("", "");
 
 //ElementDocument::ajouter_widget("titre", function($select){}); // renvoie un <h2> ou un <input> selon les droits
@@ -82,8 +87,8 @@ ElementDocument::ajouter_type_élément("a", "text strong em", "href");
 /* Widgets :
 	function en_tete() {
 		$d = new Document();
-		$d->append->titre($this->select("titre"));
-		$d->append->description($this->select("description"));
+		$d->titre($this->select("titre"));
+		$d->description($this->select("description"));
 		return $d;
 	}
 	

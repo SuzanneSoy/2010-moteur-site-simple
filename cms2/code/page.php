@@ -31,8 +31,8 @@ class Page {
 		niy("rendu");
 	}
 	
-	public function url() {
-		// Renvoie toute l'url
+	public function url($ressource = null) {
+		// Renvoie toute l'url (de la ressource principale ou de $ressource).
 		niy("url");
 	}
 	
