@@ -1,10 +1,10 @@
 <?php
 
 function main() {
-	echo "<pre>";
 	$g = new GalerieIndex();
-	var_dump($g);
-	echo "</pre>";
+	$g->res_h_page();
+
+	Debug::afficher();
 }
 
 ?>

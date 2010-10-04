@@ -10,9 +10,10 @@ abstract class GalerieBase extends Page {
 	protected static $enfants = "GalerieÉvènement";
 
 	protected static $texte_nouvelle_page = "Nouvel élément";
+	protected static $fichier_nouvelle_page = "nouvelle_periode.png";
 	
 	public function res_i_icône_nouvelle_page() {
-		niy("res_i_icône_nouvelle_page");
+		return StockageFichiers::envoyer_fichier_statique(Path::combine(dirname(__FILE__), self::$fichier_nouvelle_page));
 	}
 	
 	public function res_c_style() {
@@ -29,7 +30,8 @@ abstract class GalerieBase extends Page {
 		});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
-		$nouveau->span("titre")->texte($this->texte_nouvelle_page);
+		$nouveau->span("titre")->texte(self::$texte_nouvelle_page);
+		return $d;
 	}
 	
 	public function res_h_miniature() {
@@ -48,26 +50,17 @@ abstract class GalerieBase extends Page {
 
 class GalerieIndex extends GalerieBase {
 	protected static $texte_nouvelle_page = "Nouvelle période";
-
-	public function res_i_icône_nouvelle_page() {
-		return StockageFichiers::fichier_statique(/*TODO*/);
-	}
+	protected static $fichier_nouvelle_page = "nouvelle_periode.png";
 }
 
 class GaleriePériode extends GalerieBase {
 	protected static $texte_nouvelle_page = "Nouvel événement";
-
-	public function res_i_icône_nouvelle_page() {
-		return StockageFichiers::fichier_statique(/*TODO*/);
-	}
+	protected static $fichier_nouvelle_page = "nouvel_evenement.png";
 }
 
 class GalerieÉvénement extends GalerieBase {
 	protected static $texte_nouvelle_page = "Nouvelle photo";
-
-	public function res_i_icône_nouvelle_page() {
-		return StockageFichiers::fichier_statique(/*TODO*/);
-	}
+	protected static $fichier_nouvelle_page = "nouvelle_photo.png";
 }
 
 Page::ajouter_type("GalerieIndex");

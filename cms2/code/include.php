@@ -6,6 +6,7 @@ require_once(dirname(__FILE__) . "/page.php");
 require_once(dirname(__FILE__) . "/bdd.php");
 require_once(dirname(__FILE__) . "/document.php");
 require_once(dirname(__FILE__) . "/main.php");
+require_once(dirname(__FILE__) . "/stockage_fichiers.php");
 
 require_once(dirname(__FILE__) . "/../modules/include.php");
 

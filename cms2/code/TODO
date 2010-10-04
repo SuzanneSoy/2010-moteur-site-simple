@@ -1,0 +1,9 @@
+
+- Valeur de retour des res_t_xxx ?
+   Lorsqu'on appelle GalerieIndex::res_i_icône_nouvelle_page(), ça fait un sendfile alors que GalerieIndex::res_h_page() renvoie un objet
+   ElementDocument, et GalerieIndex::res_c_style() renvoie du texte (CSS) pour inclusion dans le CSS principal... alors que
+   res_c_style_supplémentaire() fait je-sais-pas-quoi...
+   
+   Comment gérer tout ça ? Tout le monde envoie directement et on intercepte avec un ob_start() / ob_end() ? Selon le type d'image on envoie
+   direct ou on récupère (html,css => récup, img => envoi) ? Une option à chaque fois (bêrk) ? Selon la valeur de retour (Direct => envoyé
+   directement, autre => récupéré), mais ça pose des pbs (la fonction X appelle un envoi direct alors qu'elle voulait une récup) ?
