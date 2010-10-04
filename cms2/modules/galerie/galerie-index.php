@@ -1,16 +1,18 @@
 <?php
 
-class GalerieIndex extends Page {
-	protected static $ressources_statiques = array("i_icône_nouvelle_période image/jpeg", "c_style text/css");
+abstract class GalerieBase extends Page {
+	protected static $ressources_statiques = array("i_icône_nouvelle_page image/jpeg", "c_style text/css");
 	protected static $ressources_dynamiques = array("h_page Document", "h_miniature Document", "h_mini_miniature Document");
 	protected static $attributs = array(
 		"titre" => "Galerie",
 		"description" => ""
 	);
 	protected static $enfants = "GalerieÉvènement";
+
+	protected static $texte_nouvelle_page = "Nouvel élément";
 	
-	public function res_i_icône_nouvelle_période() {
-		niy("res_i_icône_nouvelle_période");
+	public function res_i_icône_nouvelle_page() {
+		niy("res_i_icône_nouvelle_page");
 	}
 	
 	public function res_c_style() {
@@ -26,8 +28,8 @@ class GalerieIndex extends Page {
 			);
 		});
 		$nouveau = $l->li();
-		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_période"));
-		$nouveau->span("titre")->texte("Nouvelle période");
+		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
+		$nouveau->span("titre")->texte($this->texte_nouvelle_page);
 	}
 	
 	public function res_h_miniature() {
@@ -41,6 +43,30 @@ class GalerieIndex extends Page {
 		// Prendre le 1er par ordre décroissant sur la date, ou bien :
 		// TODO : prendre l'élément ayant la propriété "aperçu" à true (s'il y en a un, sinon date).
 		return $this->select("./*", "date desc", 1)->rendu("h_miniature_image");
+	}
+}
+
+class GalerieIndex extends GalerieBase {
+	protected static $texte_nouvelle_page = "Nouvelle période";
+
+	public function res_i_icône_nouvelle_page() {
+		return StockageFichiers::fichier_statique(/*TODO*/);
+	}
+}
+
+class GaleriePériode extends GalerieBase {
+	protected static $texte_nouvelle_page = "Nouvel événement";
+
+	public function res_i_icône_nouvelle_page() {
+		return StockageFichiers::fichier_statique(/*TODO*/);
+	}
+}
+
+class GalerieÉvénement extends GalerieBase {
+	protected static $texte_nouvelle_page = "Nouvelle photo";
+
+	public function res_i_icône_nouvelle_page() {
+		return StockageFichiers::fichier_statique(/*TODO*/);
 	}
 }
 
