@@ -1,8 +1,15 @@
 <?php
 
-function qw($arg, $sep = " ") {
-	if (is_array($arg)) return $arg;
+function qw($arg, $arg2 = null, $sep = " ") {
 	$ret = array();
+	if (is_array($arg))	{
+		if ($arg2 === null) {
+			return $arg;
+		} else {
+			$ret = $arg;
+			$arg = $arg2;
+		}
+	}
 	foreach(explode($sep, $arg) as $v) {
 		if ($v !== "") array_push($ret, $v);
 	}

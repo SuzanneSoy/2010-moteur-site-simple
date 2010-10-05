@@ -48,6 +48,7 @@ class ElementDocument {
 	}
 
 	public function __call($fn, $args) {
+		// TODO (peut-être ?): si on ne peut pas ajouter directement un élément, chercher un chemin qui permette de l'ajouter (p.ex. un strong directement à la racine d'un document, on ajoutera un p).
 		if (array_key_exists($this->type, self::$enfantsÉléments)
 			&& in_array($fn, self::$enfantsÉléments[$this->type])) {
 			$elem = new self($fn);

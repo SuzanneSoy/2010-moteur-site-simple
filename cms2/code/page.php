@@ -1,20 +1,30 @@
 <?php
 
-// TODO : gestion du renomage (pseudo-réécriture d'URL).
+  // TODO : gestion du renomage (pseudo-réécriture d'URL).
 
 class Page {
 	// Convention de nommage :
 	// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
-	protected static $ressources_statiques = array();
-	protected static $ressources_dynamiques = array();
-	protected static $attributs = array(
-		"date_creation" => 0,
-		"date_modification" => 0,
-		"publier" => false,
-		"nom_systeme" => "",
-		"composant_url" => "page",
-	);
-	protected static $enfants = true; // Type des enfants. True pour tout autoriser.
+	public static function ressources_statiques() {
+		return array();
+	}
+	public static function ressources_dynamiques() {
+		return array();
+	}
+	public static function types_enfants() {
+		// true => n'importe quel type est accepté
+		// null ou false => aucun type.
+		return true;
+	}
+	public static function attributs() {
+		return array(
+			"date_creation" => 0,
+			"date_modification" => 0,
+			"publier" => false,
+			"nom_systeme" => "",
+			"composant_url" => "page",
+		);
+	}
 
 	public static function ajouter_type($type) {
 		niy("Page::ajouter_type($type);");
@@ -47,9 +57,19 @@ class Page {
 		niy("uid");
 	}
 	
-	public function select($requête) {
+	/*	public function select($requête) {
+	 // Renvoie un objet de la classe CollectionPages.
+	 niy("select");
+	 }*/
+
+	public function enfants($condition = true, $ordre = "date desc", $limit = 0, $offset = 0) {
 		// Renvoie un objet de la classe CollectionPages.
-		niy("select");
+		// Si $condition === true, il n'y a pas de condition
+		//   ex: $condition = "@apercu = true"
+		// ordre = null => ordre = "date desc"
+		// limit = null || limit = 0 => pas de limite
+		// offset = null => offset = 0
+		niy("enfants");
 	}
 	
 	public function __get($nom) {
@@ -73,7 +93,7 @@ class Page {
 		// Modifie l'attribut "$nom" dans la BDD.
 		niy("set direct $name = $val");
 	}
-}
+  }
 
 class CollectionPages {
 	function __construct() {
