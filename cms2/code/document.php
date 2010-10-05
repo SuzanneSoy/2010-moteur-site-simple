@@ -124,7 +124,7 @@ ElementDocument::ajouter_widget("titre", function($d, $select){
 	});
 
 
-ElementDocument::ajouter_widget("en_tete", function($d){
+ElementDocument::ajouter_widget("en_tete", function($d, $select_titre, $select_description){
 		//$d->w_titre($this->select("titre"));
 		//$d->w_description($this->select("description"));
 		$d->w_titre("NIY en_tete");
@@ -137,6 +137,11 @@ ElementDocument::ajouter_widget("description", function($d, $select){
 	});
 
 
+ElementDocument::ajouter_widget("field", function($d, $select){
+		$f = $d->span();
+		$f->text("NIY : " . $select);
+		return $f;
+	});
 
 
 
@@ -144,7 +149,6 @@ ElementDocument::ajouter_widget("description", function($d, $select){
 
 
 //ElementDocument::ajouter_widget("richText", function($select){}); // similaire
-//ElementDocument::ajouter_widget("field", function($select){}); // ...
 // Peut-être que _field peut détecter automatiquement s'il faut traiter un champ de la BDD
 // (par ex. pour le richText) en fonction d'une info "type" dans la classe correspondant à la page de ce champ ?
 ElementDocument::ajouter_widget("liste", function($d, $select, $function_formattage_elements) {

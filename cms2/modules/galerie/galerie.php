@@ -7,7 +7,8 @@ abstract class GalerieBase extends Page {
 	
 	
 	public static function ressources_statiques() {
-		return qw("i_icône_nouvelle_page c_style"); }
+		return qw("i_icône_nouvelle_page c_style");
+	}
 	public static function ressources_dynamiques() {
 		return qw("h_page h_miniature h_mini_miniature");
 	}
@@ -111,8 +112,7 @@ class GaleriePhoto {
 	
 	public function res_h_page() {
 		$d = new Document();
-		$d->w_en_tete(); // En-tête standard.
-		// TODO : la description devrait être soit dans w_en_tete, soit dans w_img !
+		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
 		$d->w_img($this->description, $this->i_image);
 		return $d;
 	}

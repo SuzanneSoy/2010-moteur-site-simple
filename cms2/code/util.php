@@ -1,6 +1,9 @@
 <?php
 
-function qw($arg, $arg2 = null, $sep = " ") {
+function qw($arg = null, $arg2 = null, $sep = " ") {
+	if ($arg === null && $arg2 === null)
+		return array();
+	
 	$ret = array();
 	if (is_array($arg))	{
 		if ($arg2 === null) {

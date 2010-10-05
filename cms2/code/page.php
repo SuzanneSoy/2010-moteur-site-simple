@@ -18,6 +18,8 @@ class Page {
 		// null ou false => aucun type.
 		return true;
 	}
+	// TODO !! TODO !! TODO
+	// Comment spécifier que telle valeur référence telle autre (si on le spécifie, sinon c'est juste le widget qui fait la translation) ?
 	public static function attributs() {
 		return array(
 			"date_creation" => 0,
@@ -81,7 +83,7 @@ class Page {
 	public function __get($nom) {
 		// s'il y a un getter (trigger), on l'appelle, sinon on appelle get_prop_direct();
 		// le getter fait ce qu'il veut, puis appelle set_prop_direct();
-		niy("get $name");
+		niy("get $nom");
 	}
 
 	private function get_prop_direct($nom) {
