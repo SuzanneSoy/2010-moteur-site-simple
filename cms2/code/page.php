@@ -3,6 +3,8 @@
   // TODO : gestion du renomage (pseudo-réécriture d'URL).
 
 class Page {
+	public static $types = array();
+	
 	// Convention de nommage :
 	// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
 	public static function ressources_statiques() {
@@ -27,8 +29,7 @@ class Page {
 	}
 
 	public static function ajouter_type($type) {
-		niy("Page::ajouter_type($type);");
-		// Insérer la ressource "res_c_style" dans le CSS principal
+		array_push(self::$types, $type);
 	}
 	
 	private $parent = null;
@@ -38,7 +39,12 @@ class Page {
 	
 	public function rendu() {
 		// Renvoie un document (classe ElementDocument).
-		niy("rendu");
+		// L'appel à une fonction statique via $this-> n'est pas propre, mais comment appeller la
+		// fonction du sous-type et pas celle de Page sinon ?
+		if (count($this->ressources_dynamiques()) == 0)
+			return new Document();
+		$res = $this->ressources_dynamiques();
+		return call_user_func(array($this, "res_" . $res[0]));
 	}
 	
 	public function url($ressource = null) {
@@ -96,6 +102,14 @@ class Page {
   }
 
 class CollectionPages {
+	public function size() {
+		niy("CollectionPages::size()");
+	}
+	
+	public function get($i) {
+		niy("CollectionPages::get($i)");
+	}
+	
 	function __construct() {
 		niy("CollectionPages");
 	}

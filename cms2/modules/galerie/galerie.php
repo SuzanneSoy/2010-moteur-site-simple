@@ -39,7 +39,7 @@ abstract class GalerieBase extends Page {
 			});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
-		$nouveau->span("titre")->texte(self::$texte_nouvelle_page);
+		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
 		return $d;
 	}
 	
@@ -51,8 +51,6 @@ abstract class GalerieBase extends Page {
 	}
 	
 	public function res_h_mini_miniature() {
-		// Prendre le 1er par ordre décroissant sur la date, ou bien :
-		// TODO : prendre l'élément ayant la propriété "aperçu" à true (s'il y en a un, sinon date).
 		$a = $this->enfants("@apercu = true", "date desc", 1);
 		if ($a->size() != 1)
 			$a = $this->enfants(true, "date desc", 1);
