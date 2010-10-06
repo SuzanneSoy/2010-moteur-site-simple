@@ -14,7 +14,7 @@ class ElementDocument {
 	private $type = null;
 	private $enfants = array();
 	private $attr = array();
-	
+
 	public static function ajouter_type_élément($type, $typesEnfants, $attributs = "") {
 		self::$enfantsÉléments[$type] = qw($typesEnfants);
 		self::$attributsÉléments[$type] = qw($attributs);
@@ -24,10 +24,15 @@ class ElementDocument {
 		self::$widgets["w_" . $nom] = $callback;
 	}
 
-	public function inclure($elem) {
-		// Tente de fusionner $elem avec $this
-		niy("inclure");
+	public function type() {
+		return $this->type;
 	}
+	
+		/*	public function inclure($elem) {
+		// Tente de fusionner $elem avec $this
+		// Très mauvaise fonction car l'inclusion peut planter bien après la définition des deux parties.
+		niy("inclure");
+		}*/
 
 	public function attr($nom, $valeur) {
 		$this->attr[$nom] = $valeur;
@@ -107,10 +112,15 @@ ElementDocument::ajouter_type_élément("header", "title");
 ElementDocument::ajouter_type_élément("title", "text");
 ElementDocument::ajouter_type_élément("footer", "");
 ElementDocument::ajouter_type_élément("nav", "ul");
-ElementDocument::ajouter_type_élément("article", "ul p form span"); // span ?
+ElementDocument::ajouter_type_élément("article", "ul table p form span"); // span ?
 ElementDocument::ajouter_type_élément("script", "", "src");
 ElementDocument::ajouter_type_élément("style", "", "src");
 ElementDocument::ajouter_type_élément("ul", "li");
+ElementDocument::ajouter_type_élément("table", "thead tbody tfoot");
+ElementDocument::ajouter_type_élément("tbody", "tr");
+ElementDocument::ajouter_type_élément("tr", "td th");
+ElementDocument::ajouter_type_élément("td", $inline_elems);
+ElementDocument::ajouter_type_élément("th", $inline_elems);
 ElementDocument::ajouter_type_élément("li", $inline_elems);
 ElementDocument::ajouter_type_élément("form", "input_text_line input_text_multi input_text_rich input_file");
 ElementDocument::ajouter_type_élément("a", $inline_elems, "href");
@@ -158,6 +168,13 @@ ElementDocument::ajouter_widget("liste", function($d, $select, $function_formatt
 		$l = $d->ul();
 		$l->li()->text("Not Implemented Yet");
 		return $l;
+	});
+
+ElementDocument::ajouter_widget("tableau", function($d, $select, $function_formattage_elements) {
+		$t = $d->table();
+		$tr = $t->tbody()->tr();
+		$tr->td()->text("Not Implemented Yet");
+		return $t;
 	});
 
 /* Widgets :

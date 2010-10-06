@@ -25,10 +25,10 @@ class AdminListeUtilisateurs extends Page {
 	public function res_h_page($d) {
 		$d->w_titre("Utilisateurs");
 		
-		$l = $d->article()->w_liste($this->enfants(true, "nom asc prenom asc"), function($e, $li) {
-				$e->rendu("h_admin", $li);
+		$l = $d->article()->w_tableau($this->enfants(true, "nom asc prenom asc"), function($e, $tr) {
+				$e->rendu("h_admin", $tr);
 			});
-		$nouveau = $l->li();
+		$nouveau = $l->tbody(0)->tr()->td(); // TODO : colspan
 		$nouveau->text("Nouvel utilisateur");
 		return $d;
 	}
@@ -71,6 +71,7 @@ class AdminUtilisateur extends Page {
 	
 	public function res_h_admin($d) {
 		// Vue de l'utilisateur pour inclusion dans admin/utilisateurs.
+		assert('$d->type() == "tr"');
 		$a = $d->article();
 		//$d->w_titre("" . $this->nom . $this->prenom);
 

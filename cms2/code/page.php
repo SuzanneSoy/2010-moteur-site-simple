@@ -87,33 +87,31 @@ class Page {
 	public function __get($nom) {
 		// s'il y a un getter (trigger), on l'appelle, sinon on appelle get_prop_direct();
 		// le getter fait ce qu'il veut, puis appelle set_prop_direct();
-		// if (is_callable(array($this,"get_".$nom)) {
-		// 	return call_user_func(array($this,"get_".$nom));
-		// } else {
-		// 	return $this->get_prop_direct($nom);
-		// }
-		niy("get $nom");
+		if (is_callable(array($this,"get_".$nom))) {
+			return call_user_func(array($this,"get_".$nom));
+		} else {
+			return $this->get_prop_direct($nom);
+		}
 	}
 
 	private function get_prop_direct($nom) {
 		// Récupère l'attribut "$nom" depuis la BDD.
-		niy("get direct $name");
+		niy("get direct $nom");
 	}
 	
 	public function __set($nom, $val) {
 		// s'il y a un setter (trigger), on l'appelle, sinon on appelle set_prop_direct();
 		// le setter fait ce qu'il veut, puis appelle set_prop_direct();
-		// if (is_callable(array($this,"get_".$nom)) {
-		// 	return call_user_func(array($this,"get_".$nom), $val);
-		// } else {
-		// 	return $this->set_prop_direct($nom, $val);
-		// }
-		niy("set $name = $val");
+		if (is_callable(array($this,"get_".$nom))) {
+			return call_user_func(array($this,"get_".$nom), $val);
+		} else {
+			return $this->set_prop_direct($nom, $val);
+		}
 	}
 	
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
-		niy("set direct $name = $val");
+		niy("set direct $nom = $val");
 	}
   }
 

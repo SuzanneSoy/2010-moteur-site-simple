@@ -1,7 +1,7 @@
 <?php
 
 function main() {
-	$g = new AdminUtilisateur();
+	$g = new AdminListeUtilisateurs();
 	
 	$p = $g->rendu();
 	echo "<pre>";
