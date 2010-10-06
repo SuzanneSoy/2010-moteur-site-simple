@@ -39,14 +39,18 @@ class Page {
 		return $this->parent;
 	}
 	
-	public function rendu() {
+	public function rendu($res = null, $d = null) {
 		// Renvoie un document (classe ElementDocument).
 		// L'appel à une fonction statique via $this-> n'est pas propre, mais comment appeller la
 		// fonction du sous-type et pas celle de Page sinon ?
-		if (count($this->ressources_dynamiques()) == 0)
-			return new Document();
-		$res = $this->ressources_dynamiques();
-		return call_user_func(array($this, "res_" . $res[0]));
+		if ($res === null) {
+			$ressources = $this->ressources_dynamiques();
+			$res = $ressources[0];
+		}
+		if ($d === null) {
+			$d = new Document();
+		}
+		return call_user_func(array($this, "res_" . $res), $d);
 	}
 	
 	public function url($ressource = null) {
@@ -83,6 +87,11 @@ class Page {
 	public function __get($nom) {
 		// s'il y a un getter (trigger), on l'appelle, sinon on appelle get_prop_direct();
 		// le getter fait ce qu'il veut, puis appelle set_prop_direct();
+		// if (is_callable(array($this,"get_".$nom)) {
+		// 	return call_user_func(array($this,"get_".$nom));
+		// } else {
+		// 	return $this->get_prop_direct($nom);
+		// }
 		niy("get $nom");
 	}
 
@@ -94,6 +103,11 @@ class Page {
 	public function __set($nom, $val) {
 		// s'il y a un setter (trigger), on l'appelle, sinon on appelle set_prop_direct();
 		// le setter fait ce qu'il veut, puis appelle set_prop_direct();
+		// if (is_callable(array($this,"get_".$nom)) {
+		// 	return call_user_func(array($this,"get_".$nom), $val);
+		// } else {
+		// 	return $this->set_prop_direct($nom, $val);
+		// }
 		niy("set $name = $val");
 	}
 	

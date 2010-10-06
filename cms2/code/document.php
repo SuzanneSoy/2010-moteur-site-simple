@@ -74,6 +74,9 @@ class ElementDocument {
 			$elem = new self($fn);
 			
 			foreach (self::$attributsÉléments[$fn] as $i => $nom) {
+				if (!isset($args[$i])) {
+					Debug::error("Argument manquant : $nom pour " . $elem->type);
+				}
 				$elem->attr($nom, $args[$i]);
 			}
 			
@@ -85,7 +88,7 @@ class ElementDocument {
 			array_unshift($a, $this);
 			return call_user_func_array($f, $a);
 		} else {
-			Debug::error("Impossible d'ajouter un élément $fn");
+			Debug::error("Impossible d'ajouter un élément $fn à " . $this->type);
 			return null;
 		}
 	}
@@ -104,7 +107,7 @@ ElementDocument::ajouter_type_élément("header", "title");
 ElementDocument::ajouter_type_élément("title", "text");
 ElementDocument::ajouter_type_élément("footer", "");
 ElementDocument::ajouter_type_élément("nav", "ul");
-ElementDocument::ajouter_type_élément("article", "ul p form");
+ElementDocument::ajouter_type_élément("article", "ul p form span"); // span ?
 ElementDocument::ajouter_type_élément("script", "", "src");
 ElementDocument::ajouter_type_élément("style", "", "src");
 ElementDocument::ajouter_type_élément("ul", "li");
@@ -138,7 +141,7 @@ ElementDocument::ajouter_widget("description", function($d, $select){
 
 
 ElementDocument::ajouter_widget("field", function($d, $select){
-		$f = $d->span();
+		$f = $d->span("field");
 		$f->text("NIY : " . $select);
 		return $f;
 	});

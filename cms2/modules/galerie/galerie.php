@@ -30,13 +30,11 @@ abstract class GalerieBase extends Page {
 		niy("res_c_style");
 	}
 	
-	public function res_h_page() {
-		$d = new Document();
+	public function res_h_page($d) {
 		$d->w_en_tete(); // En-tête standard.
 		$l = $d->article()->w_liste($this->enfants(true, "date desc"), function($e, $li) {
-				$li->a($e->uid())->append(
-					$e->rendu("h_miniature")
-				);
+				$a = $li->a($e->uid());
+				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
@@ -44,18 +42,17 @@ abstract class GalerieBase extends Page {
 		return $d;
 	}
 	
-	public function res_h_miniature() {
-		$e = new ElementDocument();
-		$e->span("miniature")->append($this->res_h_mini_miniature());
-		$e->span("titre")->_field($this->titre);
-		return $e;
+	public function res_h_miniature($d) {
+		$d->span("miniature")->append($this->res_h_mini_miniature());
+		$d->span("titre")->_field($this->titre);
+		return $d;
 	}
 	
-	public function res_h_mini_miniature() {
+	public function res_h_mini_miniature($d) {
 		$a = $this->enfants("@apercu = true", "date desc", 1);
 		if ($a->size() != 1)
 			$a = $this->enfants(true, "date desc", 1);
-		return $a->get(0)->rendu("h_mini_miniature");
+		return $a->get(0)->rendu("h_mini_miniature", $d);;
 	}
 }
 
@@ -110,15 +107,13 @@ class GaleriePhoto {
 		niy("GaleriePhoto::res_c_style");
 	}
 	
-	public function res_h_page() {
-		$d = new Document();
+	public function res_h_page($d) {
 		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
 		$d->w_img($this->description, $this->i_image);
 		return $d;
 	}
 	
-	public function res_h_mini_miniature() {
-		$d = new Document();
+	public function res_h_mini_miniature($d) {
 		$d->img($this->description, $this->i_image);
 		return $d;
 	}

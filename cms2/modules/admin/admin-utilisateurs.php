@@ -5,7 +5,7 @@ class AdminListeUtilisateurs extends Page {
 		return qw("i_icône_nouvelle_page c_style");
 	}
 	public static function ressources_dynamiques() {
-		return qw("h_page");
+		return qw("h_page h_liste_mots_de_passe");
 	}
 	public static function types_enfants() {
 		return qw("AdminUtilisateur");
@@ -22,17 +22,23 @@ class AdminListeUtilisateurs extends Page {
 		niy("res_c_style");
 	}
 	
-	public function res_h_page() {
-		$d = new Document();
+	public function res_h_page($d) {
 		$d->w_titre("Utilisateurs");
 		
 		$l = $d->article()->w_liste($this->enfants(true, "nom asc prenom asc"), function($e, $li) {
-				$li->append(
-					$e->rendu("h_admin")
-				);
+				$e->rendu("h_admin", $li);
 			});
 		$nouveau = $l->li();
 		$nouveau->text("Nouvel utilisateur");
+		return $d;
+	}
+	
+	public function res_h_liste_mots_de_passe($d) {
+		$d->w_titre("Liste de mots de passe.");
+		
+		$l = $d->article()->w_liste($this->enfants("@groupe = utilisateurs", "nom asc prenom asc"), function($e, $li) {
+				$e->rendu("h_admin_mdp", $li);
+			});
 		return $d;
 	}
 }
@@ -49,24 +55,44 @@ class AdminUtilisateur extends Page {
 		return qw("AdminUtilisateur");
 	}
 	public static function attributs() {
-		return qw("nom prenom equipe mot_de_passe");
+		return array(
+			"nom" => "Dupondt",
+			"prenom" => "Jean",
+			"equipe" => null, // TODO
+			"mot_de_passe" => "",
+			"groupe" => "utilisateurs",
+			"peut_se_connecter" => false // TODO : permissions différentes (l'utilisateur ne peut pas modifier ça).
+		);
 	}
 	
 	public function res_c_style() {
 		niy("res_c_style");
 	}
 	
-	public function res_h_admin() {
+	public function res_h_admin($d) {
 		// Vue de l'utilisateur pour inclusion dans admin/utilisateurs.
-		$d = new Document();
-		$d->w_titre("" . $this->nom . $this->prenom);
+		$a = $d->article();
+		//$d->w_titre("" . $this->nom . $this->prenom);
 
-		$d->w_field($this->nom);
-		$d->w_field($this->prenom);
-		$d->w_field($this->equipe);
-		$d->w_field($this->mot_de_passe);
+		$a->w_field($this->nom);
+		$a->w_field($this->prenom);
+		$a->w_field($this->equipe);
+		$a->w_field($this->mot_de_passe);
+		$a->w_field($this->groupe); // TODO : menu de séléction
+		$a->w_field($this->peut_se_connecter); // TODO : checkbox
 		
-		return $d;
+		return $a;
+	}
+	
+	public function res_h_admin_mdp($d) {
+		// Vue de l'utilisateur pour inclusion dans admin/utilisateurs/liste des mots de passe.
+
+		$a = $d->article();
+		$a->w_field($this->nom);
+		$a->w_field($this->prenom);
+		$a->w_field($this->mot_de_passe);
+		
+		return $a;
 	}
 }
 
