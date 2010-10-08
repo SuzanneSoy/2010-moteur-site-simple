@@ -18,7 +18,8 @@ abstract class GalerieBase extends Page {
 	public static function attributs() {
 		return array(
 			"titre" => self::$texte_titre,
-			"description" => ""
+			"description" => "",
+			"personnes" => LIENS // TODO
 		);
 	}
 	
