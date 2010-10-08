@@ -25,21 +25,21 @@ class SiteIndex {
 		if ($vue == "normal") {
 			$ret = '';
 			
-			$ret .= '<div class="prochain-evenement">';
-			$ret .= '<h2>Prochain évènement</h2>';
-			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
-				$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
-				$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "prochain_evenement"), "prochain_evenement");
-				$ret .= '<p><input type="submit" value="appliquer" /></p>';
-				$ret .= '</form>';
-			} else {
-				$ret .= Stockage::get_prop($chemin, "prochain_evenement");
-			}
-			$ret .= '</div>';
+			// $ret .= '<div class="prochain-evenement">';
+			// $ret .= '<h2>Prochain évènement</h2>';
+			// if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
+			// 	$ret .= '<form method="post" action="' . $chemin->get_url() . '">';
+			// 	$ret .= formulaire_édition_texte_enrichi(Stockage::get_prop($chemin, "prochain_evenement"), "prochain_evenement");
+			// 	$ret .= '<p><input type="submit" value="appliquer" /></p>';
+			// 	$ret .= '</form>';
+			// } else {
+			// 	$ret .= Stockage::get_prop($chemin, "prochain_evenement");
+			// }
+			// $ret .= '</div>';
 			
-			$ret .= '<div class="logo-site">';
-			$ret .= '<img src="' . $chemin->get_url("logo.png") . '">';
-			$ret .= '</div>';
+			// $ret .= '<div class="logo-site">';
+			// $ret .= '<img src="' . $chemin->get_url("logo.png") . '">';
+			// $ret .= '</div>';
 			
 			$ret .= '<div class="description-site">';
 			if (Permissions::vérifier_permission($chemin, "set_prop", Authentification::get_utilisateur())) {
