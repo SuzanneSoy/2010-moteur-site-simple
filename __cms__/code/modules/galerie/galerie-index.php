@@ -5,9 +5,9 @@ class GalerieIndex {
 		if ($action == "anuler") {
 			return new Page($chemin, $chemin, '', "redirect");
 		} else if ($action == "nouvelle_page") {
-			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-periode");
+			$np = Stockage::nouvelle_page($chemin, "Nouvelle période", "galerie-photo");
 			Stockage::set_prop($np, "proprietaire", Authentification::get_utilisateur());
-			Stockage::set_prop($np, "titre", "Nouvelle période");
+			Stockage::set_prop($np, "titre", "Nouvel enregistrement");
 			Stockage::set_prop($np, "description", "");
 			return new Page($chemin, $np, '', "redirect");
 		} else {
@@ -61,14 +61,14 @@ class GalerieIndex {
 			if (Permissions::vérifier_permission($chemin, "nouvelle_page", Authentification::get_utilisateur())) {
 				$ret .= '<li>';
 				$ret .= '<div class="miniature">';
-				$ret .= '<img alt="nouvelle période" src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
+				$ret .= '<img alt="nouvel enregistrement" src="' . $chemin->get_url("?vue=image_nouvelle_periode") . '" />';
 				$ret .= '</div>';
 				$ret .= '<div class="titre">';
 				
 				$ret .= '<form class="galerie nouvelle_page" method="post" action="' . $chemin->get_url() . '">';
 				$ret .= '<p>';
 				$ret .= '<input type="hidden" name="action" value="nouvelle_page"/>';
-				$ret .= '<input type="submit" value="Nouvelle période"/>';
+				$ret .= '<input type="submit" value="Nouvel enregistrement"/>';
 				$ret .= '</p>';
 				$ret .= '</form>';
 				
