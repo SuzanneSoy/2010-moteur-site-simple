@@ -56,12 +56,15 @@ class AdminUtilisateur extends Page {
 	}
 	public static function attributs() {
 		return array(
-			"nom" => "Dupondt",
-			"prenom" => "Jean",
-			"equipe" => null, // TODO
-			"mot_de_passe" => "",
-			"groupe" => "utilisateurs",
-			"peut_se_connecter" => false // TODO : permissions différentes (l'utilisateur ne peut pas modifier ça).
+			// TODO : le couple (nom,prenom) doit être unique.
+			attribut("nom", "text_line", "Dupondt"),
+			attribut("prenom", "text_line", "Jean"),
+			attribut("equipe", "uid", "null"),
+			attribut("mot_de_passe", "password", ""),
+			// TODO : permissions différentes pour les propriétés peut_se_connecter et groupe_permissions.
+			// L'utilisateur ne doit pas pouvoir les modifier.
+			attribut("groupe_permissions", "groupe_permissions", "utilisateurs"),
+			attribut("peut_se_connecter", "bool", "false")
 		);
 	}
 	

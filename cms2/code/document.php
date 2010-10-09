@@ -42,7 +42,7 @@ class ElementDocument {
 		$ret = "";
 		$ret .= "$indent<" . $this->type;
 		foreach ($this->attr as $k => $v) {
-			$ret .= " " . $k . '="' . htmlspecialchars($v) . '"'; // TODO : htmlspecialchars ne suffit pas !
+			$ret .= " " . htmlspecialchars($k) . '="' . htmlspecialchars($v) . '"';
 		}
 		if (count($this->enfants) == 0) {
 			$ret .= "/>\n";
@@ -72,10 +72,21 @@ class ElementDocument {
 		$this->type = $type;
 	}
 
+	public static function has_widget($w) {
+		return array_key_exists($w, self::$widgets);
+	}
+	
+	public static function has_type_élément($t) {
+		return array_key_exists($t, self::$enfantsÉléments);
+	}
+	
+	public function type_élément_autorisé($t) {
+		return self::has_type_élément($t)
+			&& in_array($t, self::$enfantsÉléments[$this->type]);
+	}
+	
 	public function __call($fn, $args) {
-		// TODO (peut-être ?): si on ne peut pas ajouter directement un élément, chercher un chemin qui permette de l'ajouter (p.ex. un strong directement à la racine d'un document, on ajoutera un p).
-		if (array_key_exists($this->type, self::$enfantsÉléments)
-			&& in_array($fn, self::$enfantsÉléments[$this->type])) {
+		if (self::type_élément_autorisé($fn)) {
 			$elem = new self($fn);
 			
 			foreach (self::$attributsÉléments[$fn] as $i => $nom) {
@@ -87,7 +98,7 @@ class ElementDocument {
 			
 			$this->enfants[] = $elem;
 			return $elem;
-		} else if (array_key_exists($fn, self::$widgets)) {
+		} else if (self::has_widget($fn)) {
 			$f = self::$widgets[$fn];
 			$a = $args;
 			array_unshift($a, $this);
@@ -102,10 +113,7 @@ class ElementDocument {
 class Document extends ElementDocument {
 }
 
-/*****
- TODO
- Comment s'assurer que le header, footer, nav soit unique ?
-******/
+// TODO: Comment s'assurer que le header, footer, nav soit unique ?
 $inline_elems = "span text a strong em img";
 ElementDocument::ajouter_type_élément("document", "header footer nav article script style");
 ElementDocument::ajouter_type_élément("header", "title");

@@ -1,9 +1,5 @@
 <?php
 
-  // TODO : gestion du renomage (pseudo-réécriture d'URL).
-  // TODO : méthode if_perm("R" ou "W", nom_propriété)
-  // TODO : méthode if_perm("List" ou "Create" ou "Delete", enfant)
-
 class Page {
 	public static $types = array();
 	
@@ -20,8 +16,6 @@ class Page {
 		// null ou false => aucun type.
 		return true;
 	}
-	// TODO !! TODO !! TODO
-	// Comment spécifier que telle valeur référence telle autre (si on le spécifie, sinon c'est juste le widget qui fait la translation) ?
 	public static function attributs() {
 		return array(
 			attribut("date_creation", "date", "0"),
@@ -87,21 +81,43 @@ class Page {
 		niy("enfants");
 	}
 
-	public function ajouter_enfant() {
+	public function ajouter_enfant($type, $groupe = "main") {
 		// ajouter l'enfant
-		// renvoyer un pointeur sur cet enfant
+		// renvoyer une instance de la sous-classe de Page correspondant à $type.
 		niy("ajouter_enfant");
 	}
 
 	public function lier_page($page_source, $groupe = "main") {
-		// ajouter un enfant de type "Lien" (TODO: faire la classe Lien)
-		// contenant "@lien = $page_source" et "@groupe = $groupe"
+		$l = ajouter_enfant("Lien", "$groupe");
+		$l->lien = $page_source;
 		niy("lier_page");
 	}
 
-	public static function page_systeme("$nom") {
+	public static function page_systeme($nom) {
 		// select from pages where nomSysteme = $nom limit 1
 		niy("page_systeme");
+	}
+
+	public function if_perm($action, $nom_propriété) {
+		// @param $action = suite de lettre parmi les suivantes :
+		//    R = Read prop
+		//    W = Write prop
+		//    L = Lister les enfants ($nom_propriété désigne alors le groupe)
+		//    C = Créer des enfants  ($nom_propriété désigne alors le groupe)
+		//    D = Delete des enfants ($nom_propriété désigne alors le groupe)
+		// @return true si on a l'autorisation pour TOUTES les actions demandées, false sinon.
+		
+		// Squelette du code :
+		$action = strtolower($action);
+		$permissions_prop = strtolower($this->get_permissions_prop($nom_propriété));
+		$permissions_enfants = strtolower($this->get_permissions_enfants($nom_propriété));
+		if (str_contains($action, "r") && !str_contains($permissions_prop,    "r")) { return false; }
+		if (str_contains($action, "w") && !str_contains($permissions_prop,    "w")) { return false; }
+		if (str_contains($action, "l") && !str_contains($permissions_enfants, "l")) { return false; }
+		if (str_contains($action, "c") && !str_contains($permissions_enfants, "c")) { return false; }
+		if (str_contains($action, "d") && !str_contains($permissions_enfants, "d")) { return false; }
+		return true;
+		niy("if_perm");
 	}
 	
 	public function __get($nom) {
@@ -133,11 +149,18 @@ class Page {
 		// Modifie l'attribut "$nom" dans la BDD.
 		niy("set direct $nom = $val");
 	}
+	
+	public function set_composant_url() {
+		// pseudo-réécriture d'URL.
+		niy("pseudo-réécriture d'URL dans set_composant_url().");
+		return $this->set_prop_direct("composant_url", $val);
+	}
 }
 
 function attribut($nom, $type, $defaut) {
-	// TODO : si le type est inconnu, afficher une erreur.
-	// Un type <=> un widget.
+	if (!Document::has_widget($type)) {
+		Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
+	}
 	return array($nom, $type, $defaut);
 }
 

@@ -1,10 +1,6 @@
 <?php
 
 class Nouveautes extends Page {
-	protected static $texte_titre = "Nouveautés";
-	protected static $texte_nouvelle_page = "Ajouter un article aux nouveautés";
-	protected static $icône_nouvelle_page = "nouvelle_source.png";
-	
 	public static function ressources_statiques() {
 		return qw("i_icône_nouvelle_page c_style");
 	}
@@ -16,13 +12,13 @@ class Nouveautes extends Page {
 	}
 	public static function attributs() {
 		return array(
-			attribut("titre", "text_line", self::$texte_titre),
+			attribut("titre", "text_line", "Nouveautés"),
 			attribut("description", "text_rich", "")
 		);
 	}
 	
 	public function res_i_icône_nouvelle_page() {
-		return StockageFichiers::envoyer_fichier_statique(Path::combine(dirname(__FILE__), self::$icône_nouvelle_page));
+		return StockageFichiers::envoyer_fichier_statique(Path::combine(dirname(__FILE__), "nouvelle_source.png"));
 	}
 	
 	public function res_c_style() {
@@ -34,16 +30,17 @@ class Nouveautes extends Page {
 		
 		$l = $d->article()->w_liste($this->enfants(true, "date_creation desc", 10), function($e, $li) {
 				$a = $li->a($e->uid());
+				// TODO : h_miniature_nouveautes s'il existe sinon h_miniature sinon juste un lien.
+				// Comme ça le h_miniature_nouveautes d'une période de la galerie, c'est 3 ou 4 images alors que normalement c'en est juste une seule.
 				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
-		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
+		$nouveau->span("titre")->text("Ajouter un article aux nouveautés.");
 		return $d;
 	}
 }
 
 Page::ajouter_type("Nouveautes");
-
 
 ?>

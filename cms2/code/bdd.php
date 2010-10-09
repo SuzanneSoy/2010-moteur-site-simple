@@ -1,9 +1,6 @@
 <?php
 
-// TODO : Comment pseudo-insérer des images dans la BDD ? Est-ce la classe de la page qui décide de les déplacer dans /data et de mettre juste le nom dans la BDD ?
-//        (Et c'est à ce moment-là que la miniature est faite). Ou bien, un "trigger" (get et set) pour faire la même chose ?
-
-// TODO : Pouvoir stocker des collections de propriétés avec le même nom... Par ex. une photo peut avoir une collection de personnes.
+// Le widget w_img doit gérer le stockage de l'image dans un dossier, la création de la miniature et le stockage dans la BDD du chemin vers l'image.
 
 /*
  Base de données :

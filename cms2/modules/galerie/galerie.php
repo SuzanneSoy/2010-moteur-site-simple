@@ -38,12 +38,15 @@ abstract class GalerieBase extends Page {
 				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
+		// TODO : nouveau devrait être un lien, bouton, ...
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
 		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
 		
 		if ($this->if_perm("W", "dans_nouveautes")) {
 			$d->p()->w_form($this->dans_nouveautes);
 		}
+
+		// TODO : lister les liens et pouvoir en ajouter (personne, lieu etc.).
 		
 		return $d;
 	}
@@ -62,9 +65,8 @@ abstract class GalerieBase extends Page {
 	}
 	
 	public function set_dans_nouveautes($val) {
-		//TODO : ajouter $this en tant qu'enfant de /nouveautes
 		$this->page_systeme("nouveautes")->lier_page("$this");
-		$this->set_prop_direct("dans_nouveautes", $val);
+		return $this->set_prop_direct("dans_nouveautes", $val);
 	}
 }
 
@@ -105,7 +107,7 @@ class GaleriePhoto {
 	}
 
 	public function set_titre($titre) {
-		// TODO : set url quand on set titre !
+		// set url quand on set titre !
 		// TODO : valeur initiale pour l'url !
 		niy("GaleriePhoto::set_titre($titre)");
 	}
