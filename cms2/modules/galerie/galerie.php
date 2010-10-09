@@ -13,14 +13,13 @@ abstract class GalerieBase extends Page {
 		return qw("h_page h_miniature h_mini_miniature");
 	}
 	public static function types_enfants() {
-		return qw("GalerieÉvènement");
+		return qw("GalerieÉvènement Lien");
 	}
 	public static function attributs() {
 		return array(
-			"titre" => self::$texte_titre,
-			"description" => "",
-			"personnes" => LIENS, // TODO
-			"dans_nouveautes" => "true"
+			attribut("titre", "text_line", self::$texte_titre),
+			attribut("description", "text_rich", ""),
+			attribut("dans_nouveautes", "bool", "true")
 		);
 	}
 	
@@ -101,7 +100,7 @@ class GaleriePhoto {
 	}
 	public static function attributs() {
 		$a = parent::attributs();
-		$a["image"] = null; // TODO !! TODO !! TODO
+		array_push($a, attribut("image", "file", ""));
 		return $a;
 	}
 

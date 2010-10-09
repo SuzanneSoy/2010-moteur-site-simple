@@ -1,6 +1,6 @@
 <?php
 
-abstract class Nouveautes extends Page {
+class Nouveautes extends Page {
 	protected static $texte_titre = "Nouveautés";
 	protected static $texte_nouvelle_page = "Ajouter un article aux nouveautés";
 	protected static $icône_nouvelle_page = "nouvelle_source.png";
@@ -12,12 +12,12 @@ abstract class Nouveautes extends Page {
 		return qw("h_page");
 	}
 	public static function types_enfants() {
-		return qw("NouveautesSource");
+		return qw("Lien");
 	}
 	public static function attributs() {
 		return array(
-			"titre" => self::$texte_titre,
-			"description" => "",
+			attribut("titre", "text_line", self::$texte_titre),
+			attribut("description", "text_rich", "")
 		);
 	}
 	

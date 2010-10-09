@@ -24,12 +24,12 @@ class Page {
 	// Comment spécifier que telle valeur référence telle autre (si on le spécifie, sinon c'est juste le widget qui fait la translation) ?
 	public static function attributs() {
 		return array(
-			"date_creation" => 0,
-			"date_modification" => 0,
-			"publier" => false,
-			"nom_systeme" => "",
-			"composant_url" => "page",
-			"groupe" => "main"
+			attribut("date_creation", "date", "0"),
+			attribut("date_modification", "date", "0"),
+			attribut("publier", "bool", "false"),
+			attribut("nom_systeme", "text_no_space", ""),
+			attribut("composant_url", "text_no_space", "page"),
+			attribut("groupe", "text_no_space", "main") // Groupe des enfants.
 		);
 	}
 
@@ -94,8 +94,14 @@ class Page {
 	}
 
 	public function lier_page($page_source, $groupe = "main") {
-		// ajouter un enfant contenant "@lien = page_source" et "@groupe = groupe"
+		// ajouter un enfant de type "Lien" (TODO: faire la classe Lien)
+		// contenant "@lien = $page_source" et "@groupe = $groupe"
 		niy("lier_page");
+	}
+
+	public static function page_systeme("$nom") {
+		// select from pages where nomSysteme = $nom limit 1
+		niy("page_systeme");
 	}
 	
 	public function __get($nom) {
@@ -127,7 +133,13 @@ class Page {
 		// Modifie l'attribut "$nom" dans la BDD.
 		niy("set direct $nom = $val");
 	}
-  }
+}
+
+function attribut($nom, $type, $defaut) {
+	// TODO : si le type est inconnu, afficher une erreur.
+	// Un type <=> un widget.
+	return array($nom, $type, $defaut);
+}
 
 class CollectionPages {
 	public function size() {
