@@ -1,6 +1,8 @@
 <?php
 
   // TODO : gestion du renomage (pseudo-réécriture d'URL).
+  // TODO : méthode if_perm("R" ou "W", nom_propriété)
+  // TODO : méthode if_perm("List" ou "Create" ou "Delete", enfant)
 
 class Page {
 	public static $types = array();
@@ -27,6 +29,7 @@ class Page {
 			"publier" => false,
 			"nom_systeme" => "",
 			"composant_url" => "page",
+			"groupe" => "main"
 		);
 	}
 
@@ -74,14 +77,25 @@ class Page {
 	 niy("select");
 	 }*/
 
-	public function enfants($condition = true, $ordre = "date desc", $limit = 0, $offset = 0) {
+	public function enfants($condition = true, $ordre = "date_creation desc", $limit = 0, $offset = 0) {
 		// Renvoie un objet de la classe CollectionPages.
 		// Si $condition === true, il n'y a pas de condition
 		//   ex: $condition = "@apercu = true"
-		// ordre = null => ordre = "date desc"
+		// ordre = null => ordre = "date_creation desc"
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
 		niy("enfants");
+	}
+
+	public function ajouter_enfant() {
+		// ajouter l'enfant
+		// renvoyer un pointeur sur cet enfant
+		niy("ajouter_enfant");
+	}
+
+	public function lier_page($page_source, $groupe = "main") {
+		// ajouter un enfant contenant "@lien = page_source" et "@groupe = groupe"
+		niy("lier_page");
 	}
 	
 	public function __get($nom) {
@@ -103,7 +117,7 @@ class Page {
 		// s'il y a un setter (trigger), on l'appelle, sinon on appelle set_prop_direct();
 		// le setter fait ce qu'il veut, puis appelle set_prop_direct();
 		if (is_callable(array($this,"get_".$nom))) {
-			return call_user_func(array($this,"get_".$nom), $val);
+			return call_user_func(array($this,"set_".$nom), $val);
 		} else {
 			return $this->set_prop_direct($nom, $val);
 		}

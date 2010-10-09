@@ -19,7 +19,8 @@ abstract class GalerieBase extends Page {
 		return array(
 			"titre" => self::$texte_titre,
 			"description" => "",
-			"personnes" => LIENS // TODO
+			"personnes" => LIENS, // TODO
+			"dans_nouveautes" => "true"
 		);
 	}
 	
@@ -33,13 +34,18 @@ abstract class GalerieBase extends Page {
 	
 	public function res_h_page($d) {
 		$d->w_en_tete(); // En-tête standard.
-		$l = $d->article()->w_liste($this->enfants(true, "date desc"), function($e, $li) {
+		$l = $d->article()->w_liste($this->enfants(true, "date_creation desc"), function($e, $li) {
 				$a = $li->a($e->uid());
 				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
 		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
+		
+		if ($this->if_perm("W", "dans_nouveautes")) {
+			$d->p()->w_form($this->dans_nouveautes);
+		}
+		
 		return $d;
 	}
 	
@@ -50,10 +56,16 @@ abstract class GalerieBase extends Page {
 	}
 	
 	public function res_h_mini_miniature($d) {
-		$a = $this->enfants("@apercu = true", "date desc", 1);
+		$a = $this->enfants("@apercu = true", "date_creation desc", 1);
 		if ($a->size() != 1)
-			$a = $this->enfants(true, "date desc", 1);
+			$a = $this->enfants(true, "date_creation desc", 1);
 		return $a->get(0)->rendu("h_mini_miniature", $d);;
+	}
+	
+	public function set_dans_nouveautes($val) {
+		//TODO : ajouter $this en tant qu'enfant de /nouveautes
+		$this->page_systeme("nouveautes")->lier_page("$this");
+		$this->set_prop_direct("dans_nouveautes", $val);
 	}
 }
 
