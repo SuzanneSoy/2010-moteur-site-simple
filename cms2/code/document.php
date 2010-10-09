@@ -15,9 +15,10 @@ class ElementDocument {
 	private $attr = array();
 	protected $document = null;
 	
-	public static function add_type($singleton, $type, $typesEnfants = "", $attributs = "") {
+	public static function add_type($singleton, $type, $typesEnfants = "", $attributs_oblig = "", $attributs_opt = "") {
 		if ($singleton !== true && $singleton !== false) {
-			$attributs = $typesEnfants;
+			$attributs_opt = $attributs_oblig;
+			$attributs_oblig = $typesEnfants;
 			$typesEnfants = $type;
 			$type = $singleton;
 			$singleton = false;
@@ -25,7 +26,8 @@ class ElementDocument {
 		self::$types[$type] = array(
 			"singleton" => $singleton,
 			"enfants" => qw($typesEnfants),
-			"attributs" => qw($attributs)
+			"attributs_oblig" => qw($attributs_oblig),
+			"attributs_opt" => qw($attributs_opt)
 		);
 	}
 	
@@ -99,12 +101,19 @@ class ElementDocument {
 	
 	public function créer_élément($type, $args) {
 		$elem = new self($type, $this->document);
-		
-		foreach (self::$types[$type]["attributs"] as $i => $nom) {
+
+		$max = 0;
+		foreach (self::$types[$type]["attributs_oblig"] as $i => $nom) {
 			if (!isset($args[$i])) {
 				Debug::error("Argument manquant : $nom pour " . $elem->type);
 			}
 			$elem->attr($nom, $args[$i]);
+			$max = $i;
+		}
+		foreach (self::$types[$type]["attributs_opt"] as $i => $nom) {
+			if (isset($args[$i])) {
+				$elem->attr($nom, $args[$i]);
+			}
 		}
 		
 		$this->enfants[] = $elem;
@@ -157,12 +166,12 @@ ElementDocument::add_type("ul", "li");
 ElementDocument::add_type("table", "thead tbody tfoot");
 ElementDocument::add_type("tbody", "tr");
 ElementDocument::add_type("tr", "td th");
-ElementDocument::add_type("td", $inline_elems);
+ElementDocument::add_type("td", $inline_elems, "", "colspan rowspan");
 ElementDocument::add_type("th", $inline_elems);
 ElementDocument::add_type("li", $inline_elems);
 ElementDocument::add_type("form", "input_text_line input_text_multi input_text_rich input_file");
 ElementDocument::add_type("a", $inline_elems, "href");
-ElementDocument::add_type("span", $inline_elems, "class");
+ElementDocument::add_type("span", $inline_elems, "", "class");
 ElementDocument::add_type("img", "", "alt src");
 ElementDocument::add_type("p", $inline_elems);
 ElementDocument::add_type("text", "", "text");

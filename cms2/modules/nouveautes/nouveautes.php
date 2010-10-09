@@ -36,7 +36,7 @@ class Nouveautes extends Page {
 			});
 		$nouveau = $l->li();
 		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
-		$nouveau->span("titre")->text("Ajouter un article aux nouveautés.");
+		$nouveau->span("action")->text("Ajouter un article aux nouveautés.");
 		return $d;
 	}
 }

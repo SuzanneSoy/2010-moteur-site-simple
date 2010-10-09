@@ -28,7 +28,7 @@ class AdminListeUtilisateurs extends Page {
 		$l = $d->article()->w_tableau($this->enfants(true, "nom asc prenom asc"), function($e, $tr) {
 				$e->rendu("h_admin", $tr);
 			});
-		$nouveau = $l->tbody(0)->tr()->td(); // TODO : colspan
+		$nouveau = $l->tbody(0)->tr()->td(6);
 		$nouveau->text("Nouvel utilisateur");
 		return $d;
 	}
