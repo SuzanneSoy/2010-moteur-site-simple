@@ -8,19 +8,28 @@
 
 class ElementDocument {
 	public $espaceCss = null;
-	private static $enfantsÉléments = array();
-	private static $attributsÉléments = array();
+	private static $types = array();
 	private static $widgets = array();
 	private $type = null;
 	private $enfants = array();
 	private $attr = array();
-
-	public static function ajouter_type_élément($type, $typesEnfants, $attributs = "") {
-		self::$enfantsÉléments[$type] = qw($typesEnfants);
-		self::$attributsÉléments[$type] = qw($attributs);
+	protected $document = null;
+	
+	public static function add_type($singleton, $type, $typesEnfants = "", $attributs = "") {
+		if ($singleton !== true && $singleton !== false) {
+			$attributs = $typesEnfants;
+			$typesEnfants = $type;
+			$type = $singleton;
+			$singleton = false;
+		}
+		self::$types[$type] = array(
+			"singleton" => $singleton,
+			"enfants" => qw($typesEnfants),
+			"attributs" => qw($attributs)
+		);
 	}
-
-	public static function ajouter_widget($nom, $callback) {
+	
+	public static function add_widget($nom, $callback) {
 		self::$widgets["w_" . $nom] = $callback;
 	}
 
@@ -68,41 +77,54 @@ class ElementDocument {
 		niy("to_XHTML_1_1");
 	}
 
-	public function __construct($type = "document") {
+	public function __construct($type = "document", &$doc = null) {
 		$this->type = $type;
+		$this->document = $doc;
 	}
 
 	public static function has_widget($w) {
 		return array_key_exists($w, self::$widgets);
 	}
 	
-	public static function has_type_élément($t) {
-		return array_key_exists($t, self::$enfantsÉléments);
+	public function type_autorisé($t) {
+		return array_key_exists($t, self::$types) && in_array($t, self::$types[$this->type]["enfants"]);
 	}
 	
-	public function type_élément_autorisé($t) {
-		return self::has_type_élément($t)
-			&& in_array($t, self::$enfantsÉléments[$this->type]);
+	public function singleton_élément($type, $args) {
+		if (!array_key_exists($type, $this->document->singletons)) {
+			$this->document->singletons[$type] = $this->créer_élément($type, $args);
+		}
+		return $this->document->singletons[$type];
+	}
+	
+	public function créer_élément($type, $args) {
+		$elem = new self($type, $this->document);
+		
+		foreach (self::$types[$type]["attributs"] as $i => $nom) {
+			if (!isset($args[$i])) {
+				Debug::error("Argument manquant : $nom pour " . $elem->type);
+			}
+			$elem->attr($nom, $args[$i]);
+		}
+		
+		$this->enfants[] = $elem;
+		return $elem;
+	}
+
+	public function créer_widget($nom, $args) {
+			$f = self::$widgets[$nom];
+			array_unshift($args, $this);
+			return call_user_func_array($f, $args);
 	}
 	
 	public function __call($fn, $args) {
-		if (self::type_élément_autorisé($fn)) {
-			$elem = new self($fn);
-			
-			foreach (self::$attributsÉléments[$fn] as $i => $nom) {
-				if (!isset($args[$i])) {
-					Debug::error("Argument manquant : $nom pour " . $elem->type);
-				}
-				$elem->attr($nom, $args[$i]);
-			}
-			
-			$this->enfants[] = $elem;
-			return $elem;
+		if (self::type_autorisé($fn)) {
+			if (self::$types[$fn]["singleton"])
+				return $this->singleton_élément($fn, $args);
+			else
+				return $this->créer_élément($fn, $args);
 		} else if (self::has_widget($fn)) {
-			$f = self::$widgets[$fn];
-			$a = $args;
-			array_unshift($a, $this);
-			return call_user_func_array($f, $a);
+			return $this->créer_widget($fn, $args);
 		} else {
 			Debug::error("Impossible d'ajouter un élément $fn à " . $this->type);
 			return null;
@@ -111,41 +133,49 @@ class ElementDocument {
 }
 
 class Document extends ElementDocument {
+	protected $singletons = array();
+	public function __construct() {
+		parent::__construct("document", $this);
+		$this->header();
+		$this->nav();
+		$this->article();
+		$this->footer();
+	}
 }
 
 // TODO: Comment s'assurer que le header, footer, nav soit unique ?
 $inline_elems = "span text a strong em img";
-ElementDocument::ajouter_type_élément("document", "header footer nav article script style");
-ElementDocument::ajouter_type_élément("header", "title");
-ElementDocument::ajouter_type_élément("title", "text");
-ElementDocument::ajouter_type_élément("footer", "");
-ElementDocument::ajouter_type_élément("nav", "ul");
-ElementDocument::ajouter_type_élément("article", "ul table p form span"); // span ?
-ElementDocument::ajouter_type_élément("script", "", "src");
-ElementDocument::ajouter_type_élément("style", "", "src");
-ElementDocument::ajouter_type_élément("ul", "li");
-ElementDocument::ajouter_type_élément("table", "thead tbody tfoot");
-ElementDocument::ajouter_type_élément("tbody", "tr");
-ElementDocument::ajouter_type_élément("tr", "td th");
-ElementDocument::ajouter_type_élément("td", $inline_elems);
-ElementDocument::ajouter_type_élément("th", $inline_elems);
-ElementDocument::ajouter_type_élément("li", $inline_elems);
-ElementDocument::ajouter_type_élément("form", "input_text_line input_text_multi input_text_rich input_file");
-ElementDocument::ajouter_type_élément("a", $inline_elems, "href");
-ElementDocument::ajouter_type_élément("span", $inline_elems, "class");
-ElementDocument::ajouter_type_élément("img", "", "alt src");
-ElementDocument::ajouter_type_élément("p", $inline_elems);
-ElementDocument::ajouter_type_élément("text", "", "text");
+ElementDocument::add_type("document", "header footer nav article script style");
+ElementDocument::add_type(true, "header", "title");
+ElementDocument::add_type("title", "text");
+ElementDocument::add_type(true, "footer", "");
+ElementDocument::add_type(true, "nav", "ul");
+ElementDocument::add_type(true, "article", "ul table p form span"); // span ?
+ElementDocument::add_type("script", "", "src");
+ElementDocument::add_type("style", "", "src");
+ElementDocument::add_type("ul", "li");
+ElementDocument::add_type("table", "thead tbody tfoot");
+ElementDocument::add_type("tbody", "tr");
+ElementDocument::add_type("tr", "td th");
+ElementDocument::add_type("td", $inline_elems);
+ElementDocument::add_type("th", $inline_elems);
+ElementDocument::add_type("li", $inline_elems);
+ElementDocument::add_type("form", "input_text_line input_text_multi input_text_rich input_file");
+ElementDocument::add_type("a", $inline_elems, "href");
+ElementDocument::add_type("span", $inline_elems, "class");
+ElementDocument::add_type("img", "", "alt src");
+ElementDocument::add_type("p", $inline_elems);
+ElementDocument::add_type("text", "", "text");
 
 
 
-ElementDocument::ajouter_widget("titre", function($d, $select){
+ElementDocument::add_widget("titre", function($d, $select){
 		// renvoie un <h2> ou un <input> selon les droits
 		return $d->header()->title()->text("Not Implemented Yet : w_titre($select)");
 	});
 
 
-ElementDocument::ajouter_widget("en_tete", function($d, $select_titre, $select_description){
+ElementDocument::add_widget("en_tete", function($d, $select_titre, $select_description){
 		//$d->w_titre($this->select("titre"));
 		//$d->w_description($this->select("description"));
 		$d->w_titre("NIY en_tete");
@@ -153,12 +183,12 @@ ElementDocument::ajouter_widget("en_tete", function($d, $select_titre, $select_d
 	});
 
 
-ElementDocument::ajouter_widget("description", function($d, $select){
+ElementDocument::add_widget("description", function($d, $select){
 		return $d->article()->p()->text("NIY Descrption($select)");
 	});
 
 
-ElementDocument::ajouter_widget("field", function($d, $select){
+ElementDocument::add_widget("field", function($d, $select){
 		$f = $d->span("field");
 		$f->text("NIY : " . $select);
 		return $f;
@@ -169,16 +199,16 @@ ElementDocument::ajouter_widget("field", function($d, $select){
 
 
 
-//ElementDocument::ajouter_widget("richText", function($select){}); // similaire
+//ElementDocument::add_widget("richText", function($select){}); // similaire
 // Peut-être que _field peut détecter automatiquement s'il faut traiter un champ de la BDD
 // (par ex. pour le richText) en fonction d'une info "type" dans la classe correspondant à la page de ce champ ?
-ElementDocument::ajouter_widget("liste", function($d, $select, $function_formattage_elements) {
+ElementDocument::add_widget("liste", function($d, $select, $function_formattage_elements) {
 		$l = $d->ul();
 		$l->li()->text("Not Implemented Yet");
 		return $l;
 	});
 
-ElementDocument::ajouter_widget("tableau", function($d, $select, $function_formattage_elements) {
+ElementDocument::add_widget("tableau", function($d, $select, $function_formattage_elements) {
 		$t = $d->table();
 		$tr = $t->tbody()->tr();
 		$tr->td()->text("Not Implemented Yet");
