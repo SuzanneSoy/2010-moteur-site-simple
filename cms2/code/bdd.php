@@ -18,6 +18,80 @@
 // le droit de voir. Filtrage après la requête (attention au LIMIT et OFFSET !) ?
 // ou y a-t-il moyen d'exprimer ça directement dans la requête ?
 
+
+class BDD {
+	private static $handle = null;
+	public static function get() {
+		if (self::$handle === null) {
+			self::$handle = @mysql_connect(
+				Config::get('db_hôte'),
+				Config::get('db_utilisateur'),
+				Config::get('db_mot_de_passe')
+			);
+			if (!is_resource(self::$handle)) {
+				Debug::error("Échec à la connexion à la base de données");
+			}
+			mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
+			self::init();
+		}
+		return self::$handle;
+	}
+	
+	// ATTENTION : Ré-initialise toute la base de données !!!
+	public static function reset() {
+		self::unbuf_query('drop table if exists ' . self::table("pages"));
+		self::unbuf_query('drop table if exists ' . self::table("enfants"));
+		self::unbuf_query('drop table if exists ' . self::table("proprietes"));
+		self::init();
+	}
+
+	public static function init() {
+		self::unbuf_query('create table if not exists ' . self::table("pages") . ' ('
+						  . 'uid_page        integer auto_increment primary key'
+						  . ')');
+		self::unbuf_query('create table if not exists ' . self::table("enfants") . ' ('
+						  . 'uid_page        integer,'
+						  . 'uid_page_parent integer,'
+						  . 'groupe          char(10)'
+						  . ')');
+		self::unbuf_query('create table if not exists ' . self::table("proprietes") . ' ('
+						  . 'uid_prop        integer,'
+						  . 'uid_page        integer,'
+						  . 'systeme         bool,'
+						  . 'nom             char(30),'
+						  . 'valeur          char'
+						  .')');
+	}
+	
+	public static function unbuf_query($q) {
+		debug::info("sql : " . $q . ";");
+		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
+	}
+	
+	public static function table($nom) {
+		return Config::get('db_prefixe') . $nom;
+	}
+	
+	public static function test() {
+		$result = mysql_query("SELECT id, name FROM mytable") or Debug::sqlerror();
+		echo "<br/><br/>";
+		
+		while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
+			printf("ID : %s  Nom : %s", $row[0], $row[1]);
+		}
+		
+		mysql_free_result($result);
+	}
+	
+	public static function close() {
+		mysql_close(self::get());
+	}
+}
+
+
+
+  /*
+
 class DB extends Selectable {
 	private static $handle = null;
 	public function __construct() {
@@ -63,5 +137,6 @@ class Selectable {
 	}
 }
 
+  */
 
 ?>

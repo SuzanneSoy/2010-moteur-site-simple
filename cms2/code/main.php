@@ -1,6 +1,12 @@
 <?php
 
 function main() {
+	$bdd = BDD::get();
+	BDD::reset();
+	BDD::close();
+	Debug::afficher();
+	exit;
+	
 	$g = new AdminListeUtilisateurs();
 	
 	$p = $g->rendu();

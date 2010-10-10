@@ -16,6 +16,9 @@ class Debug {
 		self::afficher(false, false, true);
 		die();
 	}
+	public static function sqlerror() {
+		self::error("MySQL : " . mysql_error());
+	}
 	public static function afficher($start = true, $print = true, $end = true) {
 		if ($start) {
 			echo "<pre>";

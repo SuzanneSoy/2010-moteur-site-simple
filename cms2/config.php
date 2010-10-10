@@ -22,6 +22,27 @@ Config::set('chemin_base_stockage', Path::combine(Config::get('chemin_base'), "/
 // En général, c'est le chemin vers le dossier contenant __cms__
 Config::set('chemin_base_public', Path::combine(Config::get('chemin_base'), "/.."));
 
+// Adresse de la base de données. Syntaxe : "hôte", "hôte:port", ":/chemin/vers/socket".
+Config::set('db_hôte', "localhost");
+
+// Utilisateur de la base de données.
+Config::set('db_utilisateur', "root");
+
+// Mot de passe de l'utilisateur de la base de données.
+Config::set('db_mot_de_passe', " ");
+
+// Base dans la base de données (non, ils pouvaient pas faire plus compliqué... m'éneeeeeervent).
+// Sous ubuntu :
+// mysql -u root -p
+// taper le mot de passe donné à l'installation
+// create database mss;
+// show databases;
+// quit
+Config::set('db_base', "mss");
+
+// Préfixe pour les tables de la base de données.
+Config::set('db_prefixe', "moteur_site_simple_2010_");
+
 // ======== FIN CONFIGURATION =======
 
 ?>
