@@ -22,7 +22,7 @@
 class BDD {
 	private static $handle = null;
 	public static function get() {
-		if (self::$handle === null) {
+		if (!is_resource(self::$handle)) {
 			self::$handle = @mysql_connect(
 				Config::get('db_hôte'),
 				Config::get('db_utilisateur'),
@@ -31,7 +31,6 @@ class BDD {
 			if (!is_resource(self::$handle)) {
 				Debug::error("Échec à la connexion à la base de données");
 			}
-			mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
 			self::init();
 		}
 		return self::$handle;
@@ -46,6 +45,8 @@ class BDD {
 	}
 
 	public static function init() {
+		self::unbuf_query("create database if not exists " . Config::get('db_base'));
+		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
 		self::unbuf_query('create table if not exists ' . self::table("pages") . ' ('
 						  . 'uid_page        integer auto_increment primary key'
 						  . ')');
@@ -55,12 +56,23 @@ class BDD {
 						  . 'groupe          char(10)'
 						  . ')');
 		self::unbuf_query('create table if not exists ' . self::table("proprietes") . ' ('
-						  . 'uid_prop        integer,'
+						  . 'uid_prop        integer auto_increment primary key,'
 						  . 'uid_page        integer,'
 						  . 'systeme         bool,'
 						  . 'nom             char(30),'
 						  . 'valeur          char'
 						  .')');
+		self::test();
+	}
+	
+	public static function test() {
+		// Insertion de la racine :
+		self::modify("insert into " . self::table("pages") . " values(0)");
+		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'date_creation', 0)");
+		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'date_modification', 0)");
+		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'publier', 'true')");
+		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'nom_systeme', 'racine')");
+		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'composant_url', '')");
 	}
 	
 	public static function unbuf_query($q) {
@@ -68,23 +80,29 @@ class BDD {
 		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
 	}
 	
+	public static function select($cols, $table, $filter = "") {
+		$q = "select $cols from " . self::table($table) . " $filter;";
+		debug::info("sql : " . $q);
+		$qres = mysql_query($q, self::get()) or Debug::sqlerror();
+		$ret = array();
+		while ($row = mysql_fetch_array($qres)) {
+			$ret[] = $row;
+		}
+		return $ret;
+	}
+	
+	public static function modify($q) {
+		debug::info("sql : $q;");
+		mysql_query($q . ";", self::get()) or Debug::sqlerror();
+	}
+	
 	public static function table($nom) {
 		return Config::get('db_prefixe') . $nom;
 	}
 	
-	public static function test() {
-		$result = mysql_query("SELECT id, name FROM mytable") or Debug::sqlerror();
-		echo "<br/><br/>";
-		
-		while ($row = mysql_fetch_array($result, MYSQL_NUM)) {
-			printf("ID : %s  Nom : %s", $row[0], $row[1]);
-		}
-		
-		mysql_free_result($result);
-	}
-	
 	public static function close() {
-		mysql_close(self::get());
+		mysql_close(self::get()) or Debug::sqlerror();
+		self::$handle = null;
 	}
 }
 

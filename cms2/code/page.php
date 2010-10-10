@@ -60,10 +60,10 @@ class Page {
 		niy("composant_url");
 	}
 
-	private $uid = -1;
+	private $uid = 0;
 	public function uid() {
 		// Renvoie l'uid de la page dans la base de données.
-		niy("uid");
+		return $this->uid;
 	}
 	
 	/*	public function select($requête) {
@@ -78,7 +78,8 @@ class Page {
 		// ordre = null => ordre = "date_creation desc"
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
-		niy("enfants");
+		var_dump(BDD::select("uid_page", "enfants", "where uid_page_parent = " . $this->uid()));
+		niy("enfants__");
 	}
 
 	public function ajouter_enfant($type, $groupe = "main") {
