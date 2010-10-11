@@ -31,6 +31,7 @@ class BDD {
 			if (!is_resource(self::$handle)) {
 				Debug::error("Échec à la connexion à la base de données");
 			}
+			self::begin_transaction();
 			self::init();
 		}
 		return self::$handle;
@@ -43,7 +44,6 @@ class BDD {
 		self::unbuf_query('drop table if exists ' . self::table("proprietes"));
 		self::init();
 	}
-
 	public static function init() {
 		self::unbuf_query("create database if not exists " . Config::get('db_base'));
 		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
@@ -75,15 +75,22 @@ class BDD {
 		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'composant_url', '')");
 	}
 	
+	public static function begin_transaction() {
+		self::unbuf_query('begin');
+	}
+	
+	public static function commit() {
+		self::unbuf_query('commit');
+	}
+	
 	public static function unbuf_query($q) {
 		debug::info("sql : " . $q . ";");
 		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
 	}
 	
-	public static function select($cols, $table, $filter = "") {
-		$q = "select $cols from " . self::table($table) . " $filter;";
+	public static function select($q) {
 		debug::info("sql : " . $q);
-		$qres = mysql_query($q, self::get()) or Debug::sqlerror();
+		$qres = mysql_query($q, BDD::get()) or Debug::sqlerror();
 		$ret = array();
 		while ($row = mysql_fetch_array($qres)) {
 			$ret[] = $row;
@@ -101,14 +108,15 @@ class BDD {
 	}
 	
 	public static function close() {
-		mysql_close(self::get()) or Debug::sqlerror();
-		self::$handle = null;
+		if (is_resource(self::$handle)) {
+			self::commit();
+			mysql_close(self::get()) or Debug::sqlerror();
+			self::$handle = null;
+		}
 	}
 }
 
-
-
-  /*
+/*
 
 class DB extends Selectable {
 	private static $handle = null;
@@ -155,6 +163,6 @@ class Selectable {
 	}
 }
 
-  */
+*/
 
 ?>

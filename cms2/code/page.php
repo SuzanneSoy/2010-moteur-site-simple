@@ -74,14 +74,46 @@ class Page {
 	public function enfants($condition = true, $ordre = "date_creation desc", $limit = 0, $offset = 0) {
 		// Renvoie un objet de la classe CollectionPages.
 		// Si $condition === true, il n'y a pas de condition
-		//   ex: $condition = "@apercu = true"
+		//   sinon, par ex: $condition = "@apercu = true"
 		// ordre = null => ordre = "date_creation desc"
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
-		var_dump(BDD::select("uid_page", "enfants", "where uid_page_parent = " . $this->uid()));
+		
+		// Deux possibilités :
+		// 1) On select tous les rangs qui correspondent à une des $condition,
+		//    puis on group by having count(uid_page) = <nombre de condition>.
+		// 2) On met chaque "type" (galerie-index, ...) dans une table séparée,
+		//    et on a une table des types. On select dans cette table des types
+		//    les tables qui ont les champs sur lesquels portent les conditions,
+		//    puis on construit une requête comme suit :
+		//    select * from (select uid_page, prop_cond_1, prop_cond_2 from table_1)
+		//            union (select uid_page, prop_cond_1, prop_cond_2 from table_2)
+		//            union (...                                            table_3)
+		//            ... where prop_cond_1 = val_cond_1 and prop_cond_2 = val_cond_2;
+		
+		// Tous les enfants
+		$select = "select uid_page from " . BDD::table("enfants") . " where uid_page_parent = " . $this->uid();
+		
+		if ($condition !== true) {
+			// Toutes les propriétés des enfants
+			$select = "select$distinct uid_page from " . BDD::table("proprietes") . " where uid_page in (" . $select . ")";
+			// Liste des conditions :
+			$select .= "and (";
+			$firstcond = true;
+			foreach ($conditions as $c) {
+				if (!$firstcond) {
+					$select .= " or ";
+				}
+				$select .= "(nom = '" . mysql_real_escape_string($c["cle"]) . "' and valeur = '" . mysql_real_escape_string($c["valeur"]) . "')";
+				$firstcond = false;
+			}
+			$select .= ") group by uid_page having count(uid_page) = " . count($conditions);
+		}
+		
+		var_dump(BDD::select($select . ";"));
 		niy("enfants__");
 	}
-
+	
 	public function ajouter_enfant($type, $groupe = "main") {
 		// ajouter l'enfant
 		// renvoyer une instance de la sous-classe de Page correspondant à $type.
