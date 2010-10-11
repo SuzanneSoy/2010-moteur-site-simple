@@ -1,17 +1,10 @@
 <?php
 
 class mAdminListeUtilisateurs extends Page {
-	public static function ressources_statiques() {
-		return qw("i_icône_nouvelle_page c_style");
-	}
-	public static function ressources_dynamiques() {
-		return qw("h_page h_liste_mots_de_passe");
-	}
-	public static function types_enfants() {
-		return qw("AdminUtilisateur");
-	}
-	public static function attributs() {
-		return qw();
+	public static function info() {
+		ressources_statiques("i_icône_nouvelle_page c_style");
+		ressources_dynamiques("h_page h_liste_mots_de_passe");
+		types_enfants("AdminUtilisateur");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -44,28 +37,20 @@ class mAdminListeUtilisateurs extends Page {
 }
 
 class mAdminUtilisateur extends Page {
-	public static function ressources_statiques() {
-		return qw("c_style");
-	}
-	public static function ressources_dynamiques() {
+	public static function info() {
+		ressources_statiques("c_style");
 		// TODO : h_page = affichage "en grand" de l'utilisateur (~= page perso, par ex. destination d'un lien de la page contacts).
-		return qw("h_admin");
-	}
-	public static function types_enfants() {
-		return qw("AdminUtilisateur");
-	}
-	public static function attributs() {
-		return array(
-			// TODO : le couple (nom,prenom) doit être unique.
-			attribut("nom", "text_line", "Dupondt"),
-			attribut("prenom", "text_line", "Jean"),
-			attribut("equipe", "uid", "null"),
-			attribut("mot_de_passe", "password", ""),
-			// TODO : permissions différentes pour les propriétés peut_se_connecter et groupe_permissions.
-			// L'utilisateur ne doit pas pouvoir les modifier.
-			attribut("groupe_permissions", "groupe_permissions", "utilisateurs"),
-			attribut("peut_se_connecter", "bool", "false")
-		);
+		ressources_dynamiques("h_admin");
+		types_enfants("AdminUtilisateur");
+		// TODO : le couple (nom,prenom) doit être unique.
+		attribut("nom", "text_line", "Dupondt");
+		attribut("prenom", "text_line", "Jean");
+		attribut("equipe", "uid", "null");
+		attribut("mot_de_passe", "password", "");
+		// TODO : permissions différentes pour les propriétés peut_se_connecter et groupe_permissions.
+		// L'utilisateur ne doit pas pouvoir les modifier.
+		attribut("groupe_permissions", "groupe_permissions", "utilisateurs");
+		attribut("peut_se_connecter", "bool", "false");
 	}
 	
 	public function res_c_style() {

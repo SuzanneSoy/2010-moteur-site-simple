@@ -1,10 +1,14 @@
 <?php
 
 function main() {
+	echo "<pre>";
+	initModules();
+	var_dump(Page::$modules);
+	echo "</pre>";
 	$bdd = BDD::get();
 	BDD::reset();
 	
-	$g = new AdminListeUtilisateurs();
+	$g = new mAdminListeUtilisateurs();
 	
 	$p = $g->rendu();
 	echo "<pre>";

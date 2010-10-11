@@ -1,38 +1,128 @@
 <?php
 
+require_once(dirname(__FILE__) . "/util.php"); // qw
+require_once(dirname(__FILE__) . "/document.php"); // widgets pour la vérification des types.
+
+function inherit($m) {
+	return array("inherit" => $m);
+}
+
+function is_inherit($i) {
+	return (is_array($i) && array_key_exists("inherit", $i));
+}
+
+function ressources_statiques($res) {
+	// TODO : factoriser d'ici...
+	$lim = Page::$limitation_infos_module;
+	$m = Page::$module_en_cours;
+	if ($lim !== true && $lim != "ressources_statiques")
+		return;
+
+	if (is_inherit($res)) {
+		$i = $res["inherit"];
+		Page::$limitation_infos_module = "ressources_statiques";
+		call_user_func(array($i, "info"));
+		Page::$limitation_infos_module = $lim;
+	} else {
+		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_statiques'] peut être factorisé aussi.
+		Page::$modules[$m]['ressources_statiques'] = qw(Page::$modules[$m]['ressources_statiques'], $res);
+	}
+}
+
+function ressources_dynamiques($res) {
+	// TODO : factoriser d'ici...
+	$lim = Page::$limitation_infos_module;
+	$m = Page::$module_en_cours;
+	if ($lim !== true && $lim != "ressources_dynamiques")
+		return;
+
+	if (is_inherit($res)) {
+		$i = $res["inherit"];
+		Page::$limitation_infos_module = "ressources_dynamiques";
+		call_user_func(array($i, "info"));
+		Page::$limitation_infos_module = $lim;
+	} else {
+		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_dynamiques'] peut être factorisé aussi.
+		Page::$modules[$m]['ressources_dynamiques'] = qw(Page::$modules[$m]['ressources_dynamiques'], $res);
+	}
+}
+
+function types_enfants($types) {
+	// TODO : factoriser d'ici...
+	$lim = Page::$limitation_infos_module;
+	$m = Page::$module_en_cours;
+	if ($lim !== true && $lim != "types_enfants")
+		return;
+
+	if (is_inherit($types)) {
+		$i = $res["inherit"];
+		Page::$limitation_infos_module = "types_enfants";
+		call_user_func(array($i, "info"));
+		Page::$limitation_infos_module = $lim;
+	} else {
+		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi.
+		Page::$modules[$m]['types_enfants'] = qw(Page::$modules[$m]['types_enfants'], $types);
+	}
+}
+
+function attribut($nom, $type = null, $defaut = null) {
+	$lim = Page::$limitation_infos_module;
+	$m = Page::$module_en_cours;
+	if ($lim !== true && $lim != "attribut")
+		return;
+	
+	if (is_inherit($nom)) {
+		$i = $nom["inherit"];
+		Page::$limitation_infos_module = "attribut";
+		call_user_func(array($i, "info"));
+		Page::$limitation_infos_module = $lim;
+	} else {
+		if ($type === null || $defaut === null) {
+			Debug::error("fonction attribut() : les paramètres $type et $defaut doivent être définis");
+		}
+		if (!Document::has_widget("w_" . $type)) {
+			Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
+		}
+		Page::$modules[$m]['attributs'][$nom] = array("type" => $type, "defaut" => $defaut);
+	}
+}
+
+function attributs_globaux() {
+}
+
 function module($m) {
-	Page::ajouterType($m);
+	Page::$modules[$m] = array(
+		'ressources_statiques' => qw(),
+		'ressources_dynamiques' => qw(),
+		'types_enfants' => qw(),
+		'attributs' => qw()
+	);
+}
+
+function initModules() {
+	foreach (Page::$modules as $m => $v) {
+		echo $m . "<br/>";
+		Page::$module_en_cours = $m;
+		call_user_func(array($m, "info"));
+	}
+	Page::$module_en_cours = null;
 }
 
 class Page {
-	public static $types = array();
-	
-	// Convention de nommage :
-	// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
-	public static function ressources_statiques() {
-		return array();
-	}
-	public static function ressources_dynamiques() {
-		return array();
-	}
-	public static function types_enfants() {
-		// true => n'importe quel type est accepté
-		// null ou false => aucun type.
-		return true;
-	}
-	public static function attributs() {
-		return array(
-			attribut("date_creation", "date", "0"),
-			attribut("date_modification", "date", "0"),
-			attribut("publier", "bool", "false"),
-			attribut("nom_systeme", "text_no_space", ""),
-			attribut("composant_url", "text_no_space", "page"),
-			attribut("groupe", "text_no_space", "main") // Groupe des enfants.
-		);
-	}
+	public static $modules = array();
+	public static $attributs_globaux = array();
+	public static $module_en_cours = null;
+	public static $limitation_infos_module = true;
 
-	public static function ajouter_type($type) {
-		array_push(self::$types, $type);
+	public static function info() {
+		// Convention de nommage pour les ressources statiques :
+		// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
+		attributs_globaux("date_creation date_modification publier nom_systeme composant_url");
+		attribut("date_creation", "date", "0");
+		attribut("date_modification", "date", "0");
+		attribut("publier", "bool", "false");
+		attribut("nom_systeme", "text_no_space", "");
+		attribut("composant_url", "text_no_space", "page");
 	}
 	
 	private $parent = null;
@@ -40,13 +130,16 @@ class Page {
 		return $this->parent;
 	}
 	
+	public function module() {
+		return self::$modules[get_class($this)];
+	}
+	
 	public function rendu($res = null, $d = null) {
 		// Renvoie un document (classe ElementDocument).
 		// L'appel à une fonction statique via $this-> n'est pas propre, mais comment appeller la
 		// fonction du sous-type et pas celle de Page sinon ?
 		if ($res === null) {
-			$ressources = $this->ressources_dynamiques();
-			$res = $ressources[0];
+			$res = $this->module['ressources_dynamiques'][0];
 		}
 		if ($d === null) {
 			$d = new Document();
@@ -113,7 +206,8 @@ class Page {
 			}
 			$select .= ") group by uid_page having count(uid_page) = " . count($conditions);
 		}
-		
+
+		echo "Page::enfants : result of select : ";
 		var_dump(BDD::select($select . ";"));
 		niy("enfants__");
 	}
@@ -158,6 +252,7 @@ class Page {
 	}
 	
 	public function __get($nom) {
+		if ($nom == "module") { return $this->module(); } // Raccourci.
 		// s'il y a un getter (trigger), on l'appelle, sinon on appelle get_prop_direct();
 		// le getter fait ce qu'il veut, puis appelle set_prop_direct();
 		if (is_callable(array($this,"get_".$nom))) {
@@ -192,13 +287,6 @@ class Page {
 		niy("pseudo-réécriture d'URL dans set_composant_url().");
 		return $this->set_prop_direct("composant_url", $val);
 	}
-}
-
-function attribut($nom, $type, $defaut) {
-	if (!Document::has_widget($type)) {
-		Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
-	}
-	return array($nom, $type, $defaut);
 }
 
 class CollectionPages {

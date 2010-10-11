@@ -1,20 +1,12 @@
 <?php
 
 class mNouveautes extends Page {
-	public static function ressources_statiques() {
-		return qw("i_icône_nouvelle_page c_style");
-	}
-	public static function ressources_dynamiques() {
-		return qw("h_page");
-	}
-	public static function types_enfants() {
-		return qw("Lien");
-	}
-	public static function attributs() {
-		return array(
-			attribut("titre", "text_line", "Nouveautés"),
-			attribut("description", "text_rich", "")
-		);
+	public static function info() {
+		ressources_statiques("i_icône_nouvelle_page c_style");
+		ressources_dynamiques("h_page");
+		groupe_enfants("sources");
+		attribut("titre", "text_line", "Nouveautés");
+		attribut("description", "text_rich", "");
 	}
 	
 	public function res_i_icône_nouvelle_page() {

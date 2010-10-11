@@ -132,7 +132,7 @@ class ElementDocument {
 				return $this->singleton_élément($fn, $args);
 			else
 				return $this->créer_élément($fn, $args);
-		} else if (self::has_widget($fn)) {
+		} elseif (self::has_widget($fn)) {
 			return $this->créer_widget($fn, $args);
 		} else {
 			Debug::error("Impossible d'ajouter un élément $fn à " . $this->type);
@@ -204,13 +204,28 @@ ElementDocument::add_widget("field", function($d, $select){
 	});
 
 
+ElementDocument::add_widget("text_line", function($d, $select){
+		return $d->text("Not Implemented Yet : w_text_line($select)");
+	});
 
 
+ElementDocument::add_widget("text_rich", function($d, $select){
+		return $d->text("Not Implemented Yet : w_text_rich($select)");
+	});
 
 
-//ElementDocument::add_widget("richText", function($select){}); // similaire
-// Peut-être que _field peut détecter automatiquement s'il faut traiter un champ de la BDD
-// (par ex. pour le richText) en fonction d'une info "type" dans la classe correspondant à la page de ce champ ?
+ElementDocument::add_widget("bool", function($d, $select){
+		// checkbox
+		return $d->text("Not Implemented Yet : w_bool($select)");
+	});
+
+
+ElementDocument::add_widget("img_file", function($d, $select){
+		// input[file] et <img>
+		return $d->text("Not Implemented Yet : w_img_file($select)");
+	});
+
+
 ElementDocument::add_widget("liste", function($d, $select, $function_formattage_elements) {
 		$l = $d->ul();
 		$l->li()->text("Not Implemented Yet");

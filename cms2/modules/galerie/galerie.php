@@ -5,22 +5,13 @@ abstract class mGalerieBase extends Page {
 	protected static $texte_nouvelle_page = "Nouvel élément";
 	protected static $icône_nouvelle_page = "nouvelle_periode.png";
 	
-	
-	public static function ressources_statiques() {
-		return qw("i_icône_nouvelle_page c_style");
-	}
-	public static function ressources_dynamiques() {
-		return qw("h_page h_miniature h_mini_miniature");
-	}
-	public static function types_enfants() {
-		return qw("GalerieÉvènement Lien");
-	}
-	public static function attributs() {
-		return array(
-			attribut("titre", "text_line", self::$texte_titre),
-			attribut("description", "text_rich", ""),
-			attribut("dans_nouveautes", "bool", "true")
-		);
+	public static function info() {
+		ressources_statiques("i_icône_nouvelle_page".get_class()." c_style".get_class());
+		ressources_dynamiques("h_page h_miniature h_mini_miniature");
+		types_enfants("GalerieÉvènement");
+		attribut("titre", "text_line", self::$texte_titre);
+		attribut("description", "text_rich", "");
+		attribut("dans_nouveautes", "bool", "true");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -88,24 +79,16 @@ class mGalerieÉvénement extends mGalerieBase {
 	protected static $icône_nouvelle_page = "nouvelle_photo.png";
 }
 
-class mGaleriePhoto {
+class mGaleriePhoto extends mGalerieBase {
 	protected static $texte_titre = "Photo";
 	
-	public static function ressources_statiques() {
-		return qw("c_style");
+	public static function info() {
+		ressources_statiques("c_style");
+		ressources_dynamiques(inherit(get_parent_class()), "i_grande i_image i_miniature");
+		attribut(inherit(get_parent_class()));
+		attribut("image", "img_file", "");
 	}
-	public static function ressources_dynamiques() {
-		return qw(parent::ressources_dynamiques(), "i_grande i_image i_miniature");
-	}
-	public static function types_enfants() {
-		return null;
-	}
-	public static function attributs() {
-		$a = parent::attributs();
-		array_push($a, attribut("image", "file", ""));
-		return $a;
-	}
-
+	
 	public function set_titre($titre) {
 		// set url quand on set titre !
 		// TODO : valeur initiale pour l'url !
@@ -123,7 +106,7 @@ class mGaleriePhoto {
 	
 	public function res_h_page($d) {
 		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
-		$d->w_img($this->description, $this->i_image);
+		$d->w_img_file($this->description, $this->i_image);
 		return $d;
 	}
 	
@@ -153,7 +136,7 @@ class mGaleriePhoto {
 			$largeur_miniature = $largeur * $hauteur_miniature/$hauteur;
 		}
 		$miniature = ImageCreateTrueColor($largeur_miniature, $hauteur_miniature); // miniatures de tailles différentes
-		var_dump($largeur_miniature, $hauteur_miniature, $largeur, $hauteur);
+		//var_dump($largeur_miniature, $hauteur_miniature, $largeur, $hauteur);
 		imagecopyresampled(
 			$miniature,         // image destination
 			$image,             // image source
