@@ -1,6 +1,6 @@
 <?php
 
-class AdminListeUtilisateurs extends Page {
+class mAdminListeUtilisateurs extends Page {
 	public static function ressources_statiques() {
 		return qw("i_icône_nouvelle_page c_style");
 	}
@@ -43,7 +43,7 @@ class AdminListeUtilisateurs extends Page {
 	}
 }
 
-class AdminUtilisateur extends Page {
+class mAdminUtilisateur extends Page {
 	public static function ressources_statiques() {
 		return qw("c_style");
 	}
@@ -100,6 +100,6 @@ class AdminUtilisateur extends Page {
 	}
 }
 
-Page::ajouter_type("AdminListeUtilisateurs");
+module("mAdminListeUtilisateurs");
 
 ?>

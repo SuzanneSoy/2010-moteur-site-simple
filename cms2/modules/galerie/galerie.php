@@ -1,6 +1,6 @@
 <?php
 
-abstract class GalerieBase extends Page {
+abstract class mGalerieBase extends Page {
 	protected static $texte_titre = "Galerie";
 	protected static $texte_nouvelle_page = "Nouvel élément";
 	protected static $icône_nouvelle_page = "nouvelle_periode.png";
@@ -70,25 +70,25 @@ abstract class GalerieBase extends Page {
 	}
 }
 
-class GalerieIndex extends GalerieBase {
+class mGalerieIndex extends mGalerieBase {
 	protected static $texte_titre = "Galerie";
 	protected static $texte_nouvelle_page = "Nouvelle période";
 	protected static $icône_nouvelle_page = "nouvelle_periode.png";
 }
 
-class GaleriePériode extends GalerieBase {
+class mGaleriePériode extends mGalerieBase {
 	protected static $texte_titre = "Période";
 	protected static $texte_nouvelle_page = "Nouvel événement";
 	protected static $icône_nouvelle_page = "nouvel_evenement.png";
 }
 
-class GalerieÉvénement extends GalerieBase {
+class mGalerieÉvénement extends mGalerieBase {
 	protected static $texte_titre = "Événement";
 	protected static $texte_nouvelle_page = "Nouvelle photo";
 	protected static $icône_nouvelle_page = "nouvelle_photo.png";
 }
 
-class GaleriePhoto {
+class mGaleriePhoto {
 	protected static $texte_titre = "Photo";
 	
 	public static function ressources_statiques() {
@@ -173,9 +173,9 @@ class GaleriePhoto {
 	}
 }
 
-Page::ajouter_type("GalerieIndex");
-Page::ajouter_type("GaleriePériode");
-Page::ajouter_type("GalerieÉvénement");
-Page::ajouter_type("GaleriePhoto");
+module("mGalerieIndex");
+module("mGaleriePériode");
+module("mGalerieÉvénement");
+module("mGaleriePhoto");
 
 ?>

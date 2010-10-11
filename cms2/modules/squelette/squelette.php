@@ -10,4 +10,6 @@ class mSquelette extends Page {
 	}
 }
 
+module("mSquelette");
+
 ?>

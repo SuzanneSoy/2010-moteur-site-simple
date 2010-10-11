@@ -1,6 +1,6 @@
 <?php
 
-class Nouveautes extends Page {
+class mNouveautes extends Page {
 	public static function ressources_statiques() {
 		return qw("i_icône_nouvelle_page c_style");
 	}
@@ -41,6 +41,6 @@ class Nouveautes extends Page {
 	}
 }
 
-Page::ajouter_type("Nouveautes");
+module("mNouveautes");
 
 ?>

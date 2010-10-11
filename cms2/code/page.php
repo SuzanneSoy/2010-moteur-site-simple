@@ -1,5 +1,9 @@
 <?php
 
+function module($m) {
+	Page::ajouterType($m);
+}
+
 class Page {
 	public static $types = array();
 	
