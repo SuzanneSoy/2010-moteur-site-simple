@@ -3,10 +3,11 @@
 function main() {
 	echo "<pre>";
 	initModules();
-	var_dump(Page::$modules);
-	echo "</pre>";
+	//var_dump(Page::$modules);
+	
 	$bdd = BDD::get();
 	BDD::reset();
+	echo "</pre>";
 	
 	$g = new mAdminListeUtilisateurs();
 	

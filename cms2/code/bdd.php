@@ -40,39 +40,60 @@ class BDD {
 	// ATTENTION : Ré-initialise toute la base de données !!!
 	public static function reset() {
 		self::unbuf_query('drop table if exists ' . self::table("pages"));
-		self::unbuf_query('drop table if exists ' . self::table("enfants"));
-		self::unbuf_query('drop table if exists ' . self::table("proprietes"));
+		self::unbuf_query('drop table if exists ' . self::table("liens"));
+		// TODO : drop les tables des classes (les noms sont dans self::table("modules")).
+		self::unbuf_query('drop table if exists ' . self::table("modules"));
 		self::init();
 	}
+	
 	public static function init() {
 		self::unbuf_query("create database if not exists " . Config::get('db_base'));
 		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
-		self::unbuf_query('create table if not exists ' . self::table("pages") . ' ('
-						  . 'uid_page        integer auto_increment primary key'
+		
+		if (count(self::select("show tables like '" . self::table("pages") . "'"))) {
+			Debug::info("La base de données est déjà initialisée, on continue...");
+			return;
+		}
+		
+		self::unbuf_query('create table if not exists ' . self::table("liens") . ' ('
+						  . 'uid_page_de   integer,'
+						  . 'uid_page_vers integer,'
+						  . 'groupe        varchar(50)'
 						  . ')');
-		self::unbuf_query('create table if not exists ' . self::table("enfants") . ' ('
-						  . 'uid_page        integer,'
-						  . 'uid_page_parent integer,'
-						  . 'groupe          char(10)'
+		
+		self::unbuf_query('create table if not exists ' . self::table("modules") . ' ('
+						  . 'modules       varchar(50) primary key'
 						  . ')');
-		self::unbuf_query('create table if not exists ' . self::table("proprietes") . ' ('
-						  . 'uid_prop        integer auto_increment primary key,'
-						  . 'uid_page        integer,'
-						  . 'systeme         bool,'
-						  . 'nom             char(30),'
-						  . 'valeur          char'
-						  .')');
+		
+		$table = "create table if not exists " . self::table("pages") . " (uid_page integer auto_increment primary key";
+		foreach (Page::$attributs_globaux as $nom) {
+			$table .= ", $nom varchar(50)";
+		}
+		$table .= ")";
+		self::unbuf_query($table);
+		
+		foreach (Page::$modules as $nom_module => $m) {
+			$table = "create table if not exists " . self::table($nom_module) . " (uid_page integer";
+			foreach ($m['attributs'] as $nom => &$attr) {
+				if (!$attr['global']) {
+					$table .= ", $nom varchar(50)";
+				}
+			}
+			$table .= ")";
+			self::unbuf_query($table);
+			self::modify("replace into " . self::table("modules") . " values('" . $nom_module . "')");
+		}
+		
 		self::test();
 	}
 	
 	public static function test() {
 		// Insertion de la racine :
-		self::modify("insert into " . self::table("pages") . " values(0)");
-		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'date_creation', 0)");
-		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'date_modification', 0)");
-		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'publier', 'true')");
-		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'nom_systeme', 'racine')");
-		self::modify("insert into " . self::table("proprietes") . " values(0, 0, true, 'composant_url', '')");
+		self::modify("replace into " . self::table("pages") . " values(1, '0', '0', 'true', 'racine', '', 'mGalerieIndex')");
+		self::modify("replace into " . self::table("pages") . " values(2, '0', '0', 'true', '', '', 'mGaleriePeriode')");
+		self::modify("replace into " . self::table("pages") . " values(3, '0', '0', 'true', '', '', 'mGaleriePeriode')");
+		self::modify("replace into " . self::table("liens") . " values(1, 2, 'enfant')");
+		self::modify("replace into " . self::table("liens") . " values(1, 3, 'enfant')");
 	}
 	
 	public static function begin_transaction() {
@@ -100,7 +121,7 @@ class BDD {
 	
 	public static function modify($q) {
 		debug::info("sql : $q;");
-		mysql_query($q . ";", self::get()) or Debug::sqlerror();
+		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
 	}
 	
 	public static function table($nom) {

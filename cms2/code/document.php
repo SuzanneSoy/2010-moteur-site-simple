@@ -209,6 +209,11 @@ ElementDocument::add_widget("text_line", function($d, $select){
 	});
 
 
+ElementDocument::add_widget("text_no_space", function($d, $select){
+		return $d->text("Not Implemented Yet : w_text_line($select)");
+	});
+
+
 ElementDocument::add_widget("text_rich", function($d, $select){
 		return $d->text("Not Implemented Yet : w_text_rich($select)");
 	});
@@ -223,6 +228,12 @@ ElementDocument::add_widget("bool", function($d, $select){
 ElementDocument::add_widget("img_file", function($d, $select){
 		// input[file] et <img>
 		return $d->text("Not Implemented Yet : w_img_file($select)");
+	});
+
+
+ElementDocument::add_widget("date", function($d, $select){
+		// affichage localisé.
+		return $d->text("Not Implemented Yet : date($select)");
 	});
 
 

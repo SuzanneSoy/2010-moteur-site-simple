@@ -4,7 +4,7 @@ class mAdminListeUtilisateurs extends Page {
 	public static function info() {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_liste_mots_de_passe");
-		types_enfants("AdminUtilisateur");
+		types_enfants("mAdminUtilisateur");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -41,7 +41,6 @@ class mAdminUtilisateur extends Page {
 		ressources_statiques("c_style");
 		// TODO : h_page = affichage "en grand" de l'utilisateur (~= page perso, par ex. destination d'un lien de la page contacts).
 		ressources_dynamiques("h_admin");
-		types_enfants("AdminUtilisateur");
 		// TODO : le couple (nom,prenom) doit être unique.
 		attribut("nom", "text_line", "Dupondt");
 		attribut("prenom", "text_line", "Jean");

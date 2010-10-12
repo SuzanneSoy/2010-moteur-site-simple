@@ -4,7 +4,7 @@ class mNouveautes extends Page {
 	public static function info() {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page");
-		groupe_enfants("sources");
+		groupes_enfants("sources");
 		attribut("titre", "text_line", "Nouveautés");
 		attribut("description", "text_rich", "");
 	}

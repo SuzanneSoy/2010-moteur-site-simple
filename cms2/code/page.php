@@ -24,7 +24,7 @@ function ressources_statiques($res) {
 		call_user_func(array($i, "info"));
 		Page::$limitation_infos_module = $lim;
 	} else {
-		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_statiques'] peut être factorisé aussi.
+		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_statiques'] peut être factorisé aussi. (pas pour attribut))
 		Page::$modules[$m]['ressources_statiques'] = qw(Page::$modules[$m]['ressources_statiques'], $res);
 	}
 }
@@ -42,7 +42,7 @@ function ressources_dynamiques($res) {
 		call_user_func(array($i, "info"));
 		Page::$limitation_infos_module = $lim;
 	} else {
-		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_dynamiques'] peut être factorisé aussi.
+		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_dynamiques'] peut être factorisé aussi. (pas pour attribut))
 		Page::$modules[$m]['ressources_dynamiques'] = qw(Page::$modules[$m]['ressources_dynamiques'], $res);
 	}
 }
@@ -60,8 +60,26 @@ function types_enfants($types) {
 		call_user_func(array($i, "info"));
 		Page::$limitation_infos_module = $lim;
 	} else {
-		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi.
+		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
 		Page::$modules[$m]['types_enfants'] = qw(Page::$modules[$m]['types_enfants'], $types);
+	}
+}
+
+function groupes_enfants($groupes) {
+	// TODO : factoriser d'ici...
+	$lim = Page::$limitation_infos_module;
+	$m = Page::$module_en_cours;
+	if ($lim !== true && $lim != "attribut")
+		return;
+	
+	if (is_inherit($groupes)) {
+		$i = $groupes["inherit"];
+		Page::$limitation_infos_module = "groupes_enfants";
+		call_user_func(array($i, "info"));
+		Page::$limitation_infos_module = $lim;
+	} else {
+		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
+		Page::$modules[$m]['groupes_enfants'] = qw(Page::$modules[$m]['groupes_enfants'], $groupes);
 	}
 }
 
@@ -78,16 +96,17 @@ function attribut($nom, $type = null, $defaut = null) {
 		Page::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null || $defaut === null) {
-			Debug::error("fonction attribut() : les paramètres $type et $defaut doivent être définis");
+			Debug::error('fonction attribut() : les paramètres $type et $defaut doivent être définis');
 		}
 		if (!Document::has_widget("w_" . $type)) {
 			Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
 		}
-		Page::$modules[$m]['attributs'][$nom] = array("type" => $type, "defaut" => $defaut);
+		Page::$modules[$m]['attributs'][$nom] = array("global" => false, "type" => $type, "defaut" => $defaut);
 	}
 }
 
-function attributs_globaux() {
+function attributs_globaux($attributs) {
+	Page::$attributs_globaux = qw(Page::$attributs_globaux, $attributs);
 }
 
 function module($m) {
@@ -95,17 +114,24 @@ function module($m) {
 		'ressources_statiques' => qw(),
 		'ressources_dynamiques' => qw(),
 		'types_enfants' => qw(),
-		'attributs' => qw()
+		'groupes_enfants' => qw(),
+		'attributs' => array()
 	);
 }
 
 function initModules() {
-	foreach (Page::$modules as $m => $v) {
-		echo $m . "<br/>";
-		Page::$module_en_cours = $m;
-		call_user_func(array($m, "info"));
+	foreach (Page::$modules as $nom_module => $m) {
+		Page::$module_en_cours = $nom_module;
+		call_user_func(array($nom_module, "info"));
 	}
 	Page::$module_en_cours = null;
+	foreach (Page::$attributs_globaux as $ag) {
+		foreach (Page::$modules as &$m) {
+			if (array_key_exists($ag, $m['attributs'])) {
+				$m['attributs'][$ag]['global'] = true;
+			}
+		}
+	}
 }
 
 class Page {
@@ -117,12 +143,13 @@ class Page {
 	public static function info() {
 		// Convention de nommage pour les ressources statiques :
 		// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
-		attributs_globaux("date_creation date_modification publier nom_systeme composant_url");
+		attributs_globaux("date_creation date_modification publier nom_systeme composant_url type");
 		attribut("date_creation", "date", "0");
 		attribut("date_modification", "date", "0");
 		attribut("publier", "bool", "false");
 		attribut("nom_systeme", "text_no_space", "");
 		attribut("composant_url", "text_no_space", "page");
+		attribut("type", "text_no_space", "mSiteIndex");
 	}
 	
 	private $parent = null;
@@ -189,6 +216,7 @@ class Page {
 		//            ... where prop_cond_1 = val_cond_1 and prop_cond_2 = val_cond_2;
 		
 		// Tous les enfants
+		niy("enfants__");
 		$select = "select uid_page from " . BDD::table("enfants") . " where uid_page_parent = " . $this->uid();
 		
 		if ($condition !== true) {
@@ -206,10 +234,9 @@ class Page {
 			}
 			$select .= ") group by uid_page having count(uid_page) = " . count($conditions);
 		}
-
+		
 		echo "Page::enfants : result of select : ";
 		var_dump(BDD::select($select . ";"));
-		niy("enfants__");
 	}
 	
 	public function ajouter_enfant($type, $groupe = "main") {
@@ -217,18 +244,18 @@ class Page {
 		// renvoyer une instance de la sous-classe de Page correspondant à $type.
 		niy("ajouter_enfant");
 	}
-
+	
 	public function lier_page($page_source, $groupe = "main") {
 		$l = ajouter_enfant("Lien", "$groupe");
 		$l->lien = $page_source;
 		niy("lier_page");
 	}
-
+	
 	public static function page_systeme($nom) {
 		// select from pages where nomSysteme = $nom limit 1
 		niy("page_systeme");
 	}
-
+	
 	public function if_perm($action, $nom_propriété) {
 		// @param $action = suite de lettre parmi les suivantes :
 		//    R = Read prop
@@ -319,5 +346,7 @@ class CollectionPages {
 		niy("CollectionPages");
 	}
 }
+
+module("Page"); // TODO ! attention : risque de conflit avec la table pages dans la bdd. Page ne devrait pas y apparaître de toute façon.
 
 ?>
