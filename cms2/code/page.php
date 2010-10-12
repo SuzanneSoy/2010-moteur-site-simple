@@ -152,13 +152,12 @@ class Page {
 		attribut("type", "text_no_space", "mSiteIndex");
 	}
 	
-	private $parent = null;
-	public function parent() {
-		return $this->parent;
+	public function nom_module() {
+		return get_class($this);
 	}
 	
 	public function module() {
-		return self::$modules[get_class($this)];
+		return self::$modules[$this->nom_module()];
 	}
 	
 	public function rendu($res = null, $d = null) {
@@ -177,6 +176,7 @@ class Page {
 	public function url($ressource = null) {
 		// Renvoie toute l'url (de la ressource principale ou de $ressource).
 		niy("url");
+		return "";
 	}
 	
 	public function composant_url() {
@@ -203,40 +203,21 @@ class Page {
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
 		
-		// Deux possibilités :
-		// 1) On select tous les rangs qui correspondent à une des $condition,
-		//    puis on group by having count(uid_page) = <nombre de condition>.
-		// 2) On met chaque "type" (galerie-index, ...) dans une table séparée,
-		//    et on a une table des types. On select dans cette table des types
-		//    les tables qui ont les champs sur lesquels portent les conditions,
-		//    puis on construit une requête comme suit :
-		//    select * from (select uid_page, prop_cond_1, prop_cond_2 from table_1)
-		//            union (select uid_page, prop_cond_1, prop_cond_2 from table_2)
-		//            union (...                                            table_3)
-		//            ... where prop_cond_1 = val_cond_1 and prop_cond_2 = val_cond_2;
-		
-		// Tous les enfants
-		niy("enfants__");
-		$select = "select uid_page from " . BDD::table("enfants") . " where uid_page_parent = " . $this->uid();
-		
-		if ($condition !== true) {
-			// Toutes les propriétés des enfants
-			$select = "select$distinct uid_page from " . BDD::table("proprietes") . " where uid_page in (" . $select . ")";
-			// Liste des conditions :
-			$select .= "and (";
-			$firstcond = true;
-			foreach ($conditions as $c) {
-				if (!$firstcond) {
-					$select .= " or ";
-				}
-				$select .= "(nom = '" . mysql_real_escape_string($c["cle"]) . "' and valeur = '" . mysql_real_escape_string($c["valeur"]) . "')";
-				$firstcond = false;
-			}
-			$select .= ") group by uid_page having count(uid_page) = " . count($conditions);
+		niy("enfants");
+		// TODO : "natural join"
+		echo "uid : ";
+		var_dump($this->uid());
+		$select = "select uid_page_vers from "
+			. BDD::table("liens")
+			. " join " . BDD::table("pages") . " on uid_page = uid_page_vers "
+			. " natural join " . BDD::table($this->nom_module())
+			. " where groupe = 'enfants' and uid_page_de = " . $this->uid() . ";";
+		$res = array();
+		foreach (BDD::select($select) as $row) {
+			array_push($res, self::page_uid($row["uid_page_vers"]));
 		}
 		
-		echo "Page::enfants : result of select : ";
-		var_dump(BDD::select($select . ";"));
+		return $res;
 	}
 	
 	public function ajouter_enfant($type, $groupe = "main") {
@@ -255,7 +236,26 @@ class Page {
 		// select from pages where nomSysteme = $nom limit 1
 		niy("page_systeme");
 	}
+
+	public static function page_uid($uid) {
+		$select = "select type from " . BDD::table("pages") . " where uid_page = " . $uid . ";";
+		$type = BDD::select($select);
+		if (count($type) != 1) {
+			Debug::error("La page avec l'uid $uid n'a pas pu être trouvée.");
+			return null;
+		}
+		$type = $type[0]["type"];
+		$ret = new $type();
+		$ret->uid = $uid;
+		return $ret;
+	}
 	
+	public function get_permissions_prop($prop) {
+		niy("get_permissions_prop");
+	}
+	public function get_permissions_enfants($groupe) {
+		niy("get_permissions_enfants");
+	}
 	public function if_perm($action, $nom_propriété) {
 		// @param $action = suite de lettre parmi les suivantes :
 		//    R = Read prop

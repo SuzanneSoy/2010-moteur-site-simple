@@ -25,8 +25,8 @@ abstract class mGalerieBase extends Page {
 	}
 	
 	public function res_h_page($d) {
-		$d->w_en_tete(); // En-tête standard.
-		$l = $d->article()->w_liste($this->enfants(true, "date_creation desc"), function($e, $li) {
+		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
+		$l = $d->article()->w_liste($this->enfants(true, "-date_creation"), function($e, $li) {
 				$a = $li->a($e->uid());
 				$e->rendu("h_miniature", $a);
 			});
@@ -51,10 +51,12 @@ abstract class mGalerieBase extends Page {
 	}
 	
 	public function res_h_mini_miniature($d) {
-		$a = $this->enfants("@apercu = true", "date_creation desc", 1);
-		if ($a->size() != 1)
-			$a = $this->enfants(true, "date_creation desc", 1);
-		return $a->get(0)->rendu("h_mini_miniature", $d);;
+		$a = $this->enfants("apercu = 'true'", "-date_creation", 1); // TODO : l'aperçu devrait être défini par le parent => ajouter un attribut "virtuel".
+		if (count($a) != 1)
+			$a = $this->enfants(true, "-date_creation", 1);
+		if (count($a) != 1)
+			return; // TODO : aucune photo
+		return $a[0]->rendu("h_mini_miniature", $d);;
 	}
 	
 	public function set_dans_nouveautes($val) {

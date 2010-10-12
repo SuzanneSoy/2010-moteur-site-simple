@@ -18,7 +18,7 @@ class mAdminListeUtilisateurs extends Page {
 	public function res_h_page($d) {
 		$d->w_titre("Utilisateurs");
 		
-		$l = $d->article()->w_tableau($this->enfants(true, "nom asc prenom asc"), function($e, $tr) {
+		$l = $d->article()->w_tableau($this->enfants(true, "+nom +prenom"), function($e, $tr) {
 				$e->rendu("h_admin", $tr);
 			});
 		$nouveau = $l->tbody(0)->tr()->td(6);
@@ -29,7 +29,7 @@ class mAdminListeUtilisateurs extends Page {
 	public function res_h_liste_mots_de_passe($d) {
 		$d->w_titre("Liste de mots de passe.");
 		
-		$l = $d->article()->w_liste($this->enfants("@groupe = utilisateurs", "nom asc prenom asc"), function($e, $li) {
+		$l = $d->article()->w_liste($this->enfants("u_groupe = 'utilisateurs'", "+nom +prenom"), function($e, $li) {
 				$e->rendu("h_admin_mdp", $li);
 			});
 		return $d;

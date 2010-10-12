@@ -7,17 +7,18 @@ function main() {
 	
 	$bdd = BDD::get();
 	BDD::reset();
-	echo "</pre>";
+
+	$r = Page::page_uid(1);
+	var_dump($r);
 	
-	$g = new mAdminListeUtilisateurs();
-	
-	$p = $g->rendu();
+	$p = $r->rendu();
 	echo "<pre>";
 	echo htmlspecialchars($p->to_XHTML_5());
 	echo "</pre>";
 	
 	BDD::close();
 	Debug::afficher();
+	echo "</pre>";
 }
 
 ?>

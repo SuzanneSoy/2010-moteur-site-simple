@@ -225,6 +225,7 @@ ElementDocument::add_widget("bool", function($d, $select){
 	});
 
 
+// Le widget w_img_file doit gérer le stockage de l'image dans un dossier, la création de la miniature et le stockage dans la BDD du chemin vers l'image.
 ElementDocument::add_widget("img_file", function($d, $select){
 		// input[file] et <img>
 		return $d->text("Not Implemented Yet : w_img_file($select)");

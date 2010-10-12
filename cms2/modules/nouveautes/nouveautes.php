@@ -7,6 +7,7 @@ class mNouveautes extends Page {
 		groupes_enfants("sources");
 		attribut("titre", "text_line", "Nouveautés");
 		attribut("description", "text_rich", "");
+		attributs_globaux("dans_nouveautes");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -20,7 +21,7 @@ class mNouveautes extends Page {
 	public function res_h_page($d) {
 		$d->w_en_tete(); // En-tête standard.
 		
-		$l = $d->article()->w_liste($this->enfants(true, "date_creation desc", 10), function($e, $li) {
+		$l = $d->article()->w_liste($this->enfants(true, "-date_creation", 10), function($e, $li) {
 				$a = $li->a($e->uid());
 				// TODO : h_miniature_nouveautes s'il existe sinon h_miniature sinon juste un lien.
 				// Comme ça le h_miniature_nouveautes d'une période de la galerie, c'est 3 ou 4 images alors que normalement c'en est juste une seule.
