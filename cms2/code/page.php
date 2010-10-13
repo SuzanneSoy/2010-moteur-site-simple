@@ -47,39 +47,24 @@ function ressources_dynamiques($res) {
 	}
 }
 
-function types_enfants($types) {
+function type_liens($groupe, $type = null) {
 	// TODO : factoriser d'ici...
 	$lim = Page::$limitation_infos_module;
 	$m = Page::$module_en_cours;
-	if ($lim !== true && $lim != "types_enfants")
+	if ($lim !== true && $lim != "type_liens")
 		return;
 
-	if (is_inherit($types)) {
+	if (is_inherit($groupe)) {
 		$i = $res["inherit"];
-		Page::$limitation_infos_module = "types_enfants";
+		Page::$limitation_infos_module = "type_liens";
 		call_user_func(array($i, "info"));
 		Page::$limitation_infos_module = $lim;
 	} else {
+		if ($type === null) {
+			Debug::error('fonction attribut() : les paramètres $type et $defaut doivent être définis');
+		}
 		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
-		Page::$modules[$m]['types_enfants'] = qw(Page::$modules[$m]['types_enfants'], $types);
-	}
-}
-
-function groupes_enfants($groupes) {
-	// TODO : factoriser d'ici...
-	$lim = Page::$limitation_infos_module;
-	$m = Page::$module_en_cours;
-	if ($lim !== true && $lim != "attribut")
-		return;
-	
-	if (is_inherit($groupes)) {
-		$i = $groupes["inherit"];
-		Page::$limitation_infos_module = "groupes_enfants";
-		call_user_func(array($i, "info"));
-		Page::$limitation_infos_module = $lim;
-	} else {
-		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
-		Page::$modules[$m]['groupes_enfants'] = qw(Page::$modules[$m]['groupes_enfants'], $groupes);
+		Page::$modules[$m]['type_liens'][$groupe] = $type;
 	}
 }
 
@@ -113,8 +98,7 @@ function module($m) {
 	Page::$modules[$m] = array(
 		'ressources_statiques' => qw(),
 		'ressources_dynamiques' => qw(),
-		'types_enfants' => qw(),
-		'groupes_enfants' => qw(),
+		'type_liens' => array('enfants' => false),
 		'attributs' => array()
 	);
 }
@@ -160,6 +144,10 @@ class Page {
 		return self::$modules[$this->nom_module()];
 	}
 	
+	public function type_liens($groupe) {
+		return $this->module['type_liens'][$groupe];
+	}
+	
 	public function rendu($res = null, $d = null) {
 		// Renvoie un document (classe ElementDocument).
 		// L'appel à une fonction statique via $this-> n'est pas propre, mais comment appeller la
@@ -190,12 +178,7 @@ class Page {
 		return $this->uid;
 	}
 	
-	/*	public function select($requête) {
-	 // Renvoie un objet de la classe CollectionPages.
-	 niy("select");
-	 }*/
-
-	public function enfants($condition = true, $ordre = "date_creation desc", $limit = 0, $offset = 0) {
+	public function enfants($condition = true, $ordre = "-date_creation", $limit = 0, $offset = 0) {
 		// Renvoie un objet de la classe CollectionPages.
 		// Si $condition === true, il n'y a pas de condition
 		//   sinon, par ex: $condition = "@apercu = true"
@@ -204,19 +187,40 @@ class Page {
 		// offset = null => offset = 0
 		
 		niy("enfants");
+		// TODO : condition
+		
+		$select_order = "";
+		$first = true;
+		foreach (qw($ordre) as $o) {
+			if ($first) {
+				$first = false;
+				$select_order .= " order by ";
+			} else {
+				$select_order .= ", ";
+			}
+			$select_order .= substr($o,1) . " ";
+			$select_order .= (substr($o,0,1) == "+") ? "asc" : "desc";
+		}
+		$select_limit = ($limit == 0) ? "" : " limit $limit";
+		$select_offset = ($offset == 0) ? "" : " offset $offset";
+		
 		// TODO : "natural join"
-		echo "uid : ";
-		var_dump($this->uid());
 		$select = "select uid_page_vers from "
 			. BDD::table("liens")
 			. " join " . BDD::table("pages") . " on uid_page = uid_page_vers "
-			. " natural join " . BDD::table($this->nom_module())
-			. " where groupe = 'enfants' and uid_page_de = " . $this->uid() . ";";
+			. " natural join " . BDD::table($this->type_liens("enfants"))
+			. " where groupe = 'enfants' and uid_page_de = " . $this->uid()
+			. $select_order
+			. $select_limit
+			. $select_offset
+			. ";";
+		
 		$res = array();
 		foreach (BDD::select($select) as $row) {
 			array_push($res, self::page_uid($row["uid_page_vers"]));
 		}
 		
+		var_dump($res);
 		return $res;
 	}
 	
@@ -262,7 +266,7 @@ class Page {
 		//    W = Write prop
 		//    L = Lister les enfants ($nom_propriété désigne alors le groupe)
 		//    C = Créer des enfants  ($nom_propriété désigne alors le groupe)
-		//    D = Delete des enfants ($nom_propriété désigne alors le groupe)
+		//    D = Delete la page ($nom_propriété est ignoré)
 		// @return true si on a l'autorisation pour TOUTES les actions demandées, false sinon.
 		
 		// Squelette du code :

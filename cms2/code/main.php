@@ -9,7 +9,6 @@ function main() {
 	BDD::reset();
 
 	$r = Page::page_uid(1);
-	var_dump($r);
 	
 	$p = $r->rendu();
 	echo "<pre>";

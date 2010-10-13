@@ -19,6 +19,10 @@ function qw($arg = null, $arg2 = null, $sep = " ") {
 	return $ret;
 }
 
+function str_contains($str, $small) {
+	return strpos($str, $small) !== false;
+}
+
 /**** Début PATH ****/
 
 // http://www.liranuna.com/php-path-resolution-class-relative-paths-made-easy/

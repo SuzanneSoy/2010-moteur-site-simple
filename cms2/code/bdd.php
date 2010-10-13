@@ -27,6 +27,11 @@ class BDD {
 	public static function reset() {
 		self::unbuf_query('drop table if exists ' . self::table("pages"));
 		self::unbuf_query('drop table if exists ' . self::table("liens"));
+		// Création de la table modules pour qu'on puisse select dedans même si elle n'existe pas.
+		// TODO : fusionner avec la création de la table modules dans init();
+		self::unbuf_query('create table if not exists ' . self::table("modules") . ' ('
+						  . 'nom_module    varchar(50) primary key'
+						  . ')');
 		foreach (self::select('select * from ' . self::table("modules")) as $module) {
 			self::unbuf_query('drop table if exists ' . self::table($module["nom_module"]));
 		}
@@ -79,8 +84,8 @@ class BDD {
 	public static function test() {
 		// TODO : dans les modules qui proposent un nom_systeme, faire une fonction init_<nom_systeme>
 		// Cette fonction sera appellée lors de l'initialisation de la BDD.
-		self::modify("replace into " . self::table("pages") . " values(1, '0', '0', 'true', 'racine', '', 'mGalerieIndex', 'true')");
-		self::modify("replace into " . self::table("pages") . " values(2, '0', '0', 'true', '', 'periode-1', 'mGaleriePeriode', 'true')");
+		self::modify("replace into " . self::table("pages") . " values(1, '0', '4', 'true', 'racine', '', 'mGalerieIndex', 'true')");
+		self::modify("replace into " . self::table("pages") . " values(2, '1', '3', 'true', '', 'periode-1', 'mGaleriePeriode', 'true')");
 		self::modify("replace into " . self::table("pages") . " set uid_page = 3, date_creation = '0', date_modification = '0', publier = 'true', nom_systeme = '', composant_url = 'periode-2', type = 'mGaleriePeriode', dans_nouveautes = 'false'");
 		self::modify("replace into " . self::table("liens") . " values(1, 2, 'enfants')");
 		self::modify("replace into " . self::table("liens") . " values(1, 3, 'enfants')");

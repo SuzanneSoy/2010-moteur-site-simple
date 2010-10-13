@@ -4,7 +4,7 @@ class mAdminListeUtilisateurs extends Page {
 	public static function info() {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_liste_mots_de_passe");
-		types_enfants("mAdminUtilisateur");
+		type_liens("enfants", "mAdminUtilisateur");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
