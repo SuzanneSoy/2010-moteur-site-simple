@@ -181,13 +181,16 @@ class Page {
 	public function enfants($condition = true, $ordre = "-date_creation", $limit = 0, $offset = 0) {
 		// Renvoie un objet de la classe CollectionPages.
 		// Si $condition === true, il n'y a pas de condition
-		//   sinon, par ex: $condition = "@apercu = true"
+		//   sinon, par ex: $condition = "apercu = 'true'"
 		// ordre = null => ordre = "date_creation desc"
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
 		
-		niy("enfants");
-		// TODO : condition
+		// TODO : nettoyer la condition
+		if ($condition !== true)
+			$condition = " and ($condition)";
+		else
+			$condition = "";
 		
 		$select_order = "";
 		$first = true;
@@ -207,9 +210,10 @@ class Page {
 		// TODO : "natural join"
 		$select = "select uid_page_vers from "
 			. BDD::table("liens")
-			. " join " . BDD::table("pages") . " on uid_page = uid_page_vers "
+			. " join " . BDD::table("pages") . " on uid_page = uid_page_vers"
 			. " natural join " . BDD::table($this->type_liens("enfants"))
 			. " where groupe = 'enfants' and uid_page_de = " . $this->uid()
+			. $condition
 			. $select_order
 			. $select_limit
 			. $select_offset

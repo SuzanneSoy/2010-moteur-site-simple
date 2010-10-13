@@ -29,7 +29,7 @@ class mAdminListeUtilisateurs extends Page {
 	public function res_h_liste_mots_de_passe($d) {
 		$d->w_titre("Liste de mots de passe.");
 		
-		$l = $d->article()->w_liste($this->enfants("u_groupe = 'utilisateurs'", "+nom +prenom"), function($e, $li) {
+		$l = $d->article()->w_liste($this->enfants("groupe_permissions = 'utilisateurs'", "+nom +prenom"), function($e, $li) {
 				$e->rendu("h_admin_mdp", $li);
 			});
 		return $d;
