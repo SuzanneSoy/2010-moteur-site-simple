@@ -3,11 +3,11 @@
 abstract class mGalerieBase extends Page {
 	protected static $texte_titre = "Galerie";
 	protected static $texte_nouvelle_page = "Nouvel élément";
-	protected static $icône_nouvelle_page = "nouvelle_periode.png";
+	protected static $icone_nouvelle_page = "nouvelle_periode.png";
 	protected static $type_enfants = "mGaleriePeriode";
 	
 	public static function info() {
-		ressources_statiques("i_icône_nouvelle_page c_style");
+		ressources_statiques("i_icone_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_miniature h_mini_miniature");
 		type_liens("enfants", self::$type_enfants);
 		type_liens("liens", "*");
@@ -16,8 +16,8 @@ abstract class mGalerieBase extends Page {
 		attribut("dans_nouveautes", "bool", "true");
 	}
 	
-	public function res_i_icône_nouvelle_page() {
-		return StockageFichiers::envoyer_fichier_statique(Path::combine(dirname(__FILE__), self::$icône_nouvelle_page));
+	public function res_i_icone_nouvelle_page() {
+		return StockageFichiers::envoyer_fichier_statique(Path::combine(dirname(__FILE__), self::$icone_nouvelle_page));
 	}
 	
 	public function res_c_style() {
@@ -25,14 +25,15 @@ abstract class mGalerieBase extends Page {
 	}
 	
 	public function res_h_page($d) {
-		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
+		$d->w_en_tete($this->titre, $this->description); // En-tête standard.
 		$l = $d->article()->w_liste($this->enfants(true, "-date_creation"), function($e, $li) {
 				$a = $li->a($e->uid());
 				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
 		// TODO : nouveau devrait être un lien, bouton, ...
-		$nouveau->span("miniature")->img("", $this->url("i_icône_nouvelle_page"));
+		var_dump($this->url("i_icone_nouvelle_page"));
+		$nouveau->span("miniature")->img("", $this->url("i_icone_nouvelle_page"));
 		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
 		
 		if ($this->if_perm("W", "dans_nouveautes")) {
@@ -68,21 +69,21 @@ abstract class mGalerieBase extends Page {
 class mGalerieIndex extends mGalerieBase {
 	protected static $texte_titre = "Galerie";
 	protected static $texte_nouvelle_page = "Nouvelle période";
-	protected static $icône_nouvelle_page = "nouvelle_periode.png";
+	protected static $icone_nouvelle_page = "nouvelle_periode.png";
 	protected static $type_enfants = "mGaleriePeriode";
 }
 
 class mGaleriePeriode extends mGalerieBase {
 	protected static $texte_titre = "Période";
 	protected static $texte_nouvelle_page = "Nouvel événement";
-	protected static $icône_nouvelle_page = "nouvel_evenement.png";
+	protected static $icone_nouvelle_page = "nouvel_evenement.png";
 	protected static $type_enfants = "mGalerieEvenement";
 }
 
 class mGalerieEvenement extends mGalerieBase {
 	protected static $texte_titre = "Événement";
 	protected static $texte_nouvelle_page = "Nouvelle photo";
-	protected static $icône_nouvelle_page = "nouvelle_photo.png";
+	protected static $icone_nouvelle_page = "nouvelle_photo.png";
 	protected static $type_enfants = "mGaleriePhoto";
 }
 

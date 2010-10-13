@@ -6,7 +6,6 @@
 Config::set('courriel_admin', "jahvascriptmaniac+github@free.fr");
 
 // URL de la racine du site. Ex: http://www.monsite.com/cms/
-// Doit se terminer par '/'.
 Config::set('url_base', "http://127.0.0.1/2010-moteur-site-simple/");
 
 // Chemin absolu vers le dossier '__cms__'.

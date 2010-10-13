@@ -9,7 +9,10 @@ class Config {
 	private static $config = array();
 	
 	public static function get($nom) {
-		if (!isset(self::$config[$nom])) return null;
+		if (!isset(self::$config[$nom])) {
+			echo "Variable de configuration manquante : $nom"; // TODO : Debug::erreur ?
+			die();
+		}
 		return self::$config[$nom];
 	}
 	

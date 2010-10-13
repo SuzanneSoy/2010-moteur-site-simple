@@ -44,7 +44,7 @@ class BDD {
 		self::unbuf_query("create database if not exists " . Config::get('db_base'));
 		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
 		
-		if (count(self::select("show tables like '" . self::table("pages") . "'"))) {
+		if (count(self::select("show tables like '" . self::table("pages") . "'")) == 1) {
 			Debug::info("La base de données est déjà initialisée, on continue...");
 			return;
 		}
@@ -111,10 +111,23 @@ class BDD {
 		debug::info("sql : " . $q);
 		$qres = mysql_query($q, BDD::get()) or Debug::sqlerror();
 		$ret = array();
-		while ($row = mysql_fetch_assoc($qres)) {
+		while ($row = mysql_fetch_array($qres)) {
 			$ret[] = $row;
 		}
 		return $ret;
+	}
+	
+	// Select avec une seule colonne et un seul rang.
+	public static function select_one($q, $strict = true) {
+		$res = self::select($q);
+		if ($strict && count($res) != 1) {
+			Debug::error("Un rang de la base de données a été demmandé, mais, soit aucun rang correspondant aux critères n'a été trouvé, soit plusieurs ont été trouvés.");
+			return null;
+		}
+		if (count($res) == 0) {
+			Debug::error("Un rang de la base de données a été demmandé, mais, aucun rang correspondant aux critères n'a été trouvé.");
+		}
+		return $res[0][0];
 	}
 	
 	public static function modify($q) {
@@ -132,6 +145,29 @@ class BDD {
 			mysql_close(self::get()) or Debug::sqlerror();
 			self::$handle = null;
 		}
+	}
+}
+
+class BDDCell {
+	private $uid_page;
+	private $propriete;
+	private $valeur;
+	public function __construct($uid_page, $propriete, $valeur) {
+		$this->uid_page = $uid_page;
+		$this->propriete = $propriete;
+		$this->valeur = $valeur;
+	}
+	public function uid_page() {
+		return $this->uid_page;
+	}
+	public function propriete() {
+		return $this->propriete;
+	}
+	public function valeur() {
+		return $this->valeur;
+	}
+	public function __toString() {
+		return "".$this->valeur;
 	}
 }
 

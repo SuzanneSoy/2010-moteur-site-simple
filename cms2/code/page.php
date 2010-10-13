@@ -136,6 +136,10 @@ class Page {
 		attribut("type", "text_no_space", "mSiteIndex");
 	}
 	
+	public static function est_propriete_globale($prop) {
+		return in_array($prop, self::$attributs_globaux);
+	}
+	
 	public function nom_module() {
 		return get_class($this);
 	}
@@ -161,10 +165,20 @@ class Page {
 		return call_user_func(array($this, "res_" . $res), $d);
 	}
 	
-	public function url($ressource = null) {
+	public function url($ressource = null, $uid_racine = null) {
 		// Renvoie toute l'url (de la ressource principale ou de $ressource).
-		niy("url");
-		return "";
+		if ($uid_racine === null) {
+			$uid_racine = self::page_systeme("racine")->uid();
+		}
+		if ($ressource === null) {
+			if ($uid_racine == $this->uid()) {
+				return Config::get("url_base");
+			} else {
+				return $this->parent()->url(null, $uid_racine) . $this->composant_url . '/';
+			}
+		} else {
+			return $this->url(null, $uid_racine) . "?res=" . urlencode($ressource); // TODO : urlencode ?
+		}
 	}
 	
 	public function composant_url() {
@@ -176,6 +190,14 @@ class Page {
 	public function uid() {
 		// Renvoie l'uid de la page dans la base de données.
 		return $this->uid;
+	}
+
+	public function parent() {
+		return self::page_uid(
+			BDD::select_one(
+				"select uid_page_de from " . BDD::table("liens") . " where uid_page_vers = " . $this->uid()
+			)
+		);
 	}
 	
 	public function enfants($condition = true, $ordre = "-date_creation", $limit = 0, $offset = 0) {
@@ -224,7 +246,6 @@ class Page {
 			array_push($res, self::page_uid($row["uid_page_vers"]));
 		}
 		
-		var_dump($res);
 		return $res;
 	}
 	
@@ -242,17 +263,16 @@ class Page {
 	
 	public static function page_systeme($nom) {
 		// select from pages where nomSysteme = $nom limit 1
-		niy("page_systeme");
+		return self::page_uid(
+			BDD::select_one(
+				"select uid_page from " . BDD::table("pages") . " where nom_systeme = '" . mysql_real_escape_string($nom) . "';"
+			)
+		);
 	}
 
 	public static function page_uid($uid) {
 		$select = "select type from " . BDD::table("pages") . " where uid_page = " . $uid . ";";
-		$type = BDD::select($select);
-		if (count($type) != 1) {
-			Debug::error("La page avec l'uid $uid n'a pas pu être trouvée.");
-			return null;
-		}
-		$type = $type[0]["type"];
+		$type = BDD::select_one($select);
 		$ret = new $type();
 		$ret->uid = $uid;
 		return $ret;
@@ -299,7 +319,9 @@ class Page {
 
 	private function get_prop_direct($nom) {
 		// Récupère l'attribut "$nom" depuis la BDD.
-		niy("get direct $nom");
+		$select_table = (self::est_propriete_globale($nom)) ? "pages" : $this->nom_module();
+		$select = "select $nom from " . BDD::table($select_table) . " where uid_page = " . $this->uid() . ";";
+		return new BDDCell($this->uid(), $nom, BDD::select_one($select));
 	}
 	
 	public function __set($nom, $val) {
@@ -314,7 +336,9 @@ class Page {
 	
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
-		niy("set direct $nom = $val");
+		$update_table = (self::est_propriete_globale($nom)) ? "pages" : $this->nom_module();
+		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string($val) . "' where uid_page = " . $this->uid() . ";";
+		BDD::unbuf_query($update);
 	}
 	
 	public function set_composant_url() {
