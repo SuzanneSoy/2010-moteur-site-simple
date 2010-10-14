@@ -19,14 +19,15 @@ function main() {
 	} else {
 		$page = mPage::page_systeme('racine');
 	}
-	$rendu = $page->rendu($res);
 	
-	echo "<pre>";
-	echo htmlspecialchars($rendu->to_XHTML_5());
-	echo "</pre>";
+	$rendu = $page->rendu($res);
+	$rendu = htmlspecialchars($rendu->to_XHTML_5());
 	
 	BDD::close();
-	Debug::afficher();
+	
+	echo Debug::afficher();
+	echo "<pre>";
+	echo $rendu;
 	echo "</pre>";
 }
 

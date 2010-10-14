@@ -15,7 +15,7 @@ class BDD {
 				Config::get('db_mot_de_passe')
 			);
 			if (!is_resource(self::$handle)) {
-				Debug::error("Échec à la connexion à la base de données");
+				Debug::erreur("Échec à la connexion à la base de données");
 			}
 			// TODO : begin transaction à la 1ere écriture.
 			self::begin_transaction();
@@ -42,7 +42,7 @@ class BDD {
 	
 	public static function init() {
 		self::unbuf_query("create database if not exists " . Config::get('db_base'));
-		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
+		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::erreur_sql();
 		
 		if (count(self::select("show tables like '" . self::table("_pages") . "'")) == 1) {
 			Debug::info("La base de données est déjà initialisée, on continue...");
@@ -113,13 +113,13 @@ class BDD {
 	}
 	
 	public static function unbuf_query($q) {
-		debug::info("sql : " . $q . ";");
-		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
+		debug::sql($q . ";");
+		mysql_unbuffered_query($q . ";", self::get()) or Debug::erreur_sql();
 	}
 	
 	public static function select($q) {
-		debug::info("sql : " . $q);
-		$qres = mysql_query($q, BDD::get()) or Debug::sqlerror();
+		debug::sql($q);
+		$qres = mysql_query($q, BDD::get()) or Debug::erreur_sql();
 		$ret = array();
 		while ($row = mysql_fetch_array($qres)) {
 			$ret[] = $row;
@@ -131,18 +131,18 @@ class BDD {
 	public static function select_one($q, $strict = true) {
 		$res = self::select($q);
 		if ($strict && count($res) != 1) {
-			Debug::error("Un rang de la base de données a été demmandé, mais, soit aucun rang correspondant aux critères n'a été trouvé, soit plusieurs ont été trouvés.");
+			Debug::erreur("Un rang de la base de données a été demmandé, mais, soit aucun rang correspondant aux critères n'a été trouvé, soit plusieurs ont été trouvés.");
 			return null;
 		}
 		if (count($res) == 0) {
-			Debug::error("Un rang de la base de données a été demmandé, mais, aucun rang correspondant aux critères n'a été trouvé.");
+			Debug::erreur("Un rang de la base de données a été demmandé, mais, aucun rang correspondant aux critères n'a été trouvé.");
 		}
 		return $res[0][0];
 	}
 	
 	public static function modify($q) {
-		debug::info("sql : $q;");
-		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
+		debug::sql($q . ";");
+		mysql_unbuffered_query($q . ";", self::get()) or Debug::erreur_sql();
 		// http://stackoverflow.com/questions/621369/sql-insert-and-catch-the-id-auto-increment-value
 		return mysql_insert_id(self::get());
 	}
@@ -154,7 +154,7 @@ class BDD {
 	public static function close() {
 		if (is_resource(self::$handle)) {
 			self::commit();
-			mysql_close(self::get()) or Debug::sqlerror();
+			mysql_close(self::get()) or Debug::erreur_sql();
 			self::$handle = null;
 		}
 	}
