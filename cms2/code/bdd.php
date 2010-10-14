@@ -26,18 +26,17 @@ class BDD {
 	
 	// ATTENTION : Ré-initialise toute la base de données !!!
 	public static function reset() {
-		self::unbuf_query('drop table if exists ' . self::table("pages"));
-		self::unbuf_query('drop table if exists ' . self::table("liens"));
-		// Création de la table modules pour qu'on puisse select dedans même si elle n'existe pas.
-		// TODO : fusionner avec la création de la table modules dans init();
-		self::unbuf_query('create table if not exists ' . self::table("modules") . ' ('
+		self::unbuf_query('drop table if exists ' . self::table("_pages"));
+		self::unbuf_query('drop table if exists ' . self::table("_liens"));
+		// Création de la table _modules pour qu'on puisse select dedans même si elle n'existe pas.
+		// TODO : fusionner avec la création de la table _modules dans init();
+		self::unbuf_query('create table if not exists ' . self::table("_modules") . ' ('
 						  . 'nom_module    varchar(50) primary key'
 						  . ')');
-		foreach (self::select('select * from ' . self::table("modules")) as $module) {
+		foreach (self::select('select * from ' . self::table("_modules")) as $module) {
 			self::unbuf_query('drop table if exists ' . self::table($module["nom_module"]));
 		}
-		// TODO : drop les tables des classes (les noms sont dans self::table("modules")).
-		self::unbuf_query('drop table if exists ' . self::table("modules"));
+		self::unbuf_query('drop table if exists ' . self::table("_modules"));
 		self::init();
 	}
 	
@@ -45,49 +44,49 @@ class BDD {
 		self::unbuf_query("create database if not exists " . Config::get('db_base'));
 		mysql_select_db(Config::get('db_base'), self::$handle) or Debug::sqlerror();
 		
-		if (count(self::select("show tables like '" . self::table("pages") . "'")) == 1) {
+		if (count(self::select("show tables like '" . self::table("_pages") . "'")) == 1) {
 			Debug::info("La base de données est déjà initialisée, on continue...");
 			return;
 		}
 		
-		self::unbuf_query('create table if not exists ' . self::table("liens") . ' ('
+		self::unbuf_query('create table if not exists ' . self::table("_liens") . ' ('
 						  . 'uid_page_de   integer,'
 						  . 'uid_page_vers integer,'
 						  . 'groupe        varchar(50)'
 						  . ')');
 		
-		self::unbuf_query('create table if not exists ' . self::table("modules") . ' ('
+		self::unbuf_query('create table if not exists ' . self::table("_modules") . ' ('
 						  . 'nom_module    varchar(50) primary key'
 						  . ')');
 		
-		$table = "create table if not exists " . self::table("pages") . " ("
-			. "uid_page integer auto_increment primary key"
-			. ", type varchar(50)";
-		foreach (Page::$attributs_globaux as $nom => $attr) {
-			$table .= ", $nom varchar(50)";
-		}
-		$table .= ")";
-		self::unbuf_query($table);
-		
-		foreach (Page::$modules as $nom_module => $m) {
-			$table = "create table if not exists " . self::table($nom_module) . " (uid_page integer";
+		foreach (mPage::$modules as $nom_module => $m) {
+			$table = "create table if not exists " . self::table($nom_module) . " (_uid_page integer";
 			foreach ($m['attributs'] as $nom => $attr) {
 				if (!$attr['global']) {
 					$table .= ", $nom varchar(50)";
 				}
 			}
 			$table .= ")";
-			self::modify("replace into " . self::table("modules") . " values('" . $nom_module . "')");
+			self::modify("replace into " . self::table("_modules") . " values('" . $nom_module . "')");
 			self::unbuf_query($table);
 		}
+		
+		$table = "create table if not exists " . self::table("_pages") . " ("
+			. "_uid_page integer auto_increment primary key"
+			. ", _type varchar(50)";
+		foreach (mPage::$attributs_globaux as $nom => $attr) {
+			$table .= ", $nom varchar(50)";
+		}
+		$table .= ")";
+		self::unbuf_query($table);
 		
 		self::test();
 	}
 	
 	public static function test() {
 		// TODO : dans les modules qui proposent un nom_systeme, faire une fonction init_<nom_systeme>
-		// Cette fonction sera appellée lors de l'initialisation de la BDD.
-		$r = Page::créer_page("mGalerieIndex");
+		// Cette fonction sera appellée lors de l'initialisation de la BDD et leur permettra de la remplir.
+		$r = mPage::créer_page("mGalerieIndex");
 		$r->nom_systeme = 'racine';
 		$r->composant_url = '';
 		$r->titre = 'Galerie';

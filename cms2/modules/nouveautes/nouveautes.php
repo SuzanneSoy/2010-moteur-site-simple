@@ -1,6 +1,6 @@
 <?php
 
-class mNouveautes extends Page {
+class mNouveautes extends mPage {
 	public static function info($module) {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page");

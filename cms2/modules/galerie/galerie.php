@@ -1,6 +1,6 @@
 <?php
 
-abstract class mGalerieBase extends Page {
+abstract class mGalerieBase extends mPage {
 	protected static $texte_titre = "Galerie";
 	protected static $texte_nouvelle_page = "Nouvel élément";
 	protected static $icone_nouvelle_page = "nouvelle_periode.png";

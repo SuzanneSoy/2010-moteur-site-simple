@@ -15,9 +15,9 @@ function main() {
 	
 	$res = array_key_exists('res', $_GET) ? $_GET['res'] : null;
 	if (array_key_exists('uid_page', $_GET)) {
-		$page = Page::page_uid($_GET['uid_page']);
+		$page = mPage::page_uid($_GET['uid_page']);
 	} else {
-		$page = Page::page_systeme('racine');
+		$page = mPage::page_systeme('racine');
 	}
 	$rendu = $page->rendu($res);
 	
