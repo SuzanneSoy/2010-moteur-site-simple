@@ -10,14 +10,19 @@ function main() {
 	echo "<pre>";
 	initModules();
 	
+	// Attention ! ne pas garder BDD::reset() en production !
 	BDD::reset();
 	
-	$r = Page::page_uid(1);
-	$r->créer_enfant();
+	$res = array_key_exists('res', $_GET) ? $_GET['res'] : null;
+	if (array_key_exists('uid_page', $_GET)) {
+		$page = Page::page_uid($_GET['uid_page']);
+	} else {
+		$page = Page::page_systeme('racine');
+	}
+	$rendu = $page->rendu($res);
 	
-	$p = $r->rendu();
 	echo "<pre>";
-	echo htmlspecialchars($p->to_XHTML_5());
+	echo htmlspecialchars($rendu->to_XHTML_5());
 	echo "</pre>";
 	
 	BDD::close();

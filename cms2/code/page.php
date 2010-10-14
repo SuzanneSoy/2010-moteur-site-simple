@@ -164,6 +164,15 @@ class Page {
 	}
 	
 	public function url($ressource = null, $uid_racine = null) {
+		// Temporairement (tant qu'on n'a pas la pseudo-réécriture d'url),
+		// on renvoie vers l'index du site avec l'uid comme paramètre.
+		$url = Config::get("url_base")
+			. '?uid_page=' . $this->uid();
+		if ($ressource !== null) {
+			$url .= '&res=' . urlencode($ressource);
+		}
+		return $url;
+		
 		// Renvoie toute l'url (de la ressource principale ou de $ressource).
 		if ($uid_racine === null) {
 			$uid_racine = self::page_systeme("racine")->uid();
@@ -324,6 +333,8 @@ class Page {
 		niy("get_permissions_enfants");
 	}
 	public function if_perm($action, $nom_propriété) {
+		niy("if_perm");
+		return true;
 		// @param $action = suite de lettre parmi les suivantes :
 		//    R = Read prop
 		//    W = Write prop
@@ -342,7 +353,6 @@ class Page {
 		if (str_contains($action, "c") && !str_contains($permissions_enfants, "c")) { return false; }
 		if (str_contains($action, "d") && !str_contains($permissions_enfants, "d")) { return false; }
 		return true;
-		niy("if_perm");
 	}
 	
 	public function __get($nom) {

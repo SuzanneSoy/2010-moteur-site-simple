@@ -32,12 +32,11 @@ abstract class mGalerieBase extends Page {
 			});
 		$nouveau = $l->li();
 		// TODO : nouveau devrait être un lien, bouton, ...
-		var_dump($this->url("i_icone_nouvelle_page"));
 		$nouveau->span("miniature")->img("", $this->url("i_icone_nouvelle_page"));
 		$nouveau->span("titre")->text(self::$texte_nouvelle_page);
 		
 		if ($this->if_perm("W", "dans_nouveautes")) {
-			$d->p()->w_form($this->dans_nouveautes);
+			$d->article()->p()->w_field($this->dans_nouveautes);
 		}
 
 		// TODO : lister les liens et pouvoir en ajouter (personne, lieu etc.).

@@ -6,7 +6,7 @@
 Config::set('courriel_admin', "jahvascriptmaniac+github@free.fr");
 
 // URL de la racine du site. Ex: http://www.monsite.com/cms/
-Config::set('url_base', "http://127.0.0.1/2010-moteur-site-simple/");
+Config::set('url_base', "http://127.0.0.1/2010-moteur-site-simple/cms2/");
 
 // Chemin absolu vers le dossier '__cms__'.
 // dirname(__FILE__) peut retourner un chemin relatif (PHP < 4.0.2),
