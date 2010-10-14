@@ -215,7 +215,7 @@ class mPage {
 	}
 	
 	public function enfants($condition = true, $ordre = "-date_creation", $limit = 0, $offset = 0) {
-		// Renvoie un objet de la classe CollectionPages.
+		// Renvoie un tableau d'instances de sous-classes de mPage.
 		// Si $condition === true, il n'y a pas de condition
 		//   sinon, par ex: $condition = "apercu = 'true'"
 		// ordre = null => ordre = "date_creation desc"
@@ -403,37 +403,6 @@ class mPage {
 		// pseudo-réécriture d'URL.
 		niy("pseudo-réécriture d'URL dans set_composant_url().");
 		return $this->set_prop_direct("composant_url", $val);
-	}
-}
-
-class CollectionPages {
-	public function size() {
-		niy("CollectionPages::size()");
-	}
-	
-	public function get($i) {
-		niy("CollectionPages::get($i)");
-	}
-	
-	function __construct() {
-		niy("CollectionPages");
-	}
-	
-	function __call($fn, $args) {
-		// appelle la fonction sur tous les objets, et renvoie les résultats
-		// dans un tableau. si les résultats sont des CollectionPages, ils
-		// sont concaténés dans la même collection.
-		niy("CollectionPages");
-	}
-	
-	function __get($name) {
-		// renvoie un tableau contenant le champ pour chaque objet.
-		niy("CollectionPages");
-	}
-	
-	function __set($name, $val) {
-		// affecte la valeur sur chaque objet.
-		niy("CollectionPages");
 	}
 }
 

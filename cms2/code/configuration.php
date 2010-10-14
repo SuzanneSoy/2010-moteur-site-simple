@@ -10,7 +10,8 @@ class Config {
 	
 	public static function get($nom) {
 		if (!isset(self::$config[$nom])) {
-			echo "Variable de configuration manquante : $nom"; // TODO : Debug::erreur ?
+			// Utilisation de die() plutôt que de Debug::erreur car Debug n'est peut-être pas encore chargé.
+			echo "Variable de configuration manquante : $nom";
 			die();
 		}
 		return self::$config[$nom];

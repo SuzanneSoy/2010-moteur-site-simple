@@ -152,7 +152,6 @@ class Document extends ElementDocument {
 	}
 }
 
-// TODO: Comment s'assurer que le header, footer, nav soit unique ?
 $inline_elems = "span text a strong em img";
 ElementDocument::add_type("document", "header footer nav article script style");
 ElementDocument::add_type(true, "header", "title");
