@@ -9,12 +9,11 @@ verifications();
 function main() {
 	echo "<pre>";
 	initModules();
-	//var_dump(Page::$modules);
 	
-	$bdd = BDD::get();
 	BDD::reset();
-
+	
 	$r = Page::page_uid(1);
+	$r->créer_enfant();
 	
 	$p = $r->rendu();
 	echo "<pre>";

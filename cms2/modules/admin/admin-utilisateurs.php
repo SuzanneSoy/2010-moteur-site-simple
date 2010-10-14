@@ -1,7 +1,7 @@
 <?php
 
 class mAdminListeUtilisateurs extends Page {
-	public static function info() {
+	public static function info($module) {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_liste_mots_de_passe");
 		type_liens("enfants", "mAdminUtilisateur");
@@ -37,7 +37,7 @@ class mAdminListeUtilisateurs extends Page {
 }
 
 class mAdminUtilisateur extends Page {
-	public static function info() {
+	public static function info($module) {
 		ressources_statiques("c_style");
 		// TODO : h_page = affichage "en grand" de l'utilisateur (~= page perso, par ex. destination d'un lien de la page contacts).
 		ressources_dynamiques("h_admin");

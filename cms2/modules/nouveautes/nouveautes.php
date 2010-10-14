@@ -1,13 +1,13 @@
 <?php
 
 class mNouveautes extends Page {
-	public static function info() {
+	public static function info($module) {
 		ressources_statiques("i_icône_nouvelle_page c_style");
 		ressources_dynamiques("h_page");
 		type_liens("sources", "*");
 		attribut("titre", "text_line", "Nouveautés");
 		attribut("description", "text_rich", "");
-		attributs_globaux("dans_nouveautes");
+		attribut_global("dans_nouveautes", "bool", "true");
 	}
 	
 	public function res_i_icône_nouvelle_page() {

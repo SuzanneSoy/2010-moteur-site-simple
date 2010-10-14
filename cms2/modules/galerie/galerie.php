@@ -6,14 +6,14 @@ abstract class mGalerieBase extends Page {
 	protected static $icone_nouvelle_page = "nouvelle_periode.png";
 	protected static $type_enfants = "mGaleriePeriode";
 	
-	public static function info() {
+	public static function info($module) {
 		ressources_statiques("i_icone_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_miniature h_mini_miniature");
-		type_liens("enfants", self::$type_enfants);
+		type_liens("enfants", $module::$type_enfants);
 		type_liens("liens", "*");
-		attribut("titre", "text_line", self::$texte_titre);
+		attribut("titre", "text_line", $module::$texte_titre);
 		attribut("description", "text_rich", "");
-		attribut("dans_nouveautes", "bool", "true");
+		attribut("publier", "bool", "true");
 	}
 	
 	public function res_i_icone_nouvelle_page() {
@@ -90,7 +90,7 @@ class mGalerieEvenement extends mGalerieBase {
 class mGaleriePhoto extends mGalerieBase {
 	protected static $texte_titre = "Photo";
 	
-	public static function info() {
+	public static function info($module) {
 		ressources_statiques("c_style");
 		ressources_dynamiques(inherit(get_parent_class()), "i_grande i_image i_miniature");
 		attribut(inherit(get_parent_class()));

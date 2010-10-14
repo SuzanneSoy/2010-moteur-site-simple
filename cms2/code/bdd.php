@@ -17,6 +17,7 @@ class BDD {
 			if (!is_resource(self::$handle)) {
 				Debug::error("Échec à la connexion à la base de données");
 			}
+			// TODO : begin transaction à la 1ere écriture.
 			self::begin_transaction();
 			self::init();
 		}
@@ -59,8 +60,10 @@ class BDD {
 						  . 'nom_module    varchar(50) primary key'
 						  . ')');
 		
-		$table = "create table if not exists " . self::table("pages") . " (uid_page integer auto_increment primary key";
-		foreach (Page::$attributs_globaux as $nom) {
+		$table = "create table if not exists " . self::table("pages") . " ("
+			. "uid_page integer auto_increment primary key"
+			. ", type varchar(50)";
+		foreach (Page::$attributs_globaux as $nom => $attr) {
 			$table .= ", $nom varchar(50)";
 		}
 		$table .= ")";
@@ -68,7 +71,7 @@ class BDD {
 		
 		foreach (Page::$modules as $nom_module => $m) {
 			$table = "create table if not exists " . self::table($nom_module) . " (uid_page integer";
-			foreach ($m['attributs'] as $nom => &$attr) {
+			foreach ($m['attributs'] as $nom => $attr) {
 				if (!$attr['global']) {
 					$table .= ", $nom varchar(50)";
 				}
@@ -84,14 +87,22 @@ class BDD {
 	public static function test() {
 		// TODO : dans les modules qui proposent un nom_systeme, faire une fonction init_<nom_systeme>
 		// Cette fonction sera appellée lors de l'initialisation de la BDD.
-		self::modify("replace into " . self::table("pages") . " values(1, '0', '4', 'true', 'racine', '', 'mGalerieIndex', 'true')");
-		self::modify("replace into " . self::table("pages") . " values(2, '1', '3', 'true', '', 'periode-1', 'mGaleriePeriode', 'true')");
-		self::modify("replace into " . self::table("pages") . " set uid_page = 3, date_creation = '0', date_modification = '0', publier = 'true', nom_systeme = '', composant_url = 'periode-2', type = 'mGaleriePeriode', dans_nouveautes = 'false'");
-		self::modify("replace into " . self::table("liens") . " values(1, 2, 'enfants')");
-		self::modify("replace into " . self::table("liens") . " values(1, 3, 'enfants')");
-		self::modify("replace into " . self::table("mGalerieIndex") . " values(1, 'Galerie', 'une galerie')");
-		self::modify("replace into " . self::table("mGaleriePeriode") . " values(2, 'Periode 1', 'été')");
-		self::modify("replace into " . self::table("mGaleriePeriode") . " values(3, 'Periode 2', 'hiver')");
+		$r = Page::créer_page("mGalerieIndex");
+		$r->nom_systeme = 'racine';
+		$r->composant_url = '';
+		$r->titre = 'Galerie';
+		$r->description = 'Une galerie.';
+		
+		$e1 = $r->créer_enfant();
+		$e1->composant_url = 'periode-1';
+		$e1->titre = 'Période 1';
+		$e1->description = 'Été.';
+		
+		$e2 = $r->créer_enfant();
+		$e2->composant_url = 'periode-2';
+		$e2->titre = 'Période 2';
+		$e2->description = 'Hiver.';
+		$e2->dans_nouveautes = 'false';
 	}
 	
 	public static function begin_transaction() {
@@ -133,6 +144,8 @@ class BDD {
 	public static function modify($q) {
 		debug::info("sql : $q;");
 		mysql_unbuffered_query($q . ";", self::get()) or Debug::sqlerror();
+		// http://stackoverflow.com/questions/621369/sql-insert-and-catch-the-id-auto-increment-value
+		return mysql_insert_id(self::get());
 	}
 	
 	public static function table($nom) {

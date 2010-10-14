@@ -21,7 +21,7 @@ function ressources_statiques($res) {
 	if (is_inherit($res)) {
 		$i = $res["inherit"];
 		Page::$limitation_infos_module = "ressources_statiques";
-		call_user_func(array($i, "info"));
+		call_user_func(array($i, "info"), $i);
 		Page::$limitation_infos_module = $lim;
 	} else {
 		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_statiques'] peut être factorisé aussi. (pas pour attribut))
@@ -39,7 +39,7 @@ function ressources_dynamiques($res) {
 	if (is_inherit($res)) {
 		$i = $res["inherit"];
 		Page::$limitation_infos_module = "ressources_dynamiques";
-		call_user_func(array($i, "info"));
+		call_user_func(array($i, "info"), $i);
 		Page::$limitation_infos_module = $lim;
 	} else {
 		// TODO : ... jusqu'ici (Page::$modules[$m]['ressources_dynamiques'] peut être factorisé aussi. (pas pour attribut))
@@ -57,11 +57,11 @@ function type_liens($groupe, $type = null) {
 	if (is_inherit($groupe)) {
 		$i = $res["inherit"];
 		Page::$limitation_infos_module = "type_liens";
-		call_user_func(array($i, "info"));
+		call_user_func(array($i, "info"), $i);
 		Page::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null) {
-			Debug::error('fonction attribut() : les paramètres $type et $defaut doivent être définis');
+			Debug::error('fonction type_liens() : le paramètres $type est obligatoire.');
 		}
 		// TODO : ... jusqu'ici (Page::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
 		Page::$modules[$m]['type_liens'][$groupe] = $type;
@@ -77,11 +77,11 @@ function attribut($nom, $type = null, $defaut = null) {
 	if (is_inherit($nom)) {
 		$i = $nom["inherit"];
 		Page::$limitation_infos_module = "attribut";
-		call_user_func(array($i, "info"));
+		call_user_func(array($i, "info"), $i);
 		Page::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null || $defaut === null) {
-			Debug::error('fonction attribut() : les paramètres $type et $defaut doivent être définis');
+			Debug::error('fonction attribut() : les paramètres $type et $defaut est obligatoire.');
 		}
 		if (!Document::has_widget("w_" . $type)) {
 			Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
@@ -90,8 +90,8 @@ function attribut($nom, $type = null, $defaut = null) {
 	}
 }
 
-function attributs_globaux($attributs) {
-	Page::$attributs_globaux = qw(Page::$attributs_globaux, $attributs);
+function attribut_global($nom, $type, $defaut) {
+	Page::$attributs_globaux[$nom] = array('type' => $type, 'defaut' => $defaut);
 }
 
 function module($m) {
@@ -106,13 +106,13 @@ function module($m) {
 function initModules() {
 	foreach (Page::$modules as $nom_module => $m) {
 		Page::$module_en_cours = $nom_module;
-		call_user_func(array($nom_module, "info"));
+		call_user_func(array($nom_module, "info"), $nom_module);
 	}
 	Page::$module_en_cours = null;
-	foreach (Page::$attributs_globaux as $ag) {
+	foreach (Page::$attributs_globaux as $nom_ag => $ag) {
 		foreach (Page::$modules as &$m) {
-			if (array_key_exists($ag, $m['attributs'])) {
-				$m['attributs'][$ag]['global'] = true;
+			if (array_key_exists($nom_ag, $m['attributs'])) {
+				$m['attributs'][$nom_ag]['global'] = true;
 			}
 		}
 	}
@@ -124,20 +124,18 @@ class Page {
 	public static $module_en_cours = null;
 	public static $limitation_infos_module = true;
 
-	public static function info() {
+	public static function info($module) {
 		// Convention de nommage pour les ressources statiques :
 		// res_h_xxx = html, res_i_xxx = image, res_c_xxx = css, res_j_xxx = javascript
-		attributs_globaux("date_creation date_modification publier nom_systeme composant_url type");
-		attribut("date_creation", "date", "0");
-		attribut("date_modification", "date", "0");
-		attribut("publier", "bool", "false");
-		attribut("nom_systeme", "text_no_space", "");
-		attribut("composant_url", "text_no_space", "page");
-		attribut("type", "text_no_space", "mSiteIndex");
+		attribut_global("date_creation", "date", "0");
+		attribut_global("date_modification", "date", "0");
+		attribut_global("publier", "bool", "false");
+		attribut_global("nom_systeme", "text_no_space", "");
+		attribut_global("composant_url", "text_no_space", "page");
 	}
 	
 	public static function est_propriete_globale($prop) {
-		return in_array($prop, self::$attributs_globaux);
+		return array_key_exists($prop, self::$attributs_globaux);
 	}
 	
 	public function nom_module() {
@@ -249,16 +247,57 @@ class Page {
 		return $res;
 	}
 	
-	public function ajouter_enfant($type, $groupe = "main") {
-		// ajouter l'enfant
-		// renvoyer une instance de la sous-classe de Page correspondant à $type.
-		niy("ajouter_enfant");
+	public static function créer_page($nom_module) {
+		$module = self::$modules[$nom_module];
+		
+		// Insert dans la table pages.
+		$insert = "insert into " . BDD::table("pages") . " set ";
+		$insert .= "uid_page = null";
+		$insert .= ", type = '" . $nom_module . "'";
+		foreach (self::$attributs_globaux as $nom => $attr) {
+			if (array_key_exists($nom, $module['attributs'])) {
+				$insert .= ", $nom = '" . mysql_real_escape_string($module['attributs'][$nom]['defaut']) . "'";
+			} else {
+				$insert .= ", $nom = '" . mysql_real_escape_string($attr['defaut']) . "'";
+			}
+		}
+		
+		// Récupération du champ auto_increment uid_page.
+		$uid_nouvelle_page = BDD::modify($insert);
+		
+		// Insert dans la table du module
+		$insert = "insert into " . BDD::table($nom_module) . " set ";
+		$insert .= "uid_page = " . $uid_nouvelle_page;
+		foreach ($module['attributs'] as $nom => $attr) {
+			if (!$attr['global']) {
+				$insert .= ", $nom = '" . mysql_real_escape_string($attr['defaut']) . "'";
+			}
+		}
+		
+		BDD::modify($insert);
+
+		$page = self::page_uid($uid_nouvelle_page);
+		// Vu qu'on modifie une propriété, ça set automatiquement la date de dernière modification :
+		$page->date_creation = time();
+		return $page;
 	}
 	
-	public function lier_page($page_source, $groupe = "main") {
-		$l = ajouter_enfant("Lien", "$groupe");
-		$l->lien = $page_source;
-		niy("lier_page");
+	public function créer_enfant($groupe = "enfants") {
+		$nouvelle_page = self::créer_page($this->module['type_liens'][$groupe]);
+		$this->lier_page($nouvelle_page, $groupe);
+		return $nouvelle_page;
+	}
+	
+	public function lier_page($page_vers, $groupe = "enfants") {
+		if (!is_numeric($page_vers)) {
+			$page_vers = $page_vers->uid();
+		}
+		
+		$insert = "insert into " . BDD::table("liens") . " set";
+		$insert .= " uid_page_de = " . $this->uid();
+		$insert .= ", uid_page_vers = " . $page_vers;
+		$insert .= ", groupe = '" . $groupe . "'";
+		BDD::modify($insert);
 	}
 	
 	public static function page_systeme($nom) {
@@ -337,8 +376,11 @@ class Page {
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
 		$update_table = (self::est_propriete_globale($nom)) ? "pages" : $this->nom_module();
-		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string($val) . "' where uid_page = " . $this->uid() . ";";
+		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string("".$val) . "' where uid_page = " . $this->uid();
 		BDD::unbuf_query($update);
+		if ($nom != "date_modification") {
+			$this->date_modification = time();
+		}
 	}
 	
 	public function set_composant_url() {

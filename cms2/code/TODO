@@ -1,3 +1,11 @@
+- get() renvoie la valeur par défaut quand null dans la BDD (mais comment faire les tris ?).
+   Donc, quand on crée une page, on met les valeurs par défaut. Et s'il y a besoin de pouvoir modifier les valeurs par défaut et que ça
+   suive dans la BDD, on fait pour chaque table une table nom_table__defaut (ou pour chaque colonne une colonne nom_colonne__defaut), qui
+   indique pour chaque cellule si elle est à la valeur par défaut (et en cas de changement de la valeur par défaut, on update les cellules
+   correspondantes dans la table avec la nouvelle valeur par défaut).
+- reset : set avec la valeur par défaut.
+
+- Debug : grouper les erreurs, améliorer l'affichage.
 
 - Valeur de retour des res_t_xxx ?
    Lorsqu'on appelle GalerieIndex::res_i_icône_nouvelle_page(), ça fait un sendfile alors que GalerieIndex::res_h_page() renvoie un objet
