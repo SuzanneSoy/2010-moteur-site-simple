@@ -137,8 +137,8 @@ class mPage {
 		attribut_global("date_creation", "date", "0");
 		attribut_global("date_modification", "date", "0");
 		attribut_global("publier", "bool", "false");
-		attribut_global("nom_systeme", "text_no_space", "");
-		attribut_global("composant_url", "text_no_space", "page");
+		attribut_global("nom_systeme", "text_nix", "");
+		attribut_global("composant_url", "text_nix", "page");
 	}
 	
 	public static function est_propriete_globale($prop) {

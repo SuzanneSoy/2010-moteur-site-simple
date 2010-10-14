@@ -158,7 +158,8 @@ ElementDocument::add_type(true, "header", "title");
 ElementDocument::add_type("title", "text");
 ElementDocument::add_type(true, "footer", "");
 ElementDocument::add_type(true, "nav", "ul");
-ElementDocument::add_type(true, "article", "ul table p form span"); // span ?
+ElementDocument::add_type(true, "article", "ul hX table p form span"); // span ?
+ElementDocument::add_type("hX", $inline_elems);
 ElementDocument::add_type("script", "", "src");
 ElementDocument::add_type("style", "", "src");
 ElementDocument::add_type("ul", "li");
@@ -177,57 +178,75 @@ ElementDocument::add_type("text", "", "text");
 
 
 
-ElementDocument::add_widget("titre", function($d, $select){
+ElementDocument::add_widget("titre", function($d, $cell){
 		// renvoie un <h2> ou un <input> selon les droits
-		return $d->header()->title()->text("Not Implemented Yet : w_titre($select)");
+		$d->header()->title()->text("".$cell);
+		// TODO : modification si on a les droits.
+		$d->article()->hX()->text("".$cell);
 	});
 
 
-ElementDocument::add_widget("en_tete", function($d, $select_titre, $select_description){
-		//$d->w_titre($this->select("titre"));
-		//$d->w_description($this->select("description"));
-		$d->w_titre("NIY en_tete");
-		$d->w_description("NIY en_tete");
+ElementDocument::add_widget("en_tete", function($d, $cell_titre, $cell_description){
+		$d->w_titre($cell_titre);
+		$d->w_description($cell_description);
 	});
 
 
-ElementDocument::add_widget("description", function($d, $select){
-		return $d->article()->p()->text("NIY Descrption($select)");
+ElementDocument::add_widget("description", function($d, $cell){
+		// TODO : modification si on a les droits.
+		return $d->article()->p()->text("".$cell);
 	});
 
 
-ElementDocument::add_widget("field", function($d, $select){
+ElementDocument::add_widget("field", function($d, $cell){
 		$f = $d->span("field");
-		$f->text("NIY : " . $select);
+		$f->text("NIY : " . $cell);
 		return $f;
 	});
 
 
-ElementDocument::add_widget("text_line", function($d, $select){
-		return $d->text("Not Implemented Yet : w_text_line($select)");
+ElementDocument::add_widget("text_line", function($d, $cell){
+		// TODO : modification si on a les droits.
+		return $d->text("".$cell);
 	});
 
 
-ElementDocument::add_widget("text_no_space", function($d, $select){
-		return $d->text("Not Implemented Yet : w_text_line($select)");
+ElementDocument::add_widget("text_nix", function($d, $cell){
+		// Texte naze (sans espaces etc.) à la *nix.
+		// TODO : modification si on a les droits.
+		// TODO : vérifier que ça match [a-zA-Z][-a-zA-Z0-9_]*
+		return $d->text("".$cell);
 	});
 
 
-ElementDocument::add_widget("text_rich", function($d, $select){
-		return $d->text("Not Implemented Yet : w_text_rich($select)");
+ElementDocument::add_widget("text_rich", function($d, $cell){
+		// TODO : modification si on a les droits.
+		// TODO : rendu du texte riche.
+		return $d->p()->text("".$cell);
 	});
 
 
-ElementDocument::add_widget("bool", function($d, $select){
+ElementDocument::add_widget("bool", function($d, $cell){
 		// checkbox
-		return $d->text("Not Implemented Yet : w_bool($select)");
+		return $d->text("Not Implemented Yet : w_bool($cell)");
 	});
 
 
-// Le widget w_img_file doit gérer le stockage de l'image dans un dossier, la création de la miniature et le stockage dans la BDD du chemin vers l'image.
-ElementDocument::add_widget("img_file", function($d, $select){
+ElementDocument::add_widget("bouton", function($d, $texte, $page_callback, $ressource_callback, $action_callback){
+		// afficher un input[type=button]
+		// lors du clic, appeller $action_callback sur $page_callback/?res=$ressource_callback ?
+		return $d->text("Not Implemented Yet : w_bouton($texte, $page_callback, $ressource_callback, $action_callback)");
+	});
+
+
+// Le widget w_img_file doit gérer le stockage de l'image dans un dossier,
+// la création de la miniature et le stockage dans la BDD du chemin vers l'image.
+ElementDocument::add_widget("img_file", function($d, $cell_description, $cell_img){
+		// TODO : modification si on a les droits.
 		// input[file] et <img>
-		return $d->text("Not Implemented Yet : w_img_file($select)");
+		$img = $d->img("".$cell_description, "".$cell_img);
+		$d->w_description($cell_description);
+		return $img;
 	});
 
 
@@ -237,10 +256,13 @@ ElementDocument::add_widget("date", function($d, $select){
 	});
 
 
-ElementDocument::add_widget("liste", function($d, $select, $function_formattage_elements) {
-		$l = $d->ul();
-		$l->li()->text("Not Implemented Yet");
-		return $l;
+ElementDocument::add_widget("liste", function($d, $list_cells, $function_formattage_elements) {
+		$ul = $d->ul();
+		foreach ($list_cells as $cell) {
+			$li = $ul->li();
+			$function_formattage_elements($cell, $li);
+		}
+		return $ul;
 	});
 
 ElementDocument::add_widget("tableau", function($d, $select, $function_formattage_elements) {
@@ -249,21 +271,5 @@ ElementDocument::add_widget("tableau", function($d, $select, $function_formattag
 		$tr->td()->text("Not Implemented Yet");
 		return $t;
 	});
-
-/* Widgets :
-	function liste($elts, $format) {
-		$d = new Document();
-		$ul = $d->append->ul();
-		foreach ($elts as $k => $e) {
-			$ul->append($format($e));
-		}
-		return $d;
-	}
-	
-	function bouton($texte, $page_callback, $action_callback) {
-		// afficher un input
-		// lors du clic, appeller $action_callback sur $page_callback ?
-	}
-*/
 
 ?>

@@ -14,6 +14,7 @@ abstract class mGalerieBase extends mPage {
 		attribut("titre", "text_line", $module::$texte_titre);
 		attribut("description", "text_rich", "");
 		attribut("publier", "bool", "true");
+		attribut("apercu", "bool", "false"); // TODO !
 	}
 	
 	public function res_i_icone_nouvelle_page() {
@@ -27,7 +28,7 @@ abstract class mGalerieBase extends mPage {
 	public function res_h_page($d) {
 		$d->w_en_tete($this->titre, $this->description); // En-tête standard.
 		$l = $d->article()->w_liste($this->enfants(true, "-date_creation"), function($e, $li) {
-				$a = $li->a($e->uid());
+				$a = $li->a($e->url());
 				$e->rendu("h_miniature", $a);
 			});
 		$nouveau = $l->li();
@@ -45,17 +46,19 @@ abstract class mGalerieBase extends mPage {
 	}
 	
 	public function res_h_miniature($d) {
-		$d->span("miniature")->append($this->res_h_mini_miniature());
-		$d->span("titre")->_field($this->titre);
+		$this->res_h_mini_miniature($d->span("miniature"));
+		$d->span("titre")->w_field($this->titre);
 		return $d;
 	}
 	
 	public function res_h_mini_miniature($d) {
 		$a = $this->enfants("apercu = 'true'", "-date_creation", 1); // TODO : l'aperçu devrait être défini par le parent => ajouter un attribut "virtuel".
-		if (count($a) != 1)
+		if (count($a) != 1) {
 			$a = $this->enfants(true, "-date_creation", 1);
-		if (count($a) != 1)
-			return; // TODO : aucune photo
+		}
+		if (count($a) != 1) {
+			return $d->text("Aucune photo.");
+		}
 		return $a[0]->rendu("h_mini_miniature", $d);;
 	}
 	
