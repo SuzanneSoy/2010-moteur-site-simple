@@ -31,12 +31,6 @@ Config::set('db_utilisateur', "root");
 Config::set('db_mot_de_passe', " ");
 
 // Base dans la base de données (non, ils pouvaient pas faire plus compliqué... m'éneeeeeervent).
-// Sous ubuntu :
-// mysql -u root -p
-// taper le mot de passe donné à l'installation
-// create database mss;
-// show databases;
-// quit
 Config::set('db_base', "mss");
 
 // Préfixe pour les tables de la base de données.
