@@ -7,7 +7,6 @@ function verifications() {
 verifications();
 
 function main() {
-	echo "<pre>";
 	initModules();
 	
 	// Attention ! ne pas garder BDD::reset() en production !
@@ -21,14 +20,13 @@ function main() {
 	}
 	
 	$rendu = $page->rendu($res);
-	$rendu = htmlspecialchars($rendu->to_XHTML_5());
-	
 	BDD::close();
-	
-	echo Debug::afficher();
-	echo "<pre>";
+
+	$rendu->erreurs()->litteral(Debug::afficher());
+	$rendu = $rendu->to_XHTML_5();
+
 	echo $rendu;
-	echo "</pre>";
+	// echo "<pre>" . htmlspecialchars($rendu) . "</pre>";
 }
 
 ?>

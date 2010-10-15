@@ -70,7 +70,7 @@ function type_liens($groupe, $type = null) {
 		mPage::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null) {
-			Debug::error('fonction type_liens() : le paramètres $type est obligatoire.');
+			Debug::erreur('fonction type_liens() : le paramètres $type est obligatoire.');
 		}
 		// TODO : ... jusqu'ici (mPage::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
 		mPage::$modules[$m]['type_liens'][$groupe] = $type;
@@ -90,10 +90,10 @@ function attribut($nom, $type = null, $defaut = null) {
 		mPage::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null || $defaut === null) {
-			Debug::error('fonction attribut() : les paramètres $type et $defaut est obligatoire.');
+			Debug::erreur('fonction attribut() : les paramètres $type et $defaut est obligatoire.');
 		}
 		if (!Document::has_widget("w_" . $type)) {
-			Debug::error("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
+			Debug::erreur("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
 		}
 		mPage::$modules[$m]['attributs'][$nom] = array("global" => false, "type" => $type, "defaut" => $defaut);
 	}

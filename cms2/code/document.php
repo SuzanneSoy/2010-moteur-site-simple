@@ -49,7 +49,14 @@ class ElementDocument {
 		$this->attr[$nom] = $valeur;
 	}
 
-	public function to_XHTML_5($indent = "") {
+	public function to_XHTML_5() {
+		return applyXSLT($this->to_XML(), dirname(__FILE__) . "/xslt/xhtml5.xsl");
+	}
+
+	public function to_XML($indent = "") {
+		if ($this->type == "litteral") {
+			return $this->attr['valeur'];
+		}
 		$ret = "";
 		$ret .= "$indent<" . $this->type;
 		foreach ($this->attr as $k => $v) {
@@ -60,7 +67,7 @@ class ElementDocument {
 		} else {
 			$ret .= ">\n";
 			foreach ($this->enfants as $k => $v) {
-				$ret .= $v->to_XHTML_5($indent . "  ");
+				$ret .= $v->to_XML($indent . "  ");
 			}
 			$ret .= "$indent</" . $this->type . ">\n";
 		}
@@ -105,7 +112,7 @@ class ElementDocument {
 		$max = 0;
 		foreach (self::$types[$type]["attributs_oblig"] as $i => $nom) {
 			if (!isset($args[$i])) {
-				Debug::error("Argument manquant : $nom pour " . $elem->type);
+				Debug::erreur("Argument manquant : $nom pour " . $elem->type);
 			}
 			$elem->attr($nom, $args[$i]);
 			$max = $i;
@@ -135,7 +142,7 @@ class ElementDocument {
 		} elseif (self::has_widget($fn)) {
 			return $this->créer_widget($fn, $args);
 		} else {
-			Debug::error("Impossible d'ajouter un élément $fn à " . $this->type);
+			Debug::erreur("Impossible d'ajouter un élément $fn à " . $this->type);
 			return null;
 		}
 	}
@@ -145,6 +152,7 @@ class Document extends ElementDocument {
 	protected $singletons = array();
 	public function __construct() {
 		parent::__construct("document", $this);
+		$this->erreurs();
 		$this->header();
 		$this->nav();
 		$this->article();
@@ -153,9 +161,11 @@ class Document extends ElementDocument {
 }
 
 $inline_elems = "span text a strong em img";
-ElementDocument::add_type("document", "header footer nav article script style");
+ElementDocument::add_type("document", "erreurs header footer nav article script style");
 ElementDocument::add_type(true, "header", "title");
+ElementDocument::add_type(true, "erreurs", "litteral");
 ElementDocument::add_type("title", "text");
+ElementDocument::add_type("litteral", "", "valeur");
 ElementDocument::add_type(true, "footer", "");
 ElementDocument::add_type(true, "nav", "ul");
 ElementDocument::add_type(true, "article", "ul hX table p form span"); // span ?

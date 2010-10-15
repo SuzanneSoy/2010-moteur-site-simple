@@ -23,6 +23,20 @@ function str_contains($str, $small) {
 	return strpos($str, $small) !== false;
 }
 
+function applyXSLT($xml, $xslt_file) {
+	$dom = new DOMDocument();
+	$dom->preserveWhiteSpace = false;
+	$dom->loadXML($xml);
+	
+	$xsl = new DOMDocument();
+	$xsl->load($xslt_file); // LIBXML_NOCDATA ?
+	
+	$xslt = new XSLTProcessor();
+	$xslt->importStylesheet($xsl);
+	
+	return $xslt->transformToXML($dom);
+}
+
 /**** Début PATH ****/
 
 // http://www.liranuna.com/php-path-resolution-class-relative-paths-made-easy/
