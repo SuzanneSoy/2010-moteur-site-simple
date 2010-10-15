@@ -1,22 +1,40 @@
 <?php
 
+// TODO : sécurité : permettre d'avoir des modèles pour les erreurs, et remplir des champs dedans, en échappant les méchants caractères etc.
+// TODO : sécurité : ne pas faire de backtrace en production !
+
 class _Debug {
 	public static $types_erreur = array(
-		"erreur"     => '<span style="color:red">Erreur</span>',
-		"niy"        => '<span style="color:brown">Pas encore implémenté</span>',
-		"info"       => '<span style="color:blue">Info</span>',
-		"sql"        => 'Requête SQL',
-		"erreur_sql" => 'Erreur SQL',
-		"permission" => '<span style="color:red">Permission non accordée</span>'
+		"erreur"      => '<span style="font-weight:bold;color:red;">Erreur</span>',
+		"warn"        => '<span style="font-weight:bold;color:#ef6f00;">Attention</span>',
+		"info"        => '<span style="color:blue;">Info</span>',
+		"utilisateur" => '<span style="font-weight:bold;color:red;">Erreur</span>',
+		"niy"         => '<span style="color:brown;">Pas encore implémenté</span>',
+		"sql"         => 'Requête SQL',
+		"erreur_sql"  => '<span style="font-weight:bold;color:red;">Erreur SQL</span>',
+		"permission"  => '<span style="font-weight:bold;color:red;">Permission non accordée</span>'
 	);
 	public static $filtre_erreurs = array(
-		"erreur"     => true,
-		"niy"        => true,
-		"info"       => true,
-		"sql"        => false,
-		"erreur_sql" => true,
-		"permission" => true
+		"erreur"      => true,
+		"warn"        => true,
+		"info"        => true,
+		"niy"         => true,
+		"sql"         => false,
+		"erreur_sql"  => true,
+		"utilisateur" => true,
+		"permission"  => true
 	);
+	public static $filtre_erreurs_en_production = array(
+		"erreur"      => false,
+		"warn"        => false,
+		"info"        => false,
+		"niy"         => false,
+		"sql"         => false,
+		"erreur_sql"  => false,
+		"utilisateur" => true, // erreur générée par des données de l'utilisateur.
+		"permission"  => true  // permission non accordée.
+	);
+	
 	public static $toutes_erreurs = false; // true <=> ignorer le filtre.
 	public static $erreurs = array();
 	
@@ -55,7 +73,9 @@ class _Debug {
 		}
 		if ($print) {
 			foreach (self::$erreurs as $e) {
-				if (self::$toutes_erreurs === true || self::$filtre_erreurs[$e[0]] === true) {
+				if (self::$toutes_erreurs === true
+					|| (array_key_exists($e[0], self::$filtre_erreurs)
+						&& self::$filtre_erreurs[$e[0]] === true)) {
 					$ret .= self::$types_erreur[$e[0]] . " : " . $e[1] . "\n";
 				}
 			}

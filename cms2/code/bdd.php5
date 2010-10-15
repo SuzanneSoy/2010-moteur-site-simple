@@ -4,6 +4,7 @@
 // le droit de voir. Filtrage après la requête (attention au LIMIT et OFFSET !) ?
 // ou y a-t-il moyen d'exprimer ça directement dans la requête ?
 
+// TODO : sécurité : faire une méthode select qui construise une requête sans risques de triche de la part de l'utilisateur. Idem pour insert / update etc.
 
 class BDD {
 	private static $handle = null;
@@ -33,7 +34,7 @@ class BDD {
 		self::unbuf_query('create table if not exists ' . self::table("_modules") . ' ('
 						  . 'nom_module    varchar(50) primary key'
 						  . ')');
-		foreach (self::select('select * from ' . self::table("_modules")) as $module) {
+		foreach (self::select('select nom_module from ' . self::table("_modules")) as $module) {
 			self::unbuf_query('drop table if exists ' . self::table($module["nom_module"]));
 		}
 		self::unbuf_query('drop table if exists ' . self::table("_modules"));
@@ -148,7 +149,18 @@ class BDD {
 	}
 	
 	public static function table($nom) {
+		if (! preg_match('/^[a-zA-Z_]*$/', $nom)) {
+			Debug("erreur", "Nom de table malformé : " . htmlspecialchars(var_export($nom, true)) . ".");
+		}
 		return Config::get('db_prefixe') . $nom;
+	}
+	
+	public static function escape($str) {
+		return mysql_real_escape_string($str, self::get());
+	}
+	
+	public static function escape_int($str) {
+		return intval($str);
 	}
 	
 	public static function close() {
@@ -163,10 +175,12 @@ class BDD {
 class BDDCell {
 	private $uid_page;
 	private $propriete;
+	private $type;
 	private $valeur;
-	public function __construct($uid_page, $propriete, $valeur) {
+	public function __construct($uid_page, $propriete, $type, $valeur) {
 		$this->uid_page = $uid_page;
 		$this->propriete = $propriete;
+		$this->type = $type;
 		$this->valeur = $valeur;
 	}
 	public function uid_page() {
@@ -174,6 +188,9 @@ class BDDCell {
 	}
 	public function propriete() {
 		return $this->propriete;
+	}
+	public function type() {
+		return $this->type;
 	}
 	public function valeur() {
 		return $this->valeur;

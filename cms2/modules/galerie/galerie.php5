@@ -8,14 +8,6 @@ abstract class mGalerieBase extends mPage {
 	
 	public static function info($module) {
 		$cvars = get_class_vars($module);
-		/*		echo "<pre>";
-		var_dump($module);
-		var_dump($cvars);
-		echo "\n\n\n";
-		$cvars = get_class_vars("mGalerieBase");
-		var_dump($cvars);
-		echo "</pre>";
-		exit;*/
 		ressources_statiques("i_icone_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_miniature h_mini_miniature");
 		type_liens("enfants", $cvars['type_enfants']);

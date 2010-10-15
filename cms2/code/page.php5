@@ -141,7 +141,7 @@ class mPage {
 		attribut_global("composant_url", "text_nix", "page");
 	}
 	
-	public static function est_propriete_globale($prop) {
+	public static function est_attribut_global($prop) {
 		return array_key_exists($prop, self::$attributs_globaux);
 	}
 	
@@ -205,11 +205,16 @@ class mPage {
 		// Renvoie l'uid de la page dans la base de données.
 		return $this->uid;
 	}
-
+	
+	public function has_prop($nom) {
+		return array_key_exists($nom, self::$attributs_globaux)
+			|| array_key_exists($nom, $this->module['attributs']);
+	}
+	
 	public function parent() {
 		return self::page_uid(
 			BDD::select_one(
-				"select uid_page_de from " . BDD::table("_liens") . " where uid_page_vers = " . $this->uid()
+				"select uid_page_de from " . BDD::table("_liens") . " where uid_page_vers = " . BDD::escape_int($this->uid())
 			)
 		);
 	}
@@ -222,7 +227,7 @@ class mPage {
 		// limit = null || limit = 0 => pas de limite
 		// offset = null => offset = 0
 		
-		// TODO : nettoyer la condition
+		// TODO : nettoyer la condition (pbs de sécurité + bugs !!!).
 		if ($condition !== true)
 			$condition = " and ($condition)";
 		else
@@ -240,15 +245,15 @@ class mPage {
 			$select_order .= substr($o,1) . " ";
 			$select_order .= (substr($o,0,1) == "+") ? "asc" : "desc";
 		}
-		$select_limit = ($limit == 0) ? "" : " limit $limit";
-		$select_offset = ($offset == 0) ? "" : " offset $offset";
+		$select_limit = ($limit == 0) ? "" : " limit " . BDD::escape_int($limit);
+		$select_offset = ($offset == 0) ? "" : " offset " . BDD::escape_int($offset);
 		
 		// TODO : "natural join"
 		$select = "select uid_page_vers from "
 			. BDD::table("_liens")
 			. " join " . BDD::table("_pages") . " on _uid_page = uid_page_vers"
 			. " natural join " . BDD::table($this->type_liens("enfants"))
-			. " where groupe = 'enfants' and uid_page_de = " . $this->uid()
+			. " where groupe = 'enfants' and uid_page_de = " . BDD::escape_int($this->uid())
 			. $condition
 			. $select_order
 			. $select_limit
@@ -272,9 +277,9 @@ class mPage {
 		$insert .= ", _type = '" . $nom_module . "'";
 		foreach (self::$attributs_globaux as $nom => $attr) {
 			if (array_key_exists($nom, $module['attributs'])) {
-				$insert .= ", $nom = '" . mysql_real_escape_string($module['attributs'][$nom]['defaut']) . "'";
+				$insert .= ", $nom = '" . BDD::escape($module['attributs'][$nom]['defaut']) . "'";
 			} else {
-				$insert .= ", $nom = '" . mysql_real_escape_string($attr['defaut']) . "'";
+				$insert .= ", $nom = '" . BDD::escape($attr['defaut']) . "'";
 			}
 		}
 		
@@ -286,7 +291,7 @@ class mPage {
 		$insert .= "_uid_page = " . $uid_nouvelle_page;
 		foreach ($module['attributs'] as $nom => $attr) {
 			if (!$attr['global']) {
-				$insert .= ", $nom = '" . mysql_real_escape_string($attr['defaut']) . "'";
+				$insert .= ", $nom = '" . BDD::escape($attr['defaut']) . "'";
 			}
 		}
 		
@@ -319,13 +324,13 @@ class mPage {
 	public static function page_systeme($nom) {
 		return self::page_uid(
 			BDD::select_one(
-				"select _uid_page from " . BDD::table("_pages") . " where nom_systeme = '" . mysql_real_escape_string($nom) . "';"
+				"select _uid_page from " . BDD::table("_pages") . " where nom_systeme = '" . BDD::escape($nom) . "';"
 			)
 		);
 	}
 
 	public static function page_uid($uid) {
-		$select = "select _type from " . BDD::table("_pages") . " where _uid_page = " . $uid . ";";
+		$select = "select _type from " . BDD::table("_pages") . " where _uid_page = " . BDD::escape_int($uid) . ";";
 		$type = BDD::select_one($select);
 		$ret = new $type();
 		$ret->uid = $uid;
@@ -374,9 +379,15 @@ class mPage {
 
 	private function get_prop_direct($nom) {
 		// Récupère l'attribut "$nom" depuis la BDD.
-		$select_table = (self::est_propriete_globale($nom)) ? "_pages" : $this->nom_module();
-		$select = "select $nom from " . BDD::table($select_table) . " where _uid_page = " . $this->uid() . ";";
-		return new BDDCell($this->uid(), $nom, BDD::select_one($select));
+		if (self::est_attribut_global($nom)) {
+			$select_table = "_pages";
+			$type = self::$attributs_globaux[$nom]['type'];
+		} else {
+			$select_table = $this->nom_module();
+			$type = $this->module['attributs'][$nom]['type'];
+		}
+		$select = "select $nom from " . BDD::table($select_table) . " where _uid_page = " . BDD::escape_int($this->uid()) . ";";
+		return new BDDCell($this->uid(), $nom, $type, BDD::select_one($select));
 	}
 	
 	public function __set($nom, $val) {
@@ -391,8 +402,8 @@ class mPage {
 	
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
-		$update_table = (self::est_propriete_globale($nom)) ? "_pages" : $this->nom_module();
-		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string(toString($val)) . "' where _uid_page = " . $this->uid();
+		$update_table = (self::est_attribut_global($nom)) ? "_pages" : $this->nom_module();
+		$update = "update " . BDD::table($update_table) . " set $nom = '" . BDD::escape(toString($val)) . "' where _uid_page = " . $this->uid();
 		BDD::unbuf_query($update);
 		if ($nom != "date_modification") {
 			$this->date_modification = time();

@@ -210,7 +210,7 @@ ElementDocument::add_widget("description", create_function('$d, $cell', '
 
 ElementDocument::add_widget("field", create_function('$d, $cell', '
 		$f = $d->span("field");
-		$f->text("NIY : " . toString($cell));
+		$f->text("[(" . $cell->type() .")". $cell->propriete() . " = " . toString($cell) . "]");
 		return $f;
 	'));
 
