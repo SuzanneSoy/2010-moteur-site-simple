@@ -209,9 +209,7 @@ ElementDocument::add_widget("description", create_function('$d, $cell', '
 
 
 ElementDocument::add_widget("field", create_function('$d, $cell', '
-		$f = $d->span("field");
-		$f->text("[(" . $cell->type() .")". $cell->propriete() . " = " . toString($cell) . "]");
-		return $f;
+		return call_user_func(array($d, "w_" . $cell->type()), $cell);
 	'));
 
 
@@ -238,7 +236,7 @@ ElementDocument::add_widget("text_rich", create_function('$d, $cell', '
 
 ElementDocument::add_widget("bool", create_function('$d, $cell', '
 		// checkbox
-		return $d->text("Not Implemented Yet : w_bool($cell)");
+		return $d->text("w_bool(" . toString($cell) . ")");
 	'));
 
 
