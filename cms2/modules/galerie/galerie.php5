@@ -8,14 +8,14 @@ abstract class mGalerieBase extends mPage {
 	
 	public static function info($module) {
 		$cvars = get_class_vars($module);
-		ressources_statiques("i_icone_nouvelle_page c_style");
-		ressources_dynamiques("h_page h_miniature h_mini_miniature");
-		type_liens("enfants", $cvars['type_enfants']);
-		type_liens("liens", "*");
-		attribut("titre", "text_line", $cvars['texte_titre']);
-		attribut("description", "text_rich", "");
-		attribut("publier", "bool", "true");
-		attribut("apercu", "bool", "false"); // TODO !
+		Module::ressources_statiques("i_icone_nouvelle_page c_style");
+		Module::ressources_dynamiques("h_page h_miniature h_mini_miniature");
+		Module::type_liens("enfants", $cvars['type_enfants']);
+		Module::type_liens("liens", "*");
+		Module::attribut("titre", "text_line", $cvars['texte_titre']);
+		Module::attribut("description", "text_rich", "");
+		Module::attribut("publier", "bool", "true");
+		Module::attribut("apercu", "bool", "false"); // TODO !
 	}
 	
 	public function res_i_icone_nouvelle_page() {
@@ -94,10 +94,10 @@ class mGaleriePhoto extends mGalerieBase {
 	public static $texte_titre = "Photo";
 	
 	public static function info($module) {
-		ressources_statiques("c_style");
-		ressources_dynamiques(inherit(get_parent_class()), "i_grande i_image i_miniature");
-		attribut(inherit(get_parent_class()));
-		attribut("image", "img_file", "");
+		Module::ressources_statiques("c_style");
+		Module::ressources_dynamiques(new Inherit(get_parent_class()), "i_grande i_image i_miniature");
+		Module::attribut(new Inherit(get_parent_class()));
+		Module::attribut("image", "img_file", "");
 	}
 	
 	public function set_titre($titre) {
@@ -117,7 +117,7 @@ class mGaleriePhoto extends mGalerieBase {
 	
 	public function res_h_page($d) {
 		$d->w_en_tete($this->titre, toString($this->description)); // En-tête standard.
-		$d->w_img_file($this->description, $this->i_image);
+		$d->w_img_file_desc($this->image, $this->description);
 		return $d;
 	}
 	
@@ -167,9 +167,9 @@ class mGaleriePhoto extends mGalerieBase {
 	}
 }
 
-module("mGalerieIndex");
-module("mGaleriePeriode");
-module("mGalerieEvenement");
-module("mGaleriePhoto");
+Module::add_module("mGalerieIndex");
+Module::add_module("mGaleriePeriode");
+Module::add_module("mGalerieEvenement");
+Module::add_module("mGaleriePhoto");
 
 ?>

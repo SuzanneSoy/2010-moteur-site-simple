@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . "/module.php5");
+
 // Chaque type d'élément est une sous-classe de ElementDocument, et impléménte uniquement les méthodes de création qui respectent les règles d'imbrication des éléments.
 // Pour les éléments dont les enfants possibles dépendent du parent (par ex. <a>), on restreindra les enfants et (parents) possibles à quelque chose de sensé.
 // Plutôt que d'avoir plein de sous-classes, ElementDocument a une méthode __call(), qui vérifie ce qu'on peut appeller en fonction du type de l'élément.
@@ -31,8 +33,8 @@ class ElementDocument {
 		);
 	}
 	
-	public static function add_widget($nom, $callback) {
-		self::$widgets["w_" . $nom] = $callback;
+	public static function add_widget($nom) {
+		self::$widgets["w_" . $nom] = "fn_w_" . $nom;
 	}
 
 	public function type() {
@@ -187,97 +189,115 @@ ElementDocument::add_type("p", $inline_elems);
 ElementDocument::add_type("text", "", "text");
 
 
+function fn_w_titre($d, $cell) {
+	// renvoie un <h2> ou un <input> selon les droits
+	$d->header()->title()->text(toString($cell));
+	// TODO : modification si on a les droits.
+	$d->article()->hX()->text(toString($cell));
+}
 
-ElementDocument::add_widget("titre", create_function('$d, $cell', '
-		// renvoie un <h2> ou un <input> selon les droits
-		$d->header()->title()->text(toString($cell));
-		// TODO : modification si on a les droits.
-		$d->article()->hX()->text(toString($cell));
-	'));
+function fn_w_en_tete($d, $cell_titre, $cell_description) {
+	$d->w_titre($cell_titre);
+	$d->w_description($cell_description);
+}
 
+function fn_w_description($d, $cell) {
+	// TODO : modification si on a les droits.
+	return $d->article()->p()->text(toString($cell));
+}
 
-ElementDocument::add_widget("en_tete", create_function('$d, $cell_titre, $cell_description', '
-		$d->w_titre($cell_titre);
-		$d->w_description($cell_description);
-	'));
+function fn_w_bouton($d, $texte, $page_callback, $ressource_callback, $action_callback) {
+	// afficher un input[type=button]
+	// lors du clic, appeller $action_callback sur $page_callback/?res=$ressource_callback ?
+	$a = $d->a($page_callback->url($ressource_callback,
+								   "act_" . $page_callback->uid() . "_" . $action_callback));
+	$a->text($texte);
+	return $a;
+}
 
+function fn_w_liste($d, $liste_pages, $function_formattage_elements) {
+	$ul = $d->ul();
+	foreach ($liste_pages as $page) {
+		$li = $ul->li();
+		$function_formattage_elements($page, $li);
+	}
+	return $ul;
+}
 
-ElementDocument::add_widget("description", create_function('$d, $cell', '
-		// TODO : modification si on a les droits.
-		return $d->article()->p()->text(toString($cell));
-	'));
+function fn_w_tableau($d, $select, $function_formattage_elements) {
+	$t = $d->table();
+	$tr = $t->tbody()->tr();
+	$tr->td()->text("Not Implemented Yet");
+	return $t;
+}
 
-
-ElementDocument::add_widget("field", create_function('$d, $cell', '
-		return call_user_func(array($d, "w_" . $cell->type()), $cell);
-	'));
-
-
-ElementDocument::add_widget("text_line", create_function('$d, $cell', '
-		// TODO : modification si on a les droits.
-		return $d->text(toString($cell));
-	'));
-
-
-ElementDocument::add_widget("text_nix", create_function('$d, $cell', '
-		// Texte naze (sans espaces etc.) à la *nix.
-		// TODO : modification si on a les droits.
-		// TODO : vérifier que ça match [a-zA-Z][-a-zA-Z0-9_]*
-		return $d->text(toString($cell));
-	'));
-
-
-ElementDocument::add_widget("text_rich", create_function('$d, $cell', '
-		// TODO : modification si on a les droits.
-		// TODO : rendu du texte riche.
-		return $d->p()->text(toString($cell));
-	'));
-
-
-ElementDocument::add_widget("bool", create_function('$d, $cell', '
-		// checkbox
-		return $d->text("w_bool(" . toString($cell) . ")");
-	'));
+function fn_w_img_file_desc($d, $cell_img, $cell_description) {
+	// TODO : modification si on a les droits.
+	$d->w_img_file($cell_img);
+	$d->w_description($cell_description);
+	return $img;
+}
 
 
-ElementDocument::add_widget("bouton", create_function('$d, $texte, $page_callback, $ressource_callback, $action_callback', '
-		// afficher un input[type=button]
-		// lors du clic, appeller $action_callback sur $page_callback/?res=$ressource_callback ?
-		return $d->text("Not Implemented Yet : w_bouton($texte, $page_callback, $ressource_callback, $action_callback)");
-	'));
+function fn_w_field($d, $cell) {
+	if ($cell->page()->if_perm("w", $cell->nom_attribut())) {
+		return call_user_func(array($d, "w_w_" . $cell->type()), $cell);
+	} else {
+		return call_user_func(array($d, "w_r_" . $cell->type()), $cell);
+	}
+}
 
+function fn_w_r_text_line($d, $cell) {
+	// TODO : modification si on a les droits.
+	return $d->text(toString($cell));
+}
 
-// Le widget w_img_file doit gérer le stockage de l'image dans un dossier,
-// la création de la miniature et le stockage dans la BDD du chemin vers l'image.
-ElementDocument::add_widget("img_file", create_function('$d, $cell_description, $cell_img', '
-		// TODO : modification si on a les droits.
-		// input[file] et <img>
-		$img = $d->img(toString($cell_description), toString($cell_img));
-		$d->w_description($cell_description);
-		return $img;
-	'));
+function fn_w_r_text_nix($d, $cell) {
+	// Texte naze (sans espaces etc.) à la *nix.
+	// TODO : modification si on a les droits.
+	// TODO : vérifier que ça match [a-zA-Z][-a-zA-Z0-9_]*
+	return $d->text(toString($cell));
+}
 
+function fn_w_r_text_rich($d, $cell) {
+	// TODO : modification si on a les droits.
+	// TODO : rendu du texte riche.
+	return $d->p()->text(toString($cell));
+}
 
-ElementDocument::add_widget("date", create_function('$d, $select', '
-		// affichage localisé.
-		return $d->text("Not Implemented Yet : date($select)");
-	'));
+function fn_w_r_bool($d, $cell) {
+	// checkbox
+	return $d->text("w_bool(" . toString($cell) . ")");
+}
 
+function fn_w_r_img_file($d, $cell) {
+	// Le widget w_img_file doit gérer le stockage de l'image dans un dossier,
+	// la création de la miniature et le stockage dans la BDD du chemin vers l'image.
 
-ElementDocument::add_widget("liste", create_function('$d, $list_cells, $function_formattage_elements', '
-		$ul = $d->ul();
-		foreach ($list_cells as $cell) {
-			$li = $ul->li();
-			$function_formattage_elements($cell, $li);
-		}
-		return $ul;
-	'));
+	// TODO : modification si on a les droits.
+	// input[file] et <img>
+	return $d->img(toString($cell_description), toString($cell_img));
+}
 
-ElementDocument::add_widget("tableau", create_function('$d, $select, $function_formattage_elements', '
-		$t = $d->table();
-		$tr = $t->tbody()->tr();
-		$tr->td()->text("Not Implemented Yet");
-		return $t;
-	'));
+function fn_w_r_date($d, $cell) {
+	// affichage localisé.
+	return $d->text("w_date(" . toString($cell) . ")");
+}
+
+ElementDocument::add_widget("titre", "fn_w_titre");
+ElementDocument::add_widget("en_tete", "fn_w_en_tete");
+ElementDocument::add_widget("description", "fn_w_description");
+ElementDocument::add_widget("bouton", "fn_w_bouton");
+ElementDocument::add_widget("liste", "fn_w_liste");
+ElementDocument::add_widget("tableau", "fn_w_tableau");
+ElementDocument::add_widget("img_file_desc", "fn_w_img_file_desc");
+
+ElementDocument::add_widget("field");
+Module::add_type("text_line");
+Module::add_type("text_nix");
+Module::add_type("text_rich");
+Module::add_type("bool");
+Module::add_type("img_file");
+Module::add_type("date");
 
 ?>

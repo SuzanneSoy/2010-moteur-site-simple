@@ -2,12 +2,12 @@
 
 class mNouveautes extends mPage {
 	public static function info($module) {
-		ressources_statiques("i_icône_nouvelle_page c_style");
-		ressources_dynamiques("h_page");
-		type_liens("sources", "*");
-		attribut("titre", "text_line", "Nouveautés");
-		attribut("description", "text_rich", "");
-		attribut_global("dans_nouveautes", "bool", "true");
+		Module::ressources_statiques("i_icône_nouvelle_page c_style");
+		Module::ressources_dynamiques("h_page");
+		Module::type_liens("sources", "*");
+		Module::attribut("titre", "text_line", "Nouveautés");
+		Module::attribut("description", "text_rich", "");
+		Module::attribut_global("dans_nouveautes", "bool", "true");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -34,6 +34,6 @@ class mNouveautes extends mPage {
 	}
 }
 
-module("mNouveautes");
+Module::add_module("mNouveautes");
 
 ?>

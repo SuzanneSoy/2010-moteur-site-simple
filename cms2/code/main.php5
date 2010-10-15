@@ -7,7 +7,7 @@ function verifications() {
 verifications();
 
 function main() {
-	initModules();
+	Module::initModules();
 	
 	Debug("warn", "BDD::reset() est toujours activé, ne pas le garder en production !");
 	if (array_key_exists("reset_bdd", $_GET) && $_GET['reset_bdd'] == 'true') {

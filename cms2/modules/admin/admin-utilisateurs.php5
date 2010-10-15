@@ -2,9 +2,9 @@
 
 class mAdminListeUtilisateurs extends mPage {
 	public static function info($module) {
-		ressources_statiques("i_icône_nouvelle_page c_style");
-		ressources_dynamiques("h_page h_liste_mots_de_passe");
-		type_liens("enfants", "mAdminUtilisateur");
+		Module::ressources_statiques("i_icône_nouvelle_page c_style");
+		Module::ressources_dynamiques("h_page h_liste_mots_de_passe");
+		Module::type_liens("enfants", "mAdminUtilisateur");
 	}
 	
 	public function res_i_icône_nouvelle_page() {
@@ -38,18 +38,18 @@ class mAdminListeUtilisateurs extends mPage {
 
 class mAdminUtilisateur extends mPage {
 	public static function info($module) {
-		ressources_statiques("c_style");
+		Module::ressources_statiques("c_style");
 		// TODO : h_page = affichage "en grand" de l'utilisateur (~= page perso, par ex. destination d'un lien de la page contacts).
-		ressources_dynamiques("h_admin");
+		Module::ressources_dynamiques("h_admin");
 		// TODO : le couple (nom,prenom) doit être unique.
-		attribut("nom", "text_line", "Dupondt");
-		attribut("prenom", "text_line", "Jean");
-		attribut("equipe", "uid", "null");
-		attribut("mot_de_passe", "password", "");
+		Module::attribut("nom", "text_line", "Dupondt");
+		Module::attribut("prenom", "text_line", "Jean");
+		Module::attribut("equipe", "uid", "null");
+		Module::attribut("mot_de_passe", "password", "");
 		// TODO : permissions différentes pour les propriétés peut_se_connecter et groupe_permissions.
 		// L'utilisateur ne doit pas pouvoir les modifier.
-		attribut("groupe_permissions", "groupe_permissions", "utilisateurs");
-		attribut("peut_se_connecter", "bool", "false");
+		Module::attribut("groupe_permissions", "groupe_permissions", "utilisateurs");
+		Module::attribut("peut_se_connecter", "bool", "false");
 	}
 	
 	public function res_c_style() {
@@ -84,6 +84,6 @@ class mAdminUtilisateur extends mPage {
 	}
 }
 
-module("mAdminListeUtilisateurs");
+Module::add_module("mAdminListeUtilisateurs");
 
 ?>

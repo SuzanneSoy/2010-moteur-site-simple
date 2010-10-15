@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__) . "/module.php5");
+
 // Lors d'une requête, ne renvoyer que les éléments que l'utilisateur a
 // le droit de voir. Filtrage après la requête (attention au LIMIT et OFFSET !) ?
 // ou y a-t-il moyen d'exprimer ça directement dans la requête ?
@@ -60,7 +62,7 @@ class BDD {
 						  . 'nom_module    varchar(50) primary key'
 						  . ')');
 		
-		foreach (mPage::$modules as $nom_module => $m) {
+		foreach (Module::$modules as $nom_module => $m) {
 			$table = "create table if not exists " . self::table($nom_module) . " (_uid_page integer";
 			foreach ($m['attributs'] as $nom => $attr) {
 				if (!$attr['global']) {
@@ -75,7 +77,7 @@ class BDD {
 		$table = "create table if not exists " . self::table("_pages") . " ("
 			. "_uid_page integer auto_increment primary key"
 			. ", _type varchar(50)";
-		foreach (mPage::$attributs_globaux as $nom => $attr) {
+		foreach (Module::$attributs_globaux as $nom => $attr) {
 			$table .= ", $nom varchar(50)";
 		}
 		$table .= ")";
@@ -173,21 +175,21 @@ class BDD {
 }
 
 class BDDCell {
-	private $uid_page;
-	private $propriete;
+	private $page;
+	private $nom_attribut;
 	private $type;
 	private $valeur;
-	public function __construct($uid_page, $propriete, $type, $valeur) {
-		$this->uid_page = $uid_page;
-		$this->propriete = $propriete;
+	public function __construct($page, $nom_attribut, $type, $valeur) {
+		$this->page = $page;
+		$this->nom_attribut = $nom_attribut;
 		$this->type = $type;
 		$this->valeur = $valeur;
 	}
-	public function uid_page() {
-		return $this->uid_page;
+	public function page() {
+		return $this->page;
 	}
-	public function propriete() {
-		return $this->propriete;
+	public function nom_attribut() {
+		return $this->nom_attribut;
 	}
 	public function type() {
 		return $this->type;

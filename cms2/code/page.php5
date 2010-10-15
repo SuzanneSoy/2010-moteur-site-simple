@@ -12,137 +12,17 @@
 require_once(dirname(__FILE__) . "/util.php5"); // qw
 require_once(dirname(__FILE__) . "/document.php5"); // widgets pour la vérification des types.
 
-function inherit($m) {
-	return array("inherit" => $m);
-}
-
-function is_inherit($i) {
-	return (is_array($i) && array_key_exists("inherit", $i));
-}
-
-function ressources_statiques($res) {
-	// TODO : factoriser d'ici...
-	$lim = mPage::$limitation_infos_module;
-	$m = mPage::$module_en_cours;
-	if ($lim !== true && $lim != "ressources_statiques")
-		return;
-
-	if (is_inherit($res)) {
-		$i = $res["inherit"];
-		mPage::$limitation_infos_module = "ressources_statiques";
-		call_user_func(array($i, "info"), $i);
-		mPage::$limitation_infos_module = $lim;
-	} else {
-		// TODO : ... jusqu'ici (mPage::$modules[$m]['ressources_statiques'] peut être factorisé aussi. (pas pour attribut))
-		mPage::$modules[$m]['ressources_statiques'] = qw(mPage::$modules[$m]['ressources_statiques'], $res);
-	}
-}
-
-function ressources_dynamiques($res) {
-	// TODO : factoriser d'ici...
-	$lim = mPage::$limitation_infos_module;
-	$m = mPage::$module_en_cours;
-	if ($lim !== true && $lim != "ressources_dynamiques")
-		return;
-
-	if (is_inherit($res)) {
-		$i = $res["inherit"];
-		mPage::$limitation_infos_module = "ressources_dynamiques";
-		call_user_func(array($i, "info"), $i);
-		mPage::$limitation_infos_module = $lim;
-	} else {
-		// TODO : ... jusqu'ici (mPage::$modules[$m]['ressources_dynamiques'] peut être factorisé aussi. (pas pour attribut))
-		mPage::$modules[$m]['ressources_dynamiques'] = qw(mPage::$modules[$m]['ressources_dynamiques'], $res);
-	}
-}
-
-function type_liens($groupe, $type = null) {
-	// TODO : factoriser d'ici...
-	$lim = mPage::$limitation_infos_module;
-	$m = mPage::$module_en_cours;
-	if ($lim !== true && $lim != "type_liens")
-		return;
-
-	if (is_inherit($groupe)) {
-		$i = $res["inherit"];
-		mPage::$limitation_infos_module = "type_liens";
-		call_user_func(array($i, "info"), $i);
-		mPage::$limitation_infos_module = $lim;
-	} else {
-		if ($type === null) {
-			Debug("erreur", 'fonction type_liens() : le paramètres $type est obligatoire.');
-		}
-		// TODO : ... jusqu'ici (mPage::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
-		mPage::$modules[$m]['type_liens'][$groupe] = $type;
-	}
-}
-
-function attribut($nom, $type = null, $defaut = null) {
-	$lim = mPage::$limitation_infos_module;
-	$m = mPage::$module_en_cours;
-	if ($lim !== true && $lim != "attribut")
-		return;
-	
-	if (is_inherit($nom)) {
-		$i = $nom["inherit"];
-		mPage::$limitation_infos_module = "attribut";
-		call_user_func(array($i, "info"), $i);
-		mPage::$limitation_infos_module = $lim;
-	} else {
-		if ($type === null || $defaut === null) {
-			Debug("erreur", 'fonction attribut() : les paramètres $type et $defaut est obligatoire.');
-		}
-		if (!Document::has_widget("w_" . $type)) {
-			Debug("erreur", "L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
-		}
-		mPage::$modules[$m]['attributs'][$nom] = array("global" => false, "type" => $type, "defaut" => $defaut);
-	}
-}
-
-function attribut_global($nom, $type, $defaut) {
-	mPage::$attributs_globaux[$nom] = array('type' => $type, 'defaut' => $defaut);
-}
-
-function module($m) {
-	mPage::$modules[$m] = array(
-		'ressources_statiques' => qw(),
-		'ressources_dynamiques' => qw(),
-		'type_liens' => array('enfants' => false),
-		'attributs' => array()
-	);
-}
-
-function initModules() {
-	foreach (mPage::$modules as $nom_module => $m) {
-		mPage::$module_en_cours = $nom_module;
-		call_user_func(array($nom_module, "info"), $nom_module);
-	}
-	mPage::$module_en_cours = null;
-	foreach (mPage::$attributs_globaux as $nom_ag => $ag) {
-		foreach (mPage::$modules as &$m) {
-			if (array_key_exists($nom_ag, $m['attributs'])) {
-				$m['attributs'][$nom_ag]['global'] = true;
-			}
-		}
-	}
-}
-
 class mPage {
-	public static $modules = array();
-	public static $attributs_globaux = array();
-	public static $module_en_cours = null;
-	public static $limitation_infos_module = true;
-
 	public static function info($module) {
-		attribut_global("date_creation", "date", "0");
-		attribut_global("date_modification", "date", "0");
-		attribut_global("publier", "bool", "false");
-		attribut_global("nom_systeme", "text_nix", "");
-		attribut_global("composant_url", "text_nix", "page");
+		Module::attribut_global("date_creation", "date", "0");
+		Module::attribut_global("date_modification", "date", "0");
+		Module::attribut_global("publier", "bool", "false");
+		Module::attribut_global("nom_systeme", "text_nix", "");
+		Module::attribut_global("composant_url", "text_nix", "page");
 	}
 	
 	public static function est_attribut_global($prop) {
-		return array_key_exists($prop, self::$attributs_globaux);
+		return array_key_exists($prop, Module::$attributs_globaux);
 	}
 	
 	public function nom_module() {
@@ -150,7 +30,7 @@ class mPage {
 	}
 	
 	public function module() {
-		return self::$modules[$this->nom_module()];
+		return Module::$modules[$this->nom_module()];
 	}
 	
 	public function type_liens($groupe) {
@@ -207,7 +87,7 @@ class mPage {
 	}
 	
 	public function has_prop($nom) {
-		return array_key_exists($nom, self::$attributs_globaux)
+		return array_key_exists($nom, Module::$attributs_globaux)
 			|| array_key_exists($nom, $this->module['attributs']);
 	}
 	
@@ -269,13 +149,13 @@ class mPage {
 	}
 	
 	public static function créer_page($nom_module) {
-		$module = self::$modules[$nom_module];
+		$module = Module::$modules[$nom_module];
 		
 		// Insert dans la table _pages.
 		$insert = "insert into " . BDD::table("_pages") . " set ";
 		$insert .= "_uid_page = null";
 		$insert .= ", _type = '" . $nom_module . "'";
-		foreach (self::$attributs_globaux as $nom => $attr) {
+		foreach (Module::$attributs_globaux as $nom => $attr) {
 			if (array_key_exists($nom, $module['attributs'])) {
 				$insert .= ", $nom = '" . BDD::escape($module['attributs'][$nom]['defaut']) . "'";
 			} else {
@@ -343,21 +223,21 @@ class mPage {
 	public function get_permissions_enfants($groupe) {
 		niy("get_permissions_enfants");
 	}
-	public function if_perm($action, $nom_propriété) {
+	public function if_perm($action, $nom_attribut) {
 		niy("if_perm");
-		return true;
+		return false;
 		// @param $action = suite de lettre parmi les suivantes :
-		//    R = Read prop
-		//    W = Write prop
-		//    L = Lister les enfants ($nom_propriété désigne alors le groupe)
-		//    C = Créer des enfants  ($nom_propriété désigne alors le groupe)
-		//    D = Delete la page ($nom_propriété est ignoré)
+		//    R = Read attribut
+		//    W = Write attribut
+		//    L = Lister les enfants ($nom_attribut désigne alors le groupe)
+		//    C = Créer des enfants  ($nom_attribut désigne alors le groupe)
+		//    D = Delete la page ($nom_attribut est ignoré)
 		// @return true si on a l'autorisation pour TOUTES les actions demandées, false sinon.
 		
 		// Squelette du code :
 		$action = strtolower($action);
-		$permissions_prop = strtolower($this->get_permissions_prop($nom_propriété));
-		$permissions_enfants = strtolower($this->get_permissions_enfants($nom_propriété));
+		$permissions_prop = strtolower($this->get_permissions_prop($nom_attribut));
+		$permissions_enfants = strtolower($this->get_permissions_enfants($nom_attribut));
 		if (str_contains($action, "r") && !str_contains($permissions_prop,    "r")) { return false; }
 		if (str_contains($action, "w") && !str_contains($permissions_prop,    "w")) { return false; }
 		if (str_contains($action, "l") && !str_contains($permissions_enfants, "l")) { return false; }
@@ -381,13 +261,13 @@ class mPage {
 		// Récupère l'attribut "$nom" depuis la BDD.
 		if (self::est_attribut_global($nom)) {
 			$select_table = "_pages";
-			$type = self::$attributs_globaux[$nom]['type'];
+			$type = Module::$attributs_globaux[$nom]['type'];
 		} else {
 			$select_table = $this->nom_module();
 			$type = $this->module['attributs'][$nom]['type'];
 		}
 		$select = "select $nom from " . BDD::table($select_table) . " where _uid_page = " . BDD::escape_int($this->uid()) . ";";
-		return new BDDCell($this->uid(), $nom, $type, BDD::select_one($select));
+		return new BDDCell($this, $nom, $type, BDD::select_one($select));
 	}
 	
 	public function __set($nom, $val) {
@@ -417,6 +297,6 @@ class mPage {
 	}
 }
 
-module("mPage");
+Module::add_module("mPage");
 
 ?>
