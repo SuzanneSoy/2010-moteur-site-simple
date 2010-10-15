@@ -38,4 +38,8 @@ Config::set('db_prefixe', "moteur_site_simple_2010_");
 
 // ======== FIN CONFIGURATION =======
 
+if (file_exists(dirname(__FILE__) . '/config_free.fr.php5') && preg_match('/.free\.fr$/', $_SERVER['SERVER_NAME'])) {
+	require_once(dirname(__FILE__) . '/config_free.fr.php5');
+}
+
 ?>
