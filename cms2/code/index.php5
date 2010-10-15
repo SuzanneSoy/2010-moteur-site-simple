@@ -5,8 +5,8 @@ error_reporting(E_ALL | E_STRICT);
 // alors gardons-le aussi court que possible !
 ini_set("display_errors", 1);
 
-require_once(dirname(__FILE__) . "/configuration.php");
-require_once(dirname(__FILE__) . "/include.php");
+require_once(dirname(__FILE__) . "/configuration.php5");
+require_once(dirname(__FILE__) . "/include.php5");
 
 main();
 

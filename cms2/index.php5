@@ -1,5 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . "/code/index.php");
+require_once(dirname(__FILE__) . "/code/index.php5");
 
 ?>

@@ -1,9 +1,9 @@
 <?php
 
-  /***************************************
-   * La configuration n'est pas ici,     *
-   * elle est dans le fichier config.php *
-   ***************************************/
+  /****************************************
+   * La configuration n'est pas ici,      *
+   * elle est dans le fichier config.php5 *
+   ****************************************/
 
 class Config {
 	private static $config = array();
@@ -22,11 +22,11 @@ class Config {
 	}
 }
 
-require_once(dirname(__FILE__) . "/util.php"); // class Path.
-require_once(dirname(__FILE__) . "/../config.php");
+require_once(dirname(__FILE__) . "/util.php5"); // class Path.
+require_once(dirname(__FILE__) . "/../config.php5");
 
 if (Config::get('courriel_admin') === null) {
-	echo "Vous devez indiquer le courriel de l'administrateur dans le fichier config.php.";
+	echo "Vous devez indiquer le courriel de l'administrateur dans le fichier config.php5 .";
 	exit;
 }
 

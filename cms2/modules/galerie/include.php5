@@ -1,5 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__) . "/galerie.php");
+require_once(dirname(__FILE__) . "/galerie.php5");
 
 ?>

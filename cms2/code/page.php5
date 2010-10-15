@@ -9,8 +9,8 @@
 // Convention de nommage pour les attributs :
 // Pas de "_" au début (par ex. _publier est interdit).
  
-require_once(dirname(__FILE__) . "/util.php"); // qw
-require_once(dirname(__FILE__) . "/document.php"); // widgets pour la vérification des types.
+require_once(dirname(__FILE__) . "/util.php5"); // qw
+require_once(dirname(__FILE__) . "/document.php5"); // widgets pour la vérification des types.
 
 function inherit($m) {
 	return array("inherit" => $m);
