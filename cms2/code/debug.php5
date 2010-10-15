@@ -1,6 +1,6 @@
 <?php
 
-class Debug {
+class _Debug {
 	public static $types_erreur = array(
 		"erreur"     => '<span style="color:red">Erreur</span>',
 		"niy"        => '<span style="color:brown">Pas encore implémenté</span>',
@@ -20,11 +20,11 @@ class Debug {
 	public static $toutes_erreurs = false; // true <=> ignorer le filtre.
 	public static $erreurs = array();
 	
-	public static function __callStatic($nom, $args) {
+	public function __call($nom, $args) {
 		if (!array_key_exists($nom, self::$types_erreur)) {
-			self::erreur("Type d'erreur inconnu : " . $nom . "\nArguments de Debug::$nom() : " . var_export($args, true));
+			self::erreur("Type d'erreur inconnu : " . $nom . "\nArguments de Debug->$nom : " . var_export($args, true));
 		} elseif (count($args) != 1) {
-			self::erreur("Mauvais nombre d'arguments pour Debug::$nom().\nArguments : " . var_export($args, true));
+			self::erreur("Mauvais nombre d'arguments pour Debug->$nom.\nArguments : " . var_export($args, true));
 		} else {
 			self::push($nom, $args[0]);
 		}
@@ -67,8 +67,15 @@ class Debug {
 	}
 }
 
+function Debug($fn) {
+	$args = func_get_args();
+	array_shift($args);
+	$d = new _Debug();
+	call_user_func_array(array($d, $fn), $args);
+}
+
 function niy($name) {
-	Debug::niy($name);
+	Debug("niy", $name);
 }
 
 ?>

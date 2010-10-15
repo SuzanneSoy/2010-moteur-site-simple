@@ -70,7 +70,7 @@ function type_liens($groupe, $type = null) {
 		mPage::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null) {
-			Debug::erreur('fonction type_liens() : le paramètres $type est obligatoire.');
+			Debug("erreur", 'fonction type_liens() : le paramètres $type est obligatoire.');
 		}
 		// TODO : ... jusqu'ici (mPage::$modules[$m]['types_enfants'] peut être factorisé aussi (pas pour attribut)).
 		mPage::$modules[$m]['type_liens'][$groupe] = $type;
@@ -90,10 +90,10 @@ function attribut($nom, $type = null, $defaut = null) {
 		mPage::$limitation_infos_module = $lim;
 	} else {
 		if ($type === null || $defaut === null) {
-			Debug::erreur('fonction attribut() : les paramètres $type et $defaut est obligatoire.');
+			Debug("erreur", 'fonction attribut() : les paramètres $type et $defaut est obligatoire.');
 		}
 		if (!Document::has_widget("w_" . $type)) {
-			Debug::erreur("L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
+			Debug("erreur", "L'attribut $nom a le type $type, mais aucun widget w_$type n'existe.");
 		}
 		mPage::$modules[$m]['attributs'][$nom] = array("global" => false, "type" => $type, "defaut" => $defaut);
 	}
@@ -392,7 +392,7 @@ class mPage {
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
 		$update_table = (self::est_propriete_globale($nom)) ? "_pages" : $this->nom_module();
-		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string("".$val) . "' where _uid_page = " . $this->uid();
+		$update = "update " . BDD::table($update_table) . " set $nom = '" . mysql_real_escape_string(toString($val)) . "' where _uid_page = " . $this->uid();
 		BDD::unbuf_query($update);
 		if ($nom != "date_modification") {
 			$this->date_modification = time();

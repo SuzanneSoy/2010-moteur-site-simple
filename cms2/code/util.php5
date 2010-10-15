@@ -37,6 +37,14 @@ function applyXSLT($xml, $xslt_file) {
 	return $xslt->transformToXML($dom);
 }
 
+function toString($obj) {
+	if (is_object($obj) && method_exists($obj, "toString")) {
+		return $obj->toString();
+	} else {
+		return "".$obj;
+	}
+}
+
 /**** Début PATH ****/
 
 // http://www.liranuna.com/php-path-resolution-class-relative-paths-made-easy/

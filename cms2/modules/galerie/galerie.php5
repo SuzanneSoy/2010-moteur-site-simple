@@ -1,17 +1,26 @@
 <?php
 
 abstract class mGalerieBase extends mPage {
-	protected static $texte_titre = "Galerie";
-	protected static $texte_nouvelle_page = "Nouvel élément";
-	protected static $icone_nouvelle_page = "nouvelle_periode.png";
-	protected static $type_enfants = "mGaleriePeriode";
+	public static $texte_titre = "Galerie";
+	public static $texte_nouvelle_page = "Nouvel élément";
+	public static $icone_nouvelle_page = "nouvelle_periode.png";
+	public static $type_enfants = "mGaleriePeriode";
 	
 	public static function info($module) {
+		$cvars = get_class_vars($module);
+		/*		echo "<pre>";
+		var_dump($module);
+		var_dump($cvars);
+		echo "\n\n\n";
+		$cvars = get_class_vars("mGalerieBase");
+		var_dump($cvars);
+		echo "</pre>";
+		exit;*/
 		ressources_statiques("i_icone_nouvelle_page c_style");
 		ressources_dynamiques("h_page h_miniature h_mini_miniature");
-		type_liens("enfants", $module::$type_enfants);
+		type_liens("enfants", $cvars['type_enfants']);
 		type_liens("liens", "*");
-		attribut("titre", "text_line", $module::$texte_titre);
+		attribut("titre", "text_line", $cvars['texte_titre']);
 		attribut("description", "text_rich", "");
 		attribut("publier", "bool", "true");
 		attribut("apercu", "bool", "false"); // TODO !
@@ -27,10 +36,10 @@ abstract class mGalerieBase extends mPage {
 	
 	public function res_h_page($d) {
 		$d->w_en_tete($this->titre, $this->description); // En-tête standard.
-		$l = $d->article()->w_liste($this->enfants(true, "-date_creation"), function($e, $li) {
+		$l = $d->article()->w_liste($this->enfants(true, "-date_creation"), create_function('$e, $li', '
 				$a = $li->a($e->url());
 				$e->rendu("h_miniature", $a);
-			});
+			'));
 		$nouveau = $l->li();
 		// TODO : nouveau devrait être un lien, bouton, ...
 		$nouveau->span("miniature")->img("", $this->url("i_icone_nouvelle_page"));
@@ -69,28 +78,28 @@ abstract class mGalerieBase extends mPage {
 }
 
 class mGalerieIndex extends mGalerieBase {
-	protected static $texte_titre = "Galerie";
-	protected static $texte_nouvelle_page = "Nouvelle période";
-	protected static $icone_nouvelle_page = "nouvelle_periode.png";
-	protected static $type_enfants = "mGaleriePeriode";
+	public static $texte_titre = "Galerie";
+	public static $texte_nouvelle_page = "Nouvelle période";
+	public static $icone_nouvelle_page = "nouvelle_periode.png";
+	public static $type_enfants = "mGaleriePeriode";
 }
 
 class mGaleriePeriode extends mGalerieBase {
-	protected static $texte_titre = "Période";
-	protected static $texte_nouvelle_page = "Nouvel événement";
-	protected static $icone_nouvelle_page = "nouvel_evenement.png";
-	protected static $type_enfants = "mGalerieEvenement";
+	public static $texte_titre = "Période";
+	public static $texte_nouvelle_page = "Nouvel événement";
+	public static $icone_nouvelle_page = "nouvel_evenement.png";
+	public static $type_enfants = "mGalerieEvenement";
 }
 
 class mGalerieEvenement extends mGalerieBase {
-	protected static $texte_titre = "Événement";
-	protected static $texte_nouvelle_page = "Nouvelle photo";
-	protected static $icone_nouvelle_page = "nouvelle_photo.png";
-	protected static $type_enfants = "mGaleriePhoto";
+	public static $texte_titre = "Événement";
+	public static $texte_nouvelle_page = "Nouvelle photo";
+	public static $icone_nouvelle_page = "nouvelle_photo.png";
+	public static $type_enfants = "mGaleriePhoto";
 }
 
 class mGaleriePhoto extends mGalerieBase {
-	protected static $texte_titre = "Photo";
+	public static $texte_titre = "Photo";
 	
 	public static function info($module) {
 		ressources_statiques("c_style");
@@ -115,7 +124,7 @@ class mGaleriePhoto extends mGalerieBase {
 	}
 	
 	public function res_h_page($d) {
-		$d->w_en_tete($this->titre, "".$this->description); // En-tête standard.
+		$d->w_en_tete($this->titre, toString($this->description)); // En-tête standard.
 		$d->w_img_file($this->description, $this->i_image);
 		return $d;
 	}

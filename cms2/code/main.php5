@@ -22,7 +22,7 @@ function main() {
 	$rendu = $page->rendu($res);
 	BDD::close();
 
-	$rendu->erreurs()->litteral(Debug::afficher());
+	$rendu->erreurs()->litteral(_Debug::afficher());
 	$rendu = $rendu->to_XHTML_5();
 
 	echo $rendu;

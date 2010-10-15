@@ -1,8 +1,11 @@
-- Debug : grouper les erreurs, améliorer l'affichage.
-
 - Valeur de retour des res_t_xxx ?
    Lorsqu'on appelle GalerieIndex::res_i_icône_nouvelle_page(), ça fait un sendfile alors que GalerieIndex::res_h_page() renvoie un objet
    ElementDocument, et GalerieIndex::res_c_style() renvoie du texte (CSS) pour inclusion dans le CSS principal... alors que
    res_c_style_supplémentaire() fait je-sais-pas-quoi...
    
    Comment gérer tout ça ? Selon le type de ressource on envoie direct ou on récupère (html,css => récup, img => envoi).
+
+- PHP5.3 chez ovh : http://guide.ovh.com/Php5ChezOvh (.htaccess avec "SetEnv PHP_VER 5_TEST")
+- Compatibilité free.fr :
+   soit il faut supprimer le fichier index.php (pour que index.php5 ait la priorité),
+   soit il faut transférer .htaccess (qui spécifie qu'il faut utiliser php5).

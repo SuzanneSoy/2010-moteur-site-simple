@@ -112,7 +112,7 @@ class ElementDocument {
 		$max = 0;
 		foreach (self::$types[$type]["attributs_oblig"] as $i => $nom) {
 			if (!isset($args[$i])) {
-				Debug::erreur("Argument manquant : $nom pour " . $elem->type);
+				Debug("erreur", "Argument manquant : $nom pour " . $elem->type);
 			}
 			$elem->attr($nom, $args[$i]);
 			$max = $i;
@@ -142,7 +142,7 @@ class ElementDocument {
 		} elseif (self::has_widget($fn)) {
 			return $this->créer_widget($fn, $args);
 		} else {
-			Debug::erreur("Impossible d'ajouter un élément $fn à " . $this->type);
+			Debug("erreur", "Impossible d'ajouter un élément $fn à " . $this->type);
 			return null;
 		}
 	}
@@ -188,98 +188,98 @@ ElementDocument::add_type("text", "", "text");
 
 
 
-ElementDocument::add_widget("titre", function($d, $cell){
+ElementDocument::add_widget("titre", create_function('$d, $cell', '
 		// renvoie un <h2> ou un <input> selon les droits
-		$d->header()->title()->text("".$cell);
+		$d->header()->title()->text(toString($cell));
 		// TODO : modification si on a les droits.
-		$d->article()->hX()->text("".$cell);
-	});
+		$d->article()->hX()->text(toString($cell));
+	'));
 
 
-ElementDocument::add_widget("en_tete", function($d, $cell_titre, $cell_description){
+ElementDocument::add_widget("en_tete", create_function('$d, $cell_titre, $cell_description', '
 		$d->w_titre($cell_titre);
 		$d->w_description($cell_description);
-	});
+	'));
 
 
-ElementDocument::add_widget("description", function($d, $cell){
+ElementDocument::add_widget("description", create_function('$d, $cell', '
 		// TODO : modification si on a les droits.
-		return $d->article()->p()->text("".$cell);
-	});
+		return $d->article()->p()->text(toString($cell));
+	'));
 
 
-ElementDocument::add_widget("field", function($d, $cell){
+ElementDocument::add_widget("field", create_function('$d, $cell', '
 		$f = $d->span("field");
-		$f->text("NIY : " . $cell);
+		$f->text("NIY : " . toString($cell));
 		return $f;
-	});
+	'));
 
 
-ElementDocument::add_widget("text_line", function($d, $cell){
+ElementDocument::add_widget("text_line", create_function('$d, $cell', '
 		// TODO : modification si on a les droits.
-		return $d->text("".$cell);
-	});
+		return $d->text(toString($cell));
+	'));
 
 
-ElementDocument::add_widget("text_nix", function($d, $cell){
+ElementDocument::add_widget("text_nix", create_function('$d, $cell', '
 		// Texte naze (sans espaces etc.) à la *nix.
 		// TODO : modification si on a les droits.
 		// TODO : vérifier que ça match [a-zA-Z][-a-zA-Z0-9_]*
-		return $d->text("".$cell);
-	});
+		return $d->text(toString($cell));
+	'));
 
 
-ElementDocument::add_widget("text_rich", function($d, $cell){
+ElementDocument::add_widget("text_rich", create_function('$d, $cell', '
 		// TODO : modification si on a les droits.
 		// TODO : rendu du texte riche.
-		return $d->p()->text("".$cell);
-	});
+		return $d->p()->text(toString($cell));
+	'));
 
 
-ElementDocument::add_widget("bool", function($d, $cell){
+ElementDocument::add_widget("bool", create_function('$d, $cell', '
 		// checkbox
 		return $d->text("Not Implemented Yet : w_bool($cell)");
-	});
+	'));
 
 
-ElementDocument::add_widget("bouton", function($d, $texte, $page_callback, $ressource_callback, $action_callback){
+ElementDocument::add_widget("bouton", create_function('$d, $texte, $page_callback, $ressource_callback, $action_callback', '
 		// afficher un input[type=button]
 		// lors du clic, appeller $action_callback sur $page_callback/?res=$ressource_callback ?
 		return $d->text("Not Implemented Yet : w_bouton($texte, $page_callback, $ressource_callback, $action_callback)");
-	});
+	'));
 
 
 // Le widget w_img_file doit gérer le stockage de l'image dans un dossier,
 // la création de la miniature et le stockage dans la BDD du chemin vers l'image.
-ElementDocument::add_widget("img_file", function($d, $cell_description, $cell_img){
+ElementDocument::add_widget("img_file", create_function('$d, $cell_description, $cell_img', '
 		// TODO : modification si on a les droits.
 		// input[file] et <img>
-		$img = $d->img("".$cell_description, "".$cell_img);
+		$img = $d->img(toString($cell_description), toString($cell_img));
 		$d->w_description($cell_description);
 		return $img;
-	});
+	'));
 
 
-ElementDocument::add_widget("date", function($d, $select){
+ElementDocument::add_widget("date", create_function('$d, $select', '
 		// affichage localisé.
 		return $d->text("Not Implemented Yet : date($select)");
-	});
+	'));
 
 
-ElementDocument::add_widget("liste", function($d, $list_cells, $function_formattage_elements) {
+ElementDocument::add_widget("liste", create_function('$d, $list_cells, $function_formattage_elements', '
 		$ul = $d->ul();
 		foreach ($list_cells as $cell) {
 			$li = $ul->li();
 			$function_formattage_elements($cell, $li);
 		}
 		return $ul;
-	});
+	'));
 
-ElementDocument::add_widget("tableau", function($d, $select, $function_formattage_elements) {
+ElementDocument::add_widget("tableau", create_function('$d, $select, $function_formattage_elements', '
 		$t = $d->table();
 		$tr = $t->tbody()->tr();
 		$tr->td()->text("Not Implemented Yet");
 		return $t;
-	});
+	'));
 
 ?>
