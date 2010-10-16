@@ -13,6 +13,17 @@
 - Pouvoir ajouter des types plutôt que des widgets. Type = widget affichage + wiget modification (affichage/modification) + sérialisation (stockage) (+ autre chose ?)
 
 - modules pour le site 4h
+   Accueil : text_rich, lien -> devenir membre, inclusion de nouveautés.
+   Nouveautés : les pages ont un bouton 'afficher dans les nouveautés' qui active dans_nouveautés et met à jour date_nouvautés. Et un bouton
+   supprimer des nouveautés qui désactive dans_nouveautés.
+   Biographie : text_rich + liste photos.
+   Concerts : liste [ date du concert, lieu, text_rich ].
+   Partitions : liste [ nom du morceau, text_rich, file_pdf, liste liens vers enregistrements ].
+   Enregistrements : liste [ nom du morceau, text_rich, file_audio, (auto : liens vers partitions) ].
+   Interprètes : liste [ nom interprète(s), text_rich, liens vers enregistrements ].
+   Liens : liste [titre, text_rich, lien].
+   Contact : text_rich, lien "dvenir membre".
+   |- Devenir membre : text_rich.
 - squelette 1h
    + barre de navigation latérale 1h
 - css pour le site 2h
