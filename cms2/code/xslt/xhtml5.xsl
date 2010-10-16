@@ -37,6 +37,10 @@
 		<input type="text" value="{@value}"/>
 	</xsl:template>
 	
+	<xsl:template match="input_text_rich">
+		<input type="text" value="{@value}"/>
+	</xsl:template>
+	
 	<xsl:template match="input_submit">
 		<input type="submit" value="{@label}"/>
 	</xsl:template>

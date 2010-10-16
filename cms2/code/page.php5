@@ -282,7 +282,15 @@ class mPage {
 	
 	public function set_prop_direct($nom, $val) {
 		// Modifie l'attribut "$nom" dans la BDD.
-		$update_table = (self::est_attribut_global($nom)) ? "_pages" : $this->nom_module();
+		if (self::est_attribut_global($nom)) {
+			$update_table = "_pages";
+			$type = Module::$attributs_globaux[$nom]['type'];
+		} else {
+			$update_table = $this->nom_module();
+			$type = $this->module['attributs'][$nom]['type'];
+		}
+		$fn_serialize = "fn_serialize_" . $type;
+		$val = $fn_serialize($val);
 		$update = "update " . BDD::table($update_table) . " set $nom = '" . BDD::escape(toString($val)) . "' where _uid_page = " . $this->uid();
 		BDD::unbuf_query($update);
 		if ($nom != "date_modification") {

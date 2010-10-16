@@ -187,8 +187,10 @@ ElementDocument::add_type("tr", "td th");
 ElementDocument::add_type("td", $inline_elems, "", "colspan rowspan");
 ElementDocument::add_type("th", $inline_elems);
 ElementDocument::add_type("li", $inline_elems);
-ElementDocument::add_type("form", "input_text_line input_text_multi input_text_rich input_file input_submit", "action");
-ElementDocument::add_type("input_text_line", "", "value");
+ElementDocument::add_type("form", $inline_elems . " input_text_line input_text_multi input_text_rich input_file input_submit", "action");
+ElementDocument::add_type("input_text_line", "", "name value");
+ElementDocument::add_type("input_text_rich", "", "name value");
+ElementDocument::add_type("input_file", "name");
 ElementDocument::add_type("input_submit", "", "label");
 ElementDocument::add_type("a", $inline_elems, "href");
 ElementDocument::add_type("span", $inline_elems, "", "class");
@@ -258,49 +260,104 @@ function fn_w_r_field($d, $cell) {
 	return call_user_func(array($d, "w_r_" . $cell->type()), $cell);
 }
 
+/* ==== Types ==== */
 
-
+// text_line
 function fn_w_r_text_line($d, $cell) {
 	return $d->text(toString($cell));
 }
 
 function fn_w_w_text_line($d, $cell) {
 	$f = $d->form($d->url());
-	$f->input_text_line(toString($cell));
+	$f->input_text_line($cell->name_for_set(), toString($cell));
 	$f->input_submit("Ok");
 	return $f;
 }
 
+function fn_serialize_text_line($input) {
+	return preg_replace("/\n/", " ", $input);
+}
+
+
+// text_nix
 function fn_w_r_text_nix($d, $cell) {
 	// Texte naze (sans espaces etc.) à la *nix.
-	// TODO : modification si on a les droits.
-	// TODO : vérifier que ça match [a-zA-Z][-a-zA-Z0-9_]*
 	return $d->text(toString($cell));
 }
 
+function fn_w_w_text_nix($d, $cell) {
+	return $d->form()->input_text($cell->name_for_set(), toString($cell)); // TODO !!!
+}
+
+function fn_serialize_text_nix($input) {
+	return str_to_nix($input);
+}
+
+
+// text_rich
 function fn_w_r_text_rich($d, $cell) {
-	// TODO : modification si on a les droits.
 	// TODO : rendu du texte riche.
 	return $d->p()->text(toString($cell));
 }
 
+function fn_w_w_text_rich($d, $cell) {
+	// TODO : modification du texte riche.
+	return $d->form()->input_text_rich($cell->name_for_set(), toString($cell));
+}
+
+function fn_serialize_text_rich($input) {
+	return $input;
+}
+
+
+// bool
 function fn_w_r_bool($d, $cell) {
-	// checkbox
 	return $d->text("w_bool(" . toString($cell) . ")");
 }
 
-function fn_w_r_img_file($d, $cell) {
-	// Le widget w_img_file doit gérer le stockage de l'image dans un dossier,
-	// la création de la miniature et le stockage dans la BDD du chemin vers l'image.
-
-	// TODO : modification si on a les droits.
-	// input[file] et <img>
-	return $d->img(toString($cell_description), toString($cell_img));
+function fn_w_w_bool($d, $cell) {
+	// TODo : checkbox
 }
 
+function fn_serialize_bool($input) {
+	return ($input == "true") ? "true" : "false";
+}
+
+
+// img_file
+function fn_w_r_img_file($d, $cell) {
+	return $d->img(toString($cell));
+}
+
+function fn_w_w_img_file($d, $cell) {
+	$f = $d->form($d->url());
+	fn_w_r_img_file($f, $cell);
+	$f->input_file($cell->name_for_set());
+	return $f;
+}
+
+function fn_serialize_img_file($input) {
+	// Doit gérer le stockage de l'image dans un dossier,
+	// la création de la miniature et renvoyer le chemin vers l'image.
+	// TODO !!! comment faire ?
+	return $input;
+}
+
+
+// date
 function fn_w_r_date($d, $cell) {
 	// affichage localisé.
-	return $d->text("w_date(" . toString($cell) . ")");
+	return $d->text(strftime("%Y-%m-%d %H:%M:%S", toString($cell)));
+}
+
+function fn_w_w_date($d, $cell) {
+	// affichage localisé.
+	return $d->form()->input_text_line($cell->name_for_set(), strftime("%Y-%m-%d %H:%M:%S", toString($cell)));
+}
+
+function fn_serialize_date($input) {
+	// TODO
+	return toString(strtotime($input));
 }
 
 ElementDocument::add_widget("titre", "fn_w_titre");

@@ -123,10 +123,11 @@ class Module {
 			}
 		}
 	}
-
+	
 	public static function add_type($nom) {
 		ElementDocument::add_widget("r_" . $nom);
 		ElementDocument::add_widget("w_" . $nom);
+		// fn_serialize_$nom
 		self::$types[$nom] = array();
 	}
 }

@@ -12,13 +12,20 @@
 
 - Pouvoir ajouter des types plutôt que des widgets. Type = widget affichage + wiget modification (affichage/modification) + sérialisation (stockage) (+ autre chose ?)
 
-- r_field : read-only field
-- widgets en écriture. Un form pour chaque champ. 2h
-- if_perm() 3h
 - modules pour le site 4h
 - squelette 1h
 - css pour le site 2h
    ==== OK.
+- authentification 3h
+- if_perm() 3h
 - chercher le form parent, s'il n'y en a pas, créer un nouveau. 1h
 - sécurité : if_perm quand on get_prop_direct() ou set_prop_direct() 1h
 - import / export de la BDD. 2h
+
+- refactor : une classe par type (2 widgets + serialize), dans un fichier séparé de document.
+
+
+
+
+OK : 
+- widgets en écriture. Un form pour chaque champ. 2h (real : 3h)

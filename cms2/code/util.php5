@@ -45,6 +45,43 @@ function toString($obj) {
 	}
 }
 
+function correspondance_accents(&$arr_ascii, &$arr_accents, $ascii, $accents) {
+	$_accents = explode(".", $accents);
+	foreach ($_accents as $k=>$v) {
+		array_push($arr_accents, $v);
+		array_push($arr_ascii, $ascii);
+	}
+}
+
+// Transforme en une chaîne qui match [a-zA-Z][-a-zA-Z0-9_]*
+function str_to_nix($input) {
+	$ascii = array();
+	$accents = array();
+	correspondance_accents($ascii, $accents, "a", "à.á.â.ä.ã.ǎ.å");
+	correspondance_accents($ascii, $accents, "e", "è.é.ê.ë.ě.ẽ");
+	correspondance_accents($ascii, $accents, "i", "ì.í.î.ï.ĩ.ǐ");
+	correspondance_accents($ascii, $accents, "o", "ò.ó.ô.ö.õ.ǒ.ø");
+	correspondance_accents($ascii, $accents, "u", "ù.ú.û.ü.ũ.ǔ.ů");
+	correspondance_accents($ascii, $accents, "y", "ỳ.ý.ŷ.ÿ.ỹ.ẙ");
+	correspondance_accents($ascii, $accents, "c", "ç");
+	correspondance_accents($ascii, $accents, "A", "À.Á.Â.Ä.Ã.Ǎ.Å");
+	correspondance_accents($ascii, $accents, "E", "È.É.Ê.Ë.Ě.Ẽ");
+	correspondance_accents($ascii, $accents, "I", "Ì.Í.Î.Ï.Ĩ.Ǐ");
+	correspondance_accents($ascii, $accents, "O", "Ò.Ó.Ô.Ö.Õ.ǒ.Ø");
+	correspondance_accents($ascii, $accents, "U", "Ù.Ú.Û.Ü.Ũ.Ů.ǔ");
+	correspondance_accents($ascii, $accents, "Y", "Ŷ.Ý.Ŷ.Ÿ.Ỹ");
+	correspondance_accents($ascii, $accents, "C", "Ç");
+	correspondance_accents($ascii, $accents, "ae", "æ");
+	correspondance_accents($ascii, $accents, "oe", "œ");
+	correspondance_accents($ascii, $accents, "AE", "Æ");
+	correspondance_accents($ascii, $accents, "OE", "Œ");
+	correspondance_accents($ascii, $accents, "-", " ");
+	$input = str_replace($accents, $ascii, $input);
+	$first = preg_replace("/[^a-zA-Z]/", "a", substr($input, 0, 1));
+	$rest = preg_replace("/[^-a-zA-Z0-9_]/", "-", substr($input, 1));
+	return $first . $rest;
+}
+
 /**** Début PATH ****/
 
 // http://www.liranuna.com/php-path-resolution-class-relative-paths-made-easy/

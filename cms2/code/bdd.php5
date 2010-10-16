@@ -200,6 +200,9 @@ class BDDCell {
 	public function toString() {
 		return toString($this->valeur);
 	}
+	public function name_for_set() {
+		return "set_" . $this->page->uid() . "_" . $this->nom_attribut;
+	}
 }
 
 ?>
