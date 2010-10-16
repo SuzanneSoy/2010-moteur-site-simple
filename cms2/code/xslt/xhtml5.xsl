@@ -33,6 +33,20 @@
 		</a>
 	</xsl:template>
 	
+	<xsl:template match="input_text_line">
+		<input type="text" value="{@value}"/>
+	</xsl:template>
+	
+	<xsl:template match="input_submit">
+		<input type="submit" value="{@label}"/>
+	</xsl:template>
+	
+	<xsl:template match="form">
+		<form action="{@action}">
+			<xsl:apply-templates select="*"/>
+		</form>
+	</xsl:template>
+	
 	<xsl:template match="span">
 		<!-- TODO : mettre le class="?" ssi c'est non vide. -->
 		<span class="{@class}">

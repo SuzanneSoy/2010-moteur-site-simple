@@ -87,7 +87,11 @@ class ElementDocument {
 	public function to_XHTML_1_1() {
 		niy("to_XHTML_1_1");
 	}
-
+	
+	public function url() {
+		return $this->document->page->url();
+	}
+	
 	public function __construct($type = "document", &$doc = null) {
 		$this->type = $type;
 		$this->document = $doc;
@@ -152,17 +156,19 @@ class ElementDocument {
 
 class Document extends ElementDocument {
 	protected $singletons = array();
-	public function __construct() {
+	protected $page = null;
+	public function __construct($page) {
 		parent::__construct("document", $this);
 		$this->erreurs();
 		$this->header();
 		$this->nav();
 		$this->article();
 		$this->footer();
+		$this->page = $page;
 	}
 }
 
-$inline_elems = "span text a strong em img";
+$inline_elems = "span text a strong em img form";
 ElementDocument::add_type("document", "erreurs header footer nav article script style");
 ElementDocument::add_type(true, "header", "title");
 ElementDocument::add_type(true, "erreurs", "litteral");
@@ -181,7 +187,9 @@ ElementDocument::add_type("tr", "td th");
 ElementDocument::add_type("td", $inline_elems, "", "colspan rowspan");
 ElementDocument::add_type("th", $inline_elems);
 ElementDocument::add_type("li", $inline_elems);
-ElementDocument::add_type("form", "input_text_line input_text_multi input_text_rich input_file");
+ElementDocument::add_type("form", "input_text_line input_text_multi input_text_rich input_file input_submit", "action");
+ElementDocument::add_type("input_text_line", "", "value");
+ElementDocument::add_type("input_submit", "", "label");
 ElementDocument::add_type("a", $inline_elems, "href");
 ElementDocument::add_type("span", $inline_elems, "", "class");
 ElementDocument::add_type("img", "", "alt src");
@@ -238,7 +246,6 @@ function fn_w_img_file_desc($d, $cell_img, $cell_description) {
 	return $img;
 }
 
-
 function fn_w_field($d, $cell) {
 	if ($cell->page()->if_perm("w", $cell->nom_attribut())) {
 		return call_user_func(array($d, "w_w_" . $cell->type()), $cell);
@@ -247,9 +254,21 @@ function fn_w_field($d, $cell) {
 	}
 }
 
+function fn_w_r_field($d, $cell) {
+	return call_user_func(array($d, "w_r_" . $cell->type()), $cell);
+}
+
+
+
 function fn_w_r_text_line($d, $cell) {
-	// TODO : modification si on a les droits.
 	return $d->text(toString($cell));
+}
+
+function fn_w_w_text_line($d, $cell) {
+	$f = $d->form($d->url());
+	$f->input_text_line(toString($cell));
+	$f->input_submit("Ok");
+	return $f;
 }
 
 function fn_w_r_text_nix($d, $cell) {
@@ -293,6 +312,7 @@ ElementDocument::add_widget("tableau", "fn_w_tableau");
 ElementDocument::add_widget("img_file_desc", "fn_w_img_file_desc");
 
 ElementDocument::add_widget("field");
+ElementDocument::add_widget("r_field");
 Module::add_type("text_line");
 Module::add_type("text_nix");
 Module::add_type("text_rich");

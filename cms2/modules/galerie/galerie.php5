@@ -48,7 +48,7 @@ abstract class mGalerieBase extends mPage {
 	
 	public function res_h_miniature($d) {
 		$this->res_h_mini_miniature($d->span("miniature"));
-		$d->span("titre")->w_field($this->titre);
+		$d->span("titre")->w_r_field($this->titre);
 		return $d;
 	}
 	

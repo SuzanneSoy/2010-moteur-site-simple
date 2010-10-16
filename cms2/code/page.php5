@@ -45,7 +45,7 @@ class mPage {
 			$res = $this->module['ressources_dynamiques'][0];
 		}
 		if ($d === null) {
-			$d = new Document();
+			$d = new Document($this);
 		}
 		return call_user_func(array($this, "res_" . $res), $d);
 	}
