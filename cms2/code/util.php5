@@ -54,6 +54,7 @@ function correspondance_accents(&$arr_ascii, &$arr_accents, $ascii, $accents) {
 }
 
 // Transforme en une chaîne qui match [a-zA-Z][-a-zA-Z0-9_]*
+/* TODO : ajouter ceux de http://www.php.net/manual/fr/function.preg-replace.php#96586 . */
 function str_to_nix($input) {
 	$ascii = array();
 	$accents = array();
