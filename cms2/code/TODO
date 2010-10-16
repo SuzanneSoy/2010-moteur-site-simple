@@ -1,0 +1,32 @@
+- Valeur de retour des res_t_xxx ?
+   Lorsqu'on appelle GalerieIndex::res_i_icône_nouvelle_page(), ça fait un sendfile alors que GalerieIndex::res_h_page() renvoie un objet
+   ElementDocument, et GalerieIndex::res_c_style() renvoie du texte (CSS) pour inclusion dans le CSS principal... alors que
+   res_c_style_supplémentaire() fait je-sais-pas-quoi...
+   
+   Comment gérer tout ça ? Selon le type de ressource on envoie direct ou on récupère (html,css => récup, img => envoi).
+
+- PHP5.3 chez ovh : http://guide.ovh.com/Php5ChezOvh (.htaccess avec "SetEnv PHP_VER 5_TEST")
+- Compatibilité free.fr :
+   soit il faut supprimer le fichier index.php (pour que index.php5 ait la priorité),
+   soit il faut transférer .htaccess (qui spécifie qu'il faut utiliser php5).
+
+- Pouvoir ajouter des types plutôt que des widgets. Type = widget affichage + wiget modification (affichage/modification) + sérialisation (stockage) (+ autre chose ?)
+
+- modules pour le site 4h
+- squelette 1h
+   + barre de navigation latérale 1h
+- css pour le site 2h
+   ==== OK.
+- authentification 3h
+- if_perm() 3h
+- chercher le form parent, s'il n'y en a pas, créer un nouveau. 1h
+- sécurité : if_perm quand on get_prop_direct() ou set_prop_direct() 1h
+- import / export de la BDD. 2h
+
+- refactor : une classe par type (2 widgets + serialize), dans un fichier séparé de document.
+
+
+
+
+OK : 
+- widgets en écriture. Un form pour chaque champ. 2h (real : 3h)

@@ -1,3 +1,23 @@
+@titre : url
+@description :
+
+Enfants : galerie-photo
+Actions : créer_enfant, supprimer, vue
+
+Vue normale :
+(titre @titre)
+(action supprimer "Supprimer cet événement")
+(texte-riche @description)
+	+ liste des enfants :
+	<li>[miniature][titre]</li>
+	si permission créer page :
+	<li>(action nouvelle_page)</li>
+
+Vue miniature :
+Sélectionner le 1er enfant, lui demander sa vue "miniature", en renvoyer la partie image.
+
+Donnée statique : icône "nouvelle image".
+
 <?php
 
 class GalerieÉvènement {

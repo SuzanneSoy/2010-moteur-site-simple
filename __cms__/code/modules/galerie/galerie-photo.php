@@ -1,3 +1,22 @@
+@titre : url
+@description :
+# external signifie : ne pas stocker dans la bdd.
+@image : external
+# private signifie : ne peut pas être modifié directement par l'utilisateur / la requête / les autres modules.
+@miniature : private,external
+set_image : fonction php qui crée la miniature.
+
+Vue normale :
+(@titre titre)
+(action supprimer "Supprimer cet évènement")
+(@texte-riche description)
+(@image image)
+
+Vue miniature :
+(@titre titre)
+(@image miniature)
+
+
 <?php
 
 class GaleriePhoto {
