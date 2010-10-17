@@ -95,20 +95,10 @@ class mGaleriePhoto extends mGalerieBase {
 	
 	public static function info($module) {
 		Module::ressources_statiques("c_style");
-		Module::ressources_dynamiques(new Inherit(get_parent_class()), "i_grande i_image i_miniature");
+		Module::ressources_dynamiques(new Inherit(get_parent_class()));
+		Module::ressources_dynamiques("i_grande i_image i_miniature");
 		Module::attribut(new Inherit(get_parent_class()));
 		Module::attribut("image", "img_file", "");
-	}
-	
-	public function set_titre($titre) {
-		// set url quand on set titre !
-		// TODO : valeur initiale pour l'url !
-		niy("GaleriePhoto::set_titre($titre)");
-	}
-
-	public function set_image($fichier_image) {
-		// Faire la miniature et l'image de taille "normale".
-		niy("GaleriePhoto::set_image");
 	}
 	
 	public function res_c_style() {

@@ -344,6 +344,46 @@ function fn_serialize_img_file($input) {
 }
 
 
+// file_pdf
+function fn_w_r_file_pdf($d, $cell) {
+	return $d->img(toString($cell));
+}
+
+function fn_w_w_file_pdf($d, $cell) {
+	$f = $d->form($d->url());
+	fn_w_r_img_file($f, $cell);
+	$f->input_file($cell->name_for_set());
+	return $f;
+}
+
+function fn_serialize_file_pdf($input) {
+	// Doit gérer le stockage de l'image dans un dossier,
+	// la création de la miniature et renvoyer le chemin vers l'image.
+	// TODO !!! comment faire ?
+	return $input;
+}
+
+// file_audio
+function fn_w_r_file_audio($d, $cell) {
+	return $d->img(toString($cell));
+}
+
+function fn_w_w_file_audio($d, $cell) {
+	$f = $d->form($d->url());
+	fn_w_r_img_file($f, $cell);
+	$f->input_file($cell->name_for_set());
+	return $f;
+}
+
+function fn_serialize_file_audio($input) {
+	// Doit gérer le stockage de l'image dans un dossier,
+	// la création de la miniature et renvoyer le chemin vers l'image.
+	// TODO !!! comment faire ?
+	return $input;
+}
+
+
+
 // date
 function fn_w_r_date($d, $cell) {
 	// affichage localisé.
@@ -375,6 +415,8 @@ Module::add_type("text_nix");
 Module::add_type("text_rich");
 Module::add_type("bool");
 Module::add_type("img_file");
+Module::add_type("file_pdf");
+Module::add_type("file_audio");
 Module::add_type("date");
 
 ?>
